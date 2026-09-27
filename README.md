@@ -1,16 +1,42 @@
-# React + Vite
+# FutBot - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Interfaz web para la plataforma multijugador FutBot. Proyecto construido con React, Vite y Bootstrap.
 
-Currently, two official plugins are available:
+## Requisitos previos
+* **Node.js y NPM:** Deben estar instalados en el sistema para ejecutar el entorno de desarrollo. 
+  * En distribuciones de Linux basadas en Ubuntu/Debian, puedes instalar todo lo necesario ejecutando:
+    ```bash
+    sudo apt update
+    sudo apt install npm
+    ```
+  * Para otros sistemas operativos, descárgalo directamente desde la página oficial de [Node.js](https://nodejs.org/).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Instalación
 
-## React Compiler
+1. Clonar el repositorio.
+2. Abrir una terminal y posicionarse dentro del directorio del frontend:
+   ```bash
+   cd Frontend
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. Instalar todas las dependencias requeridas (incluyendo herramientas de testing y librerías de UI):
+   ```bash
+   npm install
+   ```
 
-## Expanding the Oxlint configuration
+## Ejecución en entorno local
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Para iniciar el servidor de desarrollo con recarga rápida (Hot Module Replacement), ejecuta:
+   ```bash
+   npm run dev
+   ```
+
+La aplicación web estará disponible por defecto en `http://localhost:5173/`.
+
+## Testing
+
+La cátedra exige que todo el código nuevo esté respaldado por Unit Tests antes de considerarlo DONE y mergearlo a la rama de desarrollo. Para correr la suite de pruebas (Vitest + React Testing Library), ejecuta:
+
+   ```bash
+   npm run test
+   ```
