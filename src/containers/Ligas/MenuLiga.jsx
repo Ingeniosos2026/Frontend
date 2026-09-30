@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import MenuLiga from '../../components/ligas/MenuLiga';
+import MenuLiga from '../../components/Ligas/MenuLiga';
 import { createHttpService } from '../../services/HttpService';
 
 const MenuLigaLogic = ({ usuario_id }) => {
     const navigate = useNavigate();
     const [interfaz, setInterfaz] = useState("ModuloConstruccion");
-    const [misLigas, setMisLigas] = useState([]);
+    //const [misLigas, setMisLigas] = useState([]);
     const [ligasDisponibles, setLigasDisponibles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { obtenerListaLigas } = createHttpService();
+
+    const { obtenerLigas } = createHttpService();
 
     useEffect(() => {
         const fetchLigas = async () => {
             setLoading(true);
             setError(null);
+            
             try {
-                const response = await obtenerListaLigas();
-                if (response.status === 200) {
-                    setLigasDisponibles(response.data.disponibles || []);
-                    setMisLigas(response.data.misLigas || []);
-                } else if (response.status === 404) {
-                    setError("404: No hay ligas disponibles.");
-                } else {
-                    setError("Ocurrió un error al intentar obtener las ligas.");
-                }
-            } catch (err) {
-                setError("Error de conexión con el servidor.");
+                const res = await obtenerLigas();
+                setLigasDisponibles(res.disponibles || res || []);
+                //setMisLigas(res.misLigas || []);
+            
+            } catch (error) {
+                console.error("Error al intentar obtener las ligas:", error);
+                setError(error.message);
+
             } finally {
                 setLoading(false);
             }
@@ -52,7 +51,7 @@ const MenuLigaLogic = ({ usuario_id }) => {
     return (
         <MenuLiga 
             ligasDisponibles={ligasDisponibles}
-            misLigas={misLigas}
+            //misLigas={misLigas}
             loading={loading}
             error={error}
             CrearLiga={handleCrearLiga}

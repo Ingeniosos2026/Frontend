@@ -1,13 +1,13 @@
 import { useState} from 'react';
 
-const MenuLiga = ({ ligasDisponibles, misLigas, loading, error, CrearLiga, UnirseLiga, VerLiga, Volver }) => {
+const MenuLiga = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, VerLiga, Volver }) => {
     // Estados locales visuales para rastrear qué liga está desplegada (colapsable)
-    const [ligaDesplegadaMis, setLigaDesplegadaMis] = useState(null);
+    //const [ligaDesplegadaMis, setLigaDesplegadaMis] = useState(null);
     const [ligaDesplegadaDisp, setLigaDesplegadaDisp] = useState(null);
 
-    const toggleMisLigas = (nombreLiga) => {
-        setLigaDesplegadaMis(ligaDesplegadaMis === nombreLiga ? null : nombreLiga);
-    };
+    // const toggleMisLigas = (nombreLiga) => {
+    //     setLigaDesplegadaMis(ligaDesplegadaMis === nombreLiga ? null : nombreLiga);
+    // };
     const toggleDispLigas = (nombreLiga) => {
         setLigaDesplegadaDisp(ligaDesplegadaDisp === nombreLiga ? null : nombreLiga);
     };
@@ -25,35 +25,6 @@ const MenuLiga = ({ ligasDisponibles, misLigas, loading, error, CrearLiga, Unirs
             <button onClick={CrearLiga}>
                 Crear Liga
             </button>
-
-            {/* Lista de mis ligas */}
-            <h3>Mis Ligas</h3>
-            <ul id="Lista_mis_ligas">
-                {misLigas.map((liga, index) => (
-                    <li key={`mis-${index}`}>
-                        <button onClick={() => toggleMisLigas(liga.nombre)}>
-                            {liga.nombre}
-                        </button>
-                        
-                        {/* Condicional para inyectar el cuerpo desplegable si fue clickeado */}
-                        {ligaDesplegadaMis === liga.nombre && (
-                            <div id="Detalles_colapsables">
-                                <div className="max_jugadores">
-                                    Máx Jugadores: {liga.max_jugadores}
-                                </div>
-                                <div className="participantes">
-                                    Participantes: {liga.participantes}/{liga.max_jugadores}
-                                </div>
-                                <div className="Ver liga">
-                                    <button onClick={() => VerLiga(liga.nombre)}>
-                                        Ver Liga
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
 
             {/* Lista de ligas disponibles */}
             <h3>Ligas Disponibles</h3>
@@ -93,3 +64,32 @@ const MenuLiga = ({ ligasDisponibles, misLigas, loading, error, CrearLiga, Unirs
 };
 
 export default MenuLiga;
+
+// {/* Lista de mis ligas */}
+// <h3>Mis Ligas</h3>
+// <ul id="Lista_mis_ligas">
+//     {misLigas.map((liga, index) => (
+//         <li key={`mis-${index}`}>
+//             <button onClick={() => toggleMisLigas(liga.nombre)}>
+//                 {liga.nombre}
+//             </button>
+            
+//             {/* Condicional para inyectar el cuerpo desplegable si fue clickeado */}
+//             {ligaDesplegadaMis === liga.nombre && (
+//                 <div id="Detalles_colapsables">
+//                     <div className="max_jugadores">
+//                         Máx Jugadores: {liga.max_jugadores}
+//                     </div>
+//                     <div className="participantes">
+//                         Participantes: {liga.participantes}/{liga.max_jugadores}
+//                     </div>
+//                     <div className="Ver liga">
+//                         <button onClick={() => VerLiga(liga.nombre)}>
+//                             Ver Liga
+//                         </button>
+//                     </div>
+//                 </div>
+//             )}
+//         </li>
+//     ))}
+// </ul>
