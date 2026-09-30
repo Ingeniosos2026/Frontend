@@ -11,31 +11,31 @@ import GameLayout from './layouts/GameLayout';
 
 //Contenedores Auth
 import MenuInicio from './containers/Auth/MenuInicio';
-import FormInicioSesion from './containers/Auth/InicioSesion';
-import FormRegistro from './containers/Auth/Registro';
+//import FormInicioSesion from './containers/Auth/InicioSesion';
+//import FormRegistro from './containers/Auth/Registro';
 
 //Contenedores Dashboard/Menu/Hub
 import MenuPrincipal from './components/MenuPrincipal';
 
-import MenuJugador from './containers/Jugadores/MenuJugador';
-import CrearJugador from './containers/Jugadores/CrearJugador';
+// import MenuJugador from './containers/Jugadores/MenuJugador';
+// import CrearJugador from './containers/Jugadores/CrearJugador';
 
-import MenuComp from './containers/Comportamientos/MenuComp';
-import CrearComp from './containers/Comportamientos/CrearComp';
-import EditarComp from './containers/Comportamientos/EditarComp';
+// import MenuComp from './containers/Comportamientos/MenuComp';
+// import CrearComp from './containers/Comportamientos/CrearComp';
+// import EditarComp from './containers/Comportamientos/EditarComp';
 
 //Contenedores Liga
 import MenuLigaLogic from './containers/Ligas/MenuLiga';
-import CrearLiga from './containers/Ligas/CrearLiga';
-import LobbyLiga from './containers/Ligas/LobbyLiga';
+// import CrearLiga from './containers/Ligas/CrearLiga';
+// import LobbyLiga from './containers/Ligas/LobbyLiga';
 
-//Contenedores Amistoso
-import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
-import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
-import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
+// //Contenedores Amistoso
+// import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
+// import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
+// import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
-//Contenedor Partidp
-import Partido from './containers/partido';
+// //Contenedor Partidp
+// import Partido from './containers/partido';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -46,8 +46,8 @@ export default function App() {
         {/*Rutas Auth*/}
         <Route element={<AuthLayout/>}>
           <Route path="/auth" element={<MenuInicio />} />
-          <Route path="/auth/login" element={<FormInicioSesion/>} />
-          <Route path="/auth/registro" element={<FormRegistro />} />
+          <Route path="/auth/login" element={<ModuloConstruccion/>} />
+          <Route path="/auth/registro" element={<ModuloConstruccion />} />
         </Route>
 
         <Route element={<AppLayout/>}>
