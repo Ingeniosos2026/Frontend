@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { createHttpService } from "../../services/HttpService"; 
+import { createHttpService } from "../../services/HttpService";
+import { useNavigate } from "react-router-dom";
 
-const FormRegistro = ({ volver }) => {
+const FormRegistro = () => {
     const { register, formState: {errors, isSubmitting}, handleSubmit } = useForm();
     const {crearUsuario} = createHttpService();
     const [mensaje, setMensaje] = useState("");
     const [errorRegistro, setErrorRegistro] = useState("");
-
+    const navigate = useNavigate();
+    
     const onSubmit = async (data) => {
         setMensaje("");
         setErrorRegistro("");
@@ -69,7 +71,7 @@ const FormRegistro = ({ volver }) => {
             {mensaje && <p>{mensaje}</p>}
             {errorRegistro && (<p>{errorRegistro}</p>)}
         </form>
-        <button onClick={volver}>
+        <button onClick={() => navigate(-1)}>
             Volver
         </button>
     </div>

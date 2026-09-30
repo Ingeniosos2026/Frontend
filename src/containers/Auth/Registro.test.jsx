@@ -1,10 +1,12 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import FormRegistro from "./Registro";
+import { useNavigate, MemoryRouter } from "react-router-dom";
 
 
-const { crearUsuarioMock } = vi.hoisted(() => ({
-    crearUsuarioMock: vi.fn()
+const { crearUsuarioMock, navigateMock } = vi.hoisted(() => ({
+    crearUsuarioMock: vi.fn(),
+    navigateMock: vi.fn()
 }));
 
 vi.mock("../../services/HttpService", () => ({
@@ -12,6 +14,13 @@ vi.mock("../../services/HttpService", () => ({
         crearUsuario: crearUsuarioMock
     })
 }));
+
+vi.mock("react-router-dom", async () => { 
+    const actual = await vi.importActual("react-router-dom"); 
+    return { ...actual, useNavigate: () => 
+        navigateMock 
+    }; 
+});
 
 const datosUsuario = {
     nombre: "Joel",
@@ -46,9 +55,9 @@ describe("FormRegistro", () => {
     });
 
     it("muestra todos los campos del formulario", () => {
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         expect(
             screen.getByRole("heading", {
@@ -91,9 +100,9 @@ describe("FormRegistro", () => {
 
 
     it("permite ingresar datos en los campos", () => {
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         completarFormulario();
         Object.entries(datosUsuario).forEach(([campo, valor]) => {
@@ -105,9 +114,9 @@ describe("FormRegistro", () => {
 
 
     it("muestra errores cuando los campos obligatorios están vacíos", async () => {
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         fireEvent.click(
             screen.getByRole("button", {
@@ -134,9 +143,9 @@ describe("FormRegistro", () => {
 
 
     it("muestra un error cuando el email tiene un formato inválido", async () => {
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         const email = screen.getByLabelText("Email");
         fireEvent.change(email, {
@@ -164,9 +173,9 @@ describe("FormRegistro", () => {
             id: 1
         });
 
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         completarFormulario();
         fireEvent.click(
@@ -193,9 +202,9 @@ describe("FormRegistro", () => {
             new Error("El email ya está registrado")
         );
 
-        render(
-            <FormRegistro volver={() => {}} />
-        );
+        render(<MemoryRouter>
+            <FormRegistro />
+        </MemoryRouter>);
 
         completarFormulario();
         fireEvent.click(
@@ -212,18 +221,13 @@ describe("FormRegistro", () => {
     });
 
 
-    it("ejecuta la función volver al presionar el botón Volver", () => {
-        const volverMock = vi.fn();
-        render(
-            <FormRegistro volver={volverMock} />
+    it("vuelve a la página anterior al presionar Volver", () => { 
+        render( <MemoryRouter> 
+            <FormRegistro /> 
+        </MemoryRouter>
         );
 
-        fireEvent.click(
-            screen.getByRole("button", {
-                name: "Volver"
-            })
-        );
-
-        expect(volverMock).toHaveBeenCalled();
+        fireEvent.click( screen.getByRole("button", { name: "Volver" }) );
+        expect(navigateMock).toHaveBeenCalledWith(-1);
     });
 });
