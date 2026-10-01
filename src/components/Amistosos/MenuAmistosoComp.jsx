@@ -33,7 +33,7 @@ const MenuAmistosoComp = ({ amistosos, cargando, mensajeError, alCrear, alUnirse
                         {/* Condicional para inyectar el cuerpo desplegable si fue clickeado */}
                         {amistosoDesplegadaDisp === amistoso.nombre && (
                             <div id="Detalles_colapsables">
-                                <div className="Unirse_liga">
+                                <div className="Unirse_amistoso">
                                     <button onClick={() => alUnirse(amistoso.id)}>
                                         Unirse
                                     </button>

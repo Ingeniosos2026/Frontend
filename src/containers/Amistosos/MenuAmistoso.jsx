@@ -17,7 +17,7 @@ const MenuAmistoso = () => {
             try {
                 setCargando(true);
 
-                const amistososDisponibles = await httpService.obtenerAmistosos();
+                const amistosos = await httpService.obtenerAmistosos();
 
                 setAmistosos(amistosos);
 
