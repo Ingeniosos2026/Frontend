@@ -1,6 +1,6 @@
 import { useState}  from "react";
-import FormInicioSesion from "../../components/FormularioInicioSesion/InicioSesion";
-import FormRegistro from "../../components/FormularioRegistro/Registro";
+//import FormInicioSesion from "./InicioSesion";
+import FormRegistro from "./Registro";
 
 const MenuInicio = () => {
 
@@ -24,9 +24,10 @@ const MenuInicio = () => {
 
     if (interfaz === "iniciar sesion") {
         return (
-            <FormInicioSesion
-                volver={() => setInterfaz("principal")}
-            />
+            // <FormInicioSesion
+            //     volver={() => setInterfaz("principal")}
+            // />
+            <div></div>
         );
     }
 
