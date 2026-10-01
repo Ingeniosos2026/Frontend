@@ -1,6 +1,7 @@
 import { it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import MenuInicio from "./MenuInicio";
+import { MemoryRouter } from "react-router-dom";
 
 it("muestra el menú inicialmente", () => {
     render(<MenuInicio />);
@@ -19,7 +20,9 @@ it("muestra el menú inicialmente", () => {
 });
 
 it("abre el formulario de registro", () => {
-    render(<MenuInicio />);
+    render(<MemoryRouter>
+        <MenuInicio />
+    </MemoryRouter>);
 
     fireEvent.click(
         screen.getByRole("button", { name: "Registrarse" })
@@ -31,7 +34,9 @@ it("abre el formulario de registro", () => {
 });
 
 it("abre el formulario de login", () => {
-    render(<MenuInicio />);
+    render(<MemoryRouter>
+        <MenuInicio />
+    </MemoryRouter>);
 
     fireEvent.click(
         screen.getByRole("button", { name: "Iniciar Sesion" })
