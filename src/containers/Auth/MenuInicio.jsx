@@ -1,6 +1,6 @@
 import { useState}  from "react";
 import FormInicioSesion from "../../components/FormularioInicioSesion/InicioSesion";
-import FormRegistro from "./Registro";
+import FormRegistro from "../../components/FormularioRegistro/Registro";
 
 const MenuInicio = () => {
 
