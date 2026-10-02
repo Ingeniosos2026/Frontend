@@ -18,7 +18,7 @@ import FormRegistro from './containers/Auth/Registro';
 import MenuPrincipal from './components/MenuPrincipal';
 
 // import MenuJugador from './containers/Jugadores/MenuJugador';
-// import CrearJugador from './containers/Jugadores/CrearJugador';
+import CrearJugador from './containers/Jugadores/CrearJugador';
 
 // import MenuComp from './containers/Comportamientos/MenuComp';
 // import CrearComp from './containers/Comportamientos/CrearComp';
@@ -65,7 +65,7 @@ export default function App() {
 
         {/*Rutas Jugador*/}
         <Route path="/jugadores" element={<ModuloConstruccion/>} />
-        <Route path="/jugadores/crear" element={<ModuloConstruccion/>} />
+        <Route path="/jugadores/crear" element={<CrearJugador/>} />
         
         {/*Rutas Plantel*/}
         <Route path="/plantel" element={<ModuloConstruccion/>} />
