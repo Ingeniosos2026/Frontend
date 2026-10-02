@@ -17,7 +17,7 @@ import FormRegistro from './containers/Auth/Registro';
 //Contenedores Dashboard/Menu/Hub
 import MenuPrincipal from './components/MenuPrincipal';
 
-// import MenuJugador from './containers/Jugadores/MenuJugador';
+import MenuJugador from './containers/Jugadores/MenuJugador';
 import CrearJugador from './containers/Jugadores/CrearJugador';
 
 // import MenuComp from './containers/Comportamientos/MenuComp';
@@ -64,12 +64,8 @@ export default function App() {
         <Route path="/amistosos/crear" element={<ModuloConstruccion />} />
 
         {/*Rutas Jugador*/}
-        <Route path="/jugadores" element={<ModuloConstruccion/>} />
+        <Route path="/jugadores" element={<MenuJugador />} />
         <Route path="/jugadores/crear" element={<CrearJugador/>} />
-        
-        {/*Rutas Plantel*/}
-        <Route path="/plantel" element={<ModuloConstruccion/>} />
-        <Route path="/plantel/crear" element={<ModuloConstruccion/>} />
 
         {/*Rutas Comportamiento*/}          
         <Route path="/comportamientos" element={<ModuloConstruccion/>} />
