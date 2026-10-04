@@ -3,6 +3,17 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import MenuInicio from "./MenuInicio";
 import { MemoryRouter } from "react-router-dom";
 
+const { navigateMock } = vi.hoisted(() => ({
+    navigateMock: vi.fn()
+}));
+
+vi.mock("react-router-dom", async () => { 
+    const actual = await vi.importActual("react-router-dom"); 
+    return { ...actual, useNavigate: () => 
+        navigateMock
+    }; 
+});
+
 it("muestra el menú inicialmente", () => {
     render(<MenuInicio />);
 
@@ -28,9 +39,8 @@ it("abre el formulario de registro", () => {
         screen.getByRole("button", { name: "Registrarse" })
     );
 
-    expect(
-        screen.queryByText("Bienvenido")
-    ).toBeNull();
+    fireEvent.click( screen.getByRole("button", { name: "Registrarse" }) );
+    expect(navigateMock).toHaveBeenCalledWith("/auth/registro");
 });
 
 it("abre el formulario de login", () => {
@@ -42,7 +52,6 @@ it("abre el formulario de login", () => {
         screen.getByRole("button", { name: "Iniciar Sesion" })
     );
 
-    expect(
-        screen.queryByText("Bienvenido")
-    ).toBeNull();
+    fireEvent.click( screen.getByRole("button", { name: "Iniciar Sesion" }) );
+    expect(navigateMock).toHaveBeenCalledWith("/auth/login");
 });

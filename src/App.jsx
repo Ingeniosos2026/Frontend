@@ -64,9 +64,9 @@ export default function App() {
         <Route path="/amistosos/crear" element={<ModuloConstruccion />} />
 
         {/*Rutas Jugador*/}
-        <Route path="/jugadores" element={<ModuloConstruccion/>} />
-        <Route path="/jugadores/crear" element={<ModuloConstruccion/>} />
-        
+        <Route path="/jugadores" element={<MenuJugador />} />
+        <Route path="/jugadores/crear" element={<CrearJugador/>} />
+
         {/*Rutas Comportamiento*/}          
         <Route path="/comportamientos" element={<ModuloConstruccion/>} />
         <Route path="/comportamientos/crear" element={<ModuloConstruccion/>} />

@@ -1,43 +1,21 @@
-import { useState}  from "react";
-//import FormInicioSesion from "./InicioSesion";
-import FormRegistro from "./Registro";
+import { useNavigate } from "react-router-dom";
 
 const MenuInicio = () => {
+    const navigate = useNavigate();
+    
+    return (
+        <div>
+            <h1>Bienvenido</h1>
 
-    const [interfaz, setInterfaz] = useState("principal");
+            <button onClick={() => navigate("/auth/registro")}>
+                Registrarse
+            </button>
 
-    if (interfaz === "principal") {
-        return (
-            <div>
-                <h1>Bienvenido</h1>
-
-                <button onClick={() => setInterfaz("iniciar sesion")}>
-                    Iniciar Sesion
-                </button>
-
-                <button onClick={() => setInterfaz("registrarse")}>
-                    Registrarse
-                </button>
-            </div>
-        );
-    }
-
-    if (interfaz === "iniciar sesion") {
-        return (
-            // <FormInicioSesion
-            //     volver={() => setInterfaz("principal")}
-            // />
-            <div></div>
-        );
-    }
-
-    if (interfaz === "registrarse") {
-        return (
-            <FormRegistro
-                volver={() => setInterfaz("principal")}
-            />
-        );
-    }
+            <button onClick={() => navigate("/auth/login")}>
+                Iniciar Sesion
+            </button>
+        </div>
+    );
 };
 
 export default MenuInicio;
