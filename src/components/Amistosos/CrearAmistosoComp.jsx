@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 const CrearAmistosoComp = ({ mensajeError, alConfirmar, alVolver }) => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
-            nombre: '',
             duracion_partido: 5
         }
     });
@@ -17,16 +16,6 @@ const CrearAmistosoComp = ({ mensajeError, alConfirmar, alVolver }) => {
             <h2>Detalles del Amistoso</h2>
             
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label htmlFor="nombre">Nombre del partido: </label>
-                    <input 
-                        id="nombre" 
-                        type="text" 
-                        {...register('nombre', { required: "Ingrese un nombre para el partido" })} 
-                    />
-                    {errors.nombre && <span> {errors.nombre.message}</span>}
-                </div>
-
                 <div>
                     <label htmlFor="duracion_partido">Duración (minutos): </label>
                     <input 

@@ -15,7 +15,6 @@ const CrearAmistoso = () => {
     const [mensajeError, setError] = useState(null);
     const [interfazActual, setInterfazActual] = useState(vistas.paso_1);
     const [amistosoBody, setAmistosoBody] = useState({
-        nombre: '',
         duracion_partido: 0,
         jugadores: [],
         formacion: ''
@@ -38,8 +37,7 @@ const CrearAmistoso = () => {
             setError(null);
             
             const partidoData = {
-                nombre: amistosoData.nombre,
-                duracion_partido: amistosoData.duracion_partido,
+                duracion: amistosoData.duracion_partido,
                 jugadores: amistosoBody.jugadores,
                 formacion: amistosoBody.formacion
             };
@@ -60,8 +58,9 @@ const CrearAmistoso = () => {
             case vistas.paso_1:
                 return (
                     <ArmarEquipo
-                        alConfirmar={manejarConfirmacionEquipo}
-                        alVolver={() => navigate('/amistosos')}
+                        usuario_id={usuarioId}
+                        onConfirmar={manejarConfirmacionEquipo}
+                        onCancelar={() => navigate('/amistosos')}
                     />
                 );
             case vistas.paso_2:
