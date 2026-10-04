@@ -1,4 +1,3 @@
-import Plantel from "../containers/InterfazPlantel/InterPlantel";
 import { useNavigate } from "react-router-dom";
 
 const PagPrincipal = () => {
@@ -9,15 +8,15 @@ const PagPrincipal = () => {
             <div>
                 <h1>Pagina Principal</h1>
 
-                <button onClick={() => navigate("/liga")}>
+                <button onClick={() => navigate("/ligas")}>
                     LIGA
                 </button>
 
-                <button onClick={() => navigate("/amistoso")}>
+                <button onClick={() => navigate("/amistosos")}>
                     AMISTOSO
                 </button>
 
-                <button onClick={() => navigate("/plantel")}>
+                <button onClick={() => navigate("/jugadores")}>
                     PLANTEL
                 </button>
 
