@@ -52,7 +52,7 @@ export default function App() {
 
         <Route element={<AppLayout/>}>
           {/*Ruta MAIN_PAGE*/}
-          <Route path="/main" element={<MenuPrincipal />} />
+          <Route path="/main" element={<MenuPrincipal />}
         </Route>
 
         {/*Rutas liga*/}
