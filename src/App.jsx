@@ -15,10 +15,10 @@ import FormInicioSesion from './containers/Auth/InicioSesion';
 import FormRegistro from './containers/Auth/Registro';
 
 //Contenedores Dashboard/Menu/Hub
-//import MenuPrincipal from './components/MenuPrincipal';
+import MenuPrincipal from './components/MenuPrincipal';
 
-// import MenuJugador from './containers/Jugadores/MenuJugador';
-// import CrearJugador from './containers/Jugadores/CrearJugador';
+import MenuJugador from './containers/Jugadores/MenuJugador';
+import CrearJugador from './containers/Jugadores/CrearJugador';
 
 // import MenuComp from './containers/Comportamientos/MenuComp';
 // import CrearComp from './containers/Comportamientos/CrearComp';
@@ -52,8 +52,7 @@ export default function App() {
 
         <Route element={<AppLayout/>}>
           {/*Ruta MAIN_PAGE*/}
-          {/*<Route path="/main" element={<MenuPrincipal />} />*/}
-          <Route path="/main" element={<ModuloConstruccion />} />
+          <Route path="/main" element={<MenuPrincipal />}
         </Route>
 
         {/*Rutas liga*/}
@@ -68,10 +67,6 @@ export default function App() {
         <Route path="/jugadores" element={<ModuloConstruccion/>} />
         <Route path="/jugadores/crear" element={<ModuloConstruccion/>} />
         
-        {/*Rutas Plantel*/}
-        <Route path="/plantel" element={<ModuloConstruccion/>} />
-        <Route path="/plantel/crear" element={<ModuloConstruccion/>} />
-
         {/*Rutas Comportamiento*/}          
         <Route path="/comportamientos" element={<ModuloConstruccion/>} />
         <Route path="/comportamientos/crear" element={<ModuloConstruccion/>} />
