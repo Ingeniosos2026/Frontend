@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createHttpService } from '../../services/HttpService';
 import UnirAmistosoComp from '../../components/Amistosos/UnirAmistosoComp';
 
-const UnirAmistoso = ({ partido_id }) => {
+const UnirAmistoso = () => {
     const navigate = useNavigate();
     const [mensajeError, setError] = useState(null);
     const { unirseAmistoso } = createHttpService();
     
     const usuarioId = localStorage.getItem('usuario_id');
+    const {partido_id} = useParams();
 
     const handleUnirse = async (equipoData) => {
         try {

@@ -36,8 +36,7 @@ import { useState } from "react";
                         
                         {jugadorDespliegue?.id === jugador.id && (
                         <div>
-                            <button>Eliminar jugador</button>
-                            <button>Ver info de jugador</button>
+                            
                         </div>
                         )}
                     </li>

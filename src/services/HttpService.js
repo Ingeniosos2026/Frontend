@@ -19,8 +19,13 @@ const createHttpService = () => {
         let mensajeBackend = 'Error HTTP: ${response.status}';
 
         try {
-            const errorData = await response.json();
+          const errorData = await response.json();
+          console.error("Respuesta de error del backend:", errorData);
+          if (errorData.mensaje) {
             mensajeBackend = errorData.mensaje;
+          } else if (errorData.detail) {
+            mensajeBackend = JSON.stringify(errorData.detail);
+          }
         } catch (e) {
             console.warn("El servidor no devolvió un JSON de error válido");
         }

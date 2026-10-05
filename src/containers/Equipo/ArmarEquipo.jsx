@@ -10,8 +10,8 @@ const ArmarEquipo = ({ usuario_id, onConfirmar, onCancelar }) => {
     const [error, setError] = useState(null);
     //Error en cantidad de jugadores y/o listas
     const [bloqueoCritico, setBloqueoCritico] = useState(false); 
-    const [equipo, setEquipo] = useState(Array(6).fill({ jugador_id: '', comp_id: ''}));
-    const [formacion, setFormacion] = useState('Ofensivo');
+    const [equipo, setEquipo] = useState(Array(6).fill({ id_jugador: '', id_comportamiento: ''}));
+    const [formacion, setFormacion] = useState('ofensiva');
     const { obtenerJugadores, obtenerComportamientos } = createHttpService();
 
 
@@ -64,24 +64,26 @@ const ArmarEquipo = ({ usuario_id, onConfirmar, onCancelar }) => {
 
     const handleConfirmar = () => {
         if (bloqueoCritico) return;
-
-        //Verificacion de asignacion completa
-        if (equipo.some(slot => !slot.jugador_id || !slot.comp_id)) {
+    
+        // Verificación de asignación completa
+        if (equipo.some(slot => !slot.id_jugador || !slot.id_comportamiento)) {
             setError("Equipo con menos de 6 jugadores con comportamiento asignado");
             return;
         }
-
-        //Verificacion de jugador_id no repetido
-        const idsSeleccionados = equipo.map(slot => slot.jugador_id);
+    
+        // Verificación de jugador_id no repetido
+        const idsSeleccionados = equipo.map(slot => slot.id_jugador);
         const idsUnicos = new Set(idsSeleccionados);
         if (idsUnicos.size !== 6) {
             setError("Jugadores repetidos");
             return;
         }
 
-        //Formato para API
-        const tuplasString = equipo.map(slot => `(${slot.jugador_id},${slot.comp_id})`).join(',');
-        const jugadoresFormateados = `[${tuplasString}]`;
+        // Formato para la API
+        const jugadoresFormateados = equipo.map(slot => ({
+            id_jugador: Number(slot.id_jugador),
+            id_comportamiento: Number(slot.id_comportamiento)
+        }));
 
         onConfirmar({
             jugadores: jugadoresFormateados,
