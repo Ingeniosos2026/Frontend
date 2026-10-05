@@ -45,7 +45,7 @@ const MenuAmistoso = () => {
     };
 
     const manejarUnirseAmistoso = async (partidoId) => {
-        console.log(`Intentando unirse al partido: ${partidoId}`);
+        navigate("/amistosos/unir");
     };
 
     const manejarVolver = () => {
