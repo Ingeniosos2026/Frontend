@@ -46,7 +46,7 @@ const CrearAmistoso = () => {
 
             const respuesta = await httpService.crearAmistoso(usuarioId, partidoData);
             console.log("Amistoso creado", respuesta);
-            navigate(`/amistosos/lobby/${respuesta.id}`);
+            navigate(`/amistosos/lobby/${respuesta.id_partido}`, { state: { esCreador: true } });
         } catch (error) {
             console.error(error);
             setError(error.message);
