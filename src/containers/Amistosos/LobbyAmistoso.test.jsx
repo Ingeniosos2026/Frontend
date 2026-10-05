@@ -35,6 +35,8 @@ describe('LobbyAmistoso', () => {
             iniciarAmistoso: mockIniciarAmistoso,
         });
 
+        vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('1');
+
         wsHandlers = {};
         mockWsConnect = vi.fn();
         mockWsDisconnect = vi.fn();
@@ -60,7 +62,7 @@ describe('LobbyAmistoso', () => {
         expect(screen.getByText('Esperando a que un rival se una a la sala...')).toBeInTheDocument();
         expect(screen.getByText('Esperando a que el creador inicie el partido...')).toBeInTheDocument();
         
-        expect(createWSService).toHaveBeenCalledWith('/ws/partido/15');
+        expect(createWSService).toHaveBeenCalledWith('/ws/amistoso/15');
         expect(mockWsConnect).toHaveBeenCalled();
     });
 
@@ -111,7 +113,7 @@ describe('LobbyAmistoso', () => {
         const botonIniciar = screen.getByRole('button', { name: /Iniciar Amistoso/i });
         fireEvent.click(botonIniciar);
 
-        expect(mockIniciarAmistoso).toHaveBeenCalledWith('15');
+        expect(mockIniciarAmistoso).toHaveBeenCalledWith('15', '1');
         
         await waitFor(() => {
             expect(screen.getByRole('button', { name: /Iniciando.../i })).toBeDisabled();

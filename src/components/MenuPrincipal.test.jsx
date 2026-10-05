@@ -44,7 +44,7 @@ it("muestra la interfaz de liga", () => {
     </MemoryRouter>);
 
     fireEvent.click( screen.getByRole("button", { name: "LIGA" }) );
-        expect(navigateMock).toHaveBeenCalledWith("/liga");
+        expect(navigateMock).toHaveBeenCalledWith("/ligas");
 });
 
 it("muestra la interfaz de amistoso", () => {
@@ -53,7 +53,7 @@ it("muestra la interfaz de amistoso", () => {
     </MemoryRouter>);
 
     fireEvent.click( screen.getByRole("button", { name: "AMISTOSO" }) );
-        expect(navigateMock).toHaveBeenCalledWith("/amistoso");
+        expect(navigateMock).toHaveBeenCalledWith("/amistosos");
 });
 
 it("muestra la interfaz de plantel", () => {
@@ -62,7 +62,7 @@ it("muestra la interfaz de plantel", () => {
     </MemoryRouter>);
 
     fireEvent.click( screen.getByRole("button", { name: "PLANTEL" }) );
-        expect(navigateMock).toHaveBeenCalledWith("/plantel");
+        expect(navigateMock).toHaveBeenCalledWith("/jugadores");
 });
 
 it("muestra la interfaz de comportamientos", () => {

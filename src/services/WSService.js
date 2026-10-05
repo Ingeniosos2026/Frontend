@@ -1,6 +1,9 @@
 const createWSService = (endpoint) => {
   let ws = null;
   let isConnected = false;
+  let desconexionIntencional = false;
+  let timeoutId = null;
+  
   const baseUrl = import.meta.env.VITE_WS_URI || 'ws://localhost:8000';
   const wsUrl = `${baseUrl}${endpoint}`; 
   const listeners = {};
@@ -13,6 +16,13 @@ const createWSService = (endpoint) => {
 
   const connect = () => {
     try {
+      desconexionIntencional = false; 
+      
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
       ws = new WebSocket(wsUrl);
       
       ws.onopen = () => {
@@ -32,12 +42,18 @@ const createWSService = (endpoint) => {
       ws.onclose = () => {
         console.log(`WebSocket desconectado de: ${endpoint}`);
         isConnected = false;
-        setTimeout(() => connect(), 3000);
+        
+        if (!desconexionIntencional) {
+            console.log(`Intentando reconectar a ${endpoint} en 3 segundos...`);
+            timeoutId = setTimeout(() => connect(), 3000); 
+        }
       };
       
       ws.onerror = (error) => {
         isConnected = false;
-        console.error(`WebSocket error en ${endpoint}:`, error);
+        if (!desconexionIntencional) {
+            console.error(`WebSocket error en ${endpoint}:`, error);
+        }
       };
     } catch (error) {
       isConnected = false;
@@ -59,6 +75,13 @@ const createWSService = (endpoint) => {
   };
 
   const disconnect = () => {
+    desconexionIntencional = true; 
+    
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+
     if (ws) {
       ws.close();
     }
