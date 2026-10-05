@@ -20,7 +20,7 @@ import MenuPrincipal from './components/MenuPrincipal';
 import MenuJugador from './containers/Jugadores/MenuJugador';
 import CrearJugador from './containers/Jugadores/CrearJugador';
 
-// import MenuComp from './containers/Comportamientos/MenuComp';
+import MenuComp from './containers/Comportamientos/MenuComp';
 // import CrearComp from './containers/Comportamientos/CrearComp';
 // import EditarComp from './containers/Comportamientos/EditarComp';
 
@@ -32,7 +32,7 @@ import MenuLigaLogic from './containers/Ligas/MenuLiga';
 // //Contenedores Amistoso
 import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
 import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
-// import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
+import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 // //Contenedor Partidp
 // import Partido from './containers/partido';
@@ -52,7 +52,7 @@ export default function App() {
 
         <Route element={<AppLayout/>}>
           {/*Ruta MAIN_PAGE*/}
-          <Route path="/main" element={<MenuPrincipal />}
+          <Route path="/main" element={<MenuPrincipal />} />
         </Route>
 
         {/*Rutas liga*/}
@@ -68,14 +68,14 @@ export default function App() {
         <Route path="/jugadores/crear" element={<CrearJugador/>} />
 
         {/*Rutas Comportamiento*/}          
-        <Route path="/comportamientos" element={<ModuloConstruccion/>} />
+        <Route path="/comportamientos" element={<MenuComp/>} />
         <Route path="/comportamientos/crear" element={<ModuloConstruccion/>} />
         <Route path="/comportamientos/editar/:comp_id" element={<ModuloConstruccion/>} />
 
         {/*Rutas Lobby*/} 
         <Route element={<LobbyLayout />}>   
           <Route path="/ligas/lobby/:liga_id" element={<ModuloConstruccion/>} />
-          <Route path="/amistosos/lobby/:partido_id" element={<ModuloConstruccion/>} />
+          <Route path="/amistosos/lobby/:partido_id" element={<LobbyAmistoso/>} />
         </Route>
 
         {/*Ruta Partido*/} 
