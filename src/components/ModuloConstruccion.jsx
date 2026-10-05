@@ -17,7 +17,6 @@ const ModuloConstruccion = () =>  {
                 </p>
                 <hr />
                 <div className="d-flex justify-content-center mt-4">
-                    {/* Utiliza useNavigate para retornar limpiamente al menú principal[cite: 1] */}
                     <Button 
                         variant="secondary" 
                         onClick={() => navigate('/main')}

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 //IMPORTACION DE CONTENEDORES
 import ModuloConstruccion from './components/ModuloConstruccion';
 
-//Layouts (Envolturas visuales)
+//LAYOUTS (PLANTILAS DE BACKGROUND)
 import AuthLayout from './layouts/AuthLayout';
 import AppLayout from './layouts/AppLayout';
 import LobbyLayout from './layouts/LobbyLayout';
@@ -25,7 +25,7 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 // import EditarComp from './containers/Comportamientos/EditarComp';
 
 //Contenedores Liga
-import MenuLigaLogic from './containers/Ligas/MenuLiga';
+//import MenuLigaLogic from './containers/Ligas/MenuLiga';
 // import CrearLiga from './containers/Ligas/CrearLiga';
 // import LobbyLiga from './containers/Ligas/LobbyLiga';
 
@@ -46,31 +46,31 @@ export default function App() {
       
         {/*Rutas Auth*/}
         <Route element={<AuthLayout/>}>
-          <Route path="/auth" element={<MenuInicio />} />
           <Route path="/auth/login" element={<FormInicioSesion/>} />
           <Route path="/auth/registro" element={<FormRegistro />} />
         </Route>
 
         <Route element={<AppLayout/>}>
-          {/*Ruta MAIN_PAGE*/}
+          <Route path="/auth" element={<MenuInicio />} />
           <Route path="/main" element={<MenuPrincipal />} />
+          <Route path="/ligas" element={<ModuloConstruccion />} />
+          <Route path="/amistosos" element={<MenuAmistoso />} />
+          <Route path="/jugadores" element={<MenuJugador />} />
+          <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
 
         {/*Rutas liga*/}
-        <Route path="/ligas" element={<MenuLigaLogic />} />
+
         <Route path="/ligas/crear" element={<ModuloConstruccion />} />
 
         {/*Rutas Amistoso*/}
-        <Route path="/amistosos" element={<MenuAmistoso />} />
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />
         <Route path="/amistosos/unir/:partido_id" element={<UnirAmistoso />} />
 
         {/*Rutas Jugador*/}
-        <Route path="/jugadores" element={<MenuJugador />} />
         <Route path="/jugadores/crear" element={<CrearJugador/>} />
 
         {/*Rutas Comportamiento*/}          
-        <Route path="/comportamientos" element={<MenuComp/>} />
         <Route path="/comportamientos/crear" element={<ModuloConstruccion/>} />
         <Route path="/comportamientos/editar/:comp_id" element={<ModuloConstruccion/>} />
 
