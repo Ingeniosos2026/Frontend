@@ -36,7 +36,7 @@ import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
 import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
-// import Partido from './containers/partido';
+import Partido from './containers/Partido';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -82,7 +82,7 @@ export default function App() {
 
         {/*Ruta Partido*/} 
         <Route element={<GameLayout />}>
-          <Route path="/partido/:partido_id" element={<ModuloConstruccion/>} />
+          <Route path="/partido/:partido_id" element={<Partido/>} />
         </Route>
 
         <Route 

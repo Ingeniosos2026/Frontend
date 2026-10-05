@@ -6,6 +6,8 @@ import LobbyAmistosoComp from '../../components/Amistosos/LobbyAmistosoComp';
 
 const LobbyAmistoso = () => {
     const { partido_id } = useParams();
+    const usuarioId = localStorage.getItem('usuario_id');
+
     const navigate = useNavigate();
     const location = useLocation();
     
@@ -18,7 +20,7 @@ const LobbyAmistoso = () => {
     const [iniciando, setIniciando] = useState(false);
 
     useEffect(() => {
-        const wsEndpoint = `/ws/partido/${partido_id}`;
+        const wsEndpoint = `/ws/amistoso/${partido_id}`;
         const wsService = createWSService(wsEndpoint);
 
         wsService.connect();
@@ -51,7 +53,7 @@ const LobbyAmistoso = () => {
     const manejarIniciarPartido = async () => {
         try {
             setIniciando(true);
-            await httpService.iniciarAmistoso(partido_id);
+            await httpService.iniciarAmistoso(partido_id, usuarioId);
         } catch (error) {
             console.error("Error al iniciar el partido:", error);
             setIniciando(false);
