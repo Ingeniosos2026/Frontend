@@ -19,8 +19,33 @@ vi.mock('../Equipo/ArmarEquipo', () => ({
         <div data-testid="mock-armar-equipo">
             <button 
                 onClick={() => onConfirmar({ 
-                    jugadores: [[1, 101], [2, 102], [3, 103], [4, 104], [5, 105], [6, 106]],
-                    formacion: "C-FORMACION" 
+                    jugadores: [
+                        {
+                            id_jugador: 1,
+                            id_comportamiento: 101
+                        },
+                        {
+                            id_jugador: 2,
+                            id_comportamiento: 102
+                        },
+                        {
+                            id_jugador: 3,
+                            id_comportamiento: 103
+                        },
+                        {
+                            id_jugador: 4,
+                            id_comportamiento: 104
+                        },
+                        {
+                            id_jugador: 5,
+                            id_comportamiento: 105
+                        },
+                        {
+                            id_jugador: 6,
+                            id_comportamiento: 106
+                        }
+                    ],
+                    formacion: "c" 
                 })}
             >
                 Confirmar Equipo
@@ -77,7 +102,7 @@ describe('CrearAmistoso', () => {
     });
 
     it('envía datos combinados al backend y navega al lobby si todo es válido', async () => {
-        mockCrearAmistoso.mockResolvedValue({ id: 99 });
+        mockCrearAmistoso.mockResolvedValue({ id_partido: 99 });
 
         render(<CrearAmistoso />);
         avanzarAPaso2();
@@ -91,10 +116,40 @@ describe('CrearAmistoso', () => {
         await waitFor(() => {
             expect(mockCrearAmistoso).toHaveBeenCalledWith('1', {
                 duracion: 15,
-                jugadores: [[1, 101], [2, 102], [3, 103], [4, 104], [5, 105], [6, 106]],
-                formacion: "C-FORMACION"
+                jugadores: [
+                    {
+                        id_jugador: 1,
+                        id_comportamiento: 101
+                    },
+                    {
+                        id_jugador: 2,
+                        id_comportamiento: 102
+                    },
+                    {
+                        id_jugador: 3,
+                        id_comportamiento: 103
+                    },
+                    {
+                        id_jugador: 4,
+                        id_comportamiento: 104
+                    },
+                    {
+                        id_jugador: 5,
+                        id_comportamiento: 105
+                    },
+                    {
+                        id_jugador: 6,
+                        id_comportamiento: 106
+                    }
+                ],
+                formacion: "c"
             });
-            expect(mockNavigate).toHaveBeenCalledWith('/amistosos/lobby/99');
+            expect(mockNavigate).toHaveBeenCalledWith(
+                '/amistosos/lobby/99',
+                {
+                    state: { esCreador: true }
+                }
+            );
         });
     });
 

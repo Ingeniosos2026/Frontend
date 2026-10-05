@@ -116,7 +116,7 @@ describe("ArmarEquipo Logic Container", () => {
         const selects = screen.getAllByRole("combobox");
 
         for (let i = 0; i < 6; i++) {
-             fireEvent.change(selects[i * 2], { target: { value: '1' } }); // Todos eligen al Jugador 1
+             fireEvent.change(selects[i * 2], { target: { value: '1' } });
             fireEvent.change(selects[i * 2 + 1], { target: { value: '101' } }); 
         }
 
@@ -126,7 +126,7 @@ describe("ArmarEquipo Logic Container", () => {
         expect(mockOnConfirmar).not.toHaveBeenCalled();
     });
 
-    it("formatea el string correctamente y envia al confirmar un equipo válido", async () => {
+    it("formatea los datos como array de objetos y envia al confirmar un equipo válido", async () => {
         mockObtenerJugadores.mockResolvedValue({
             disponibles: [
                 { id: '1', nombre: 'J1' }, { id: '2', nombre: 'J2' }, { id: '3', nombre: 'J3' },
@@ -151,8 +151,15 @@ describe("ArmarEquipo Logic Container", () => {
         fireEvent.click(screen.getByRole("button", { name: "Confirmar Equipo" }));
 
         expect(mockOnConfirmar).toHaveBeenCalledWith({
-            jugadores: "[(1,101),(2,101),(3,101),(4,101),(5,101),(6,101)]",
-            formacion: "Ofensivo"
+            jugadores: [
+                { id_jugador: 1, id_comportamiento: 101 },
+                { id_jugador: 2, id_comportamiento: 101 },
+                { id_jugador: 3, id_comportamiento: 101 },
+                { id_jugador: 4, id_comportamiento: 101 },
+                { id_jugador: 5, id_comportamiento: 101 },
+                { id_jugador: 6, id_comportamiento: 101 }
+            ],
+            formacion: "ofensiva"
         });
     });
 

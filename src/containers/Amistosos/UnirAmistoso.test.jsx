@@ -2,15 +2,17 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import UnirAmistoso from "./UnirAmistoso";
 import { createHttpService } from "../../services/HttpService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-//MOCKS
 vi.mock("react-router-dom", () => ({
     useNavigate: vi.fn(),
+    useParams: vi.fn(),
 }));
+
 vi.mock("../../services/HttpService", () => ({
     createHttpService: vi.fn(),
 }));
+
 vi.mock("../../components/Amistosos/UnirAmistosoComp", () => ({
     default: (props) => (
         <div data-testid="unir-amistoso-mock">
@@ -19,7 +21,10 @@ vi.mock("../../components/Amistosos/UnirAmistosoComp", () => ({
             
             <button 
                 data-testid="btn-confirmar" 
-                onClick={() => props.onConfirmar({ jugadores: "[(1,101)]", formacion: "Ofensivo" })}
+                onClick={() => props.onConfirmar({ 
+                    jugadores: [{ id_jugador: 1, id_comportamiento: 101 }], 
+                    formacion: "ofensiva" 
+                })}
             >
                 Confirmar
             </button>
@@ -30,30 +35,36 @@ vi.mock("../../components/Amistosos/UnirAmistosoComp", () => ({
     )
 }));
 
-
-describe("Unitests sobre container: UnirAmistoso ", () => {
+describe("Unitests sobre container: UnirAmistoso", () => {
     const mockUnirseAmistoso = vi.fn();
     const mockNavigate = vi.fn();
     
     beforeEach(() => {
         vi.clearAllMocks();
-        localStorage.setItem("usuario_id", "42");
+        
+        vi.spyOn(Storage.prototype, 'getItem').mockReturnValue("42");
+        
         createHttpService.mockReturnValue({
             unirseAmistoso: mockUnirseAmistoso
         });
+        
         useNavigate.mockReturnValue(mockNavigate);
+        useParams.mockReturnValue({ partido_id: "99" });
     });
 
     it("redireccion a lobby en caso de exito al unirse a Amistoso", async () => {
-
         mockUnirseAmistoso.mockResolvedValue({ id: 99, status: "ok" });
-        render(<UnirAmistoso partido_id={99} />);
+        
+        render(<UnirAmistoso />);
         fireEvent.click(screen.getByTestId("btn-confirmar"));
 
         expect(mockUnirseAmistoso).toHaveBeenCalledWith(
-            99, 
+            "99", 
             "42", 
-            { jugadores: "[(1,101)]", formacion: "Ofensivo" }
+            { 
+                jugadores: [{ id_jugador: 1, id_comportamiento: 101 }], 
+                formacion: "ofensiva" 
+            }
         );
 
         await waitFor(() => {
@@ -64,7 +75,7 @@ describe("Unitests sobre container: UnirAmistoso ", () => {
     });
 
     it("redireccion a Menu Amistoso en caso de cancelar", () => {
-        render(<UnirAmistoso partido_id={99} />);
+        render(<UnirAmistoso />);
         fireEvent.click(screen.getByTestId("btn-cancelar"));
 
         expect(mockNavigate).toHaveBeenCalledWith("/amistosos");
@@ -73,7 +84,8 @@ describe("Unitests sobre container: UnirAmistoso ", () => {
 
     it("captura de errores en caso de error al unirse a Amistoso", async () => {
         mockUnirseAmistoso.mockRejectedValue(new Error("El partido ya se encuentra lleno."));
-        render(<UnirAmistoso partido_id={99} />);
+        
+        render(<UnirAmistoso />);
 
         fireEvent.click(screen.getByTestId("btn-confirmar"));
 
