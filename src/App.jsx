@@ -29,13 +29,13 @@ import MenuLigaLogic from './containers/Ligas/MenuLiga';
 // import CrearLiga from './containers/Ligas/CrearLiga';
 // import LobbyLiga from './containers/Ligas/LobbyLiga';
 
-// //Contenedores Amistoso
+//Contenedores Amistoso
 import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
 import UnirAmistoso from './containers/Amistosos/UnirAmistoso';
 import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
 import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
-// //Contenedor Partidp
+//Contenedor Partido
 // import Partido from './containers/partido';
 
 export default function App() {
@@ -62,8 +62,8 @@ export default function App() {
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos" element={<MenuAmistoso />} />
-        <Route path="/amistosos/crear" element={<ModuloConstruccion />} />
-        <Route path="/amistosos/unir" element={<UnirAmistoso />} />
+        <Route path="/amistosos/crear" element={<CrearAmistoso />} />
+        <Route path="/amistosos/unir/:partido_id" element={<UnirAmistoso />} />
 
         {/*Rutas Jugador*/}
         <Route path="/jugadores" element={<MenuJugador />} />

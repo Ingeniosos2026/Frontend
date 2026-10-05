@@ -25,8 +25,8 @@ const ArmarEquipoComp = ({
                     <div key={`slot-${index}`}>
                         
                         <select 
-                            value={slot.jugador_id} 
-                            onChange={(e) => onSeleccion(index, 'jugador_id', e.target.value)}
+                            value={slot.id_jugador} 
+                            onChange={(e) => onSeleccion(index, 'id_jugador', e.target.value)}
                         >
                             <option value="">Seleccionar Jugador...</option>
                             {listaJugadores.map(jugador => (
@@ -37,8 +37,8 @@ const ArmarEquipoComp = ({
                         </select>
 
                         <select 
-                            value={slot.comp_id} 
-                            onChange={(e) => onSeleccion(index, 'comp_id', e.target.value)}
+                            value={slot.id_comportamiento} 
+                            onChange={(e) => onSeleccion(index, 'id_comportamiento', e.target.value)}
                         >
                             <option value="">Asignar Comportamiento...</option>
                             {listaComportamientos.map(comp => (
@@ -54,10 +54,10 @@ const ArmarEquipoComp = ({
             <div>
                 <h3>Formación Inicial</h3>
                 <select value={formacion} onChange={onFormacionChange}>
-                    <option value="Ofensivo">Ofensivo</option>
-                    <option value="Defensivo">Defensivo</option>
-                    <option value="C-formacion">C-formación</option>
-                    <option value="D-formacion">D-formación</option>
+                    <option value="ofensiva">Ofensivo</option>
+                    <option value="defensiva">Defensivo</option>
+                    <option value="c">C-formación</option>
+                    <option value="d">D-formación</option>
                 </select>
             </div>
 

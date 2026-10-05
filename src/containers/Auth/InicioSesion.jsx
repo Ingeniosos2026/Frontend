@@ -17,7 +17,7 @@ const FormInicioSesion = () => {
         try {
             const res = await iniciarSesion(data);
             console.log("Usuario logueado", res);
-            localStorage.setItem("usuario_id", res.usuario_id)
+            localStorage.setItem("usuario_id", res.id)
             setMensaje("Login realizado con exito!");
             navigate("/main"); 
         } catch (error) {

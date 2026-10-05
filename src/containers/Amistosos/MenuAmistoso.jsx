@@ -45,7 +45,7 @@ const MenuAmistoso = () => {
     };
 
     const manejarUnirseAmistoso = async (partidoId) => {
-        navigate("/amistosos/unir");
+        navigate(`/amistosos/unir/${partidoId}`);
     };
 
     const manejarVolver = () => {
@@ -65,4 +65,3 @@ const MenuAmistoso = () => {
 };
 
 export default MenuAmistoso;
-
