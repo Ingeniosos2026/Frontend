@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Medidas lógicas de tu backend en Python
 const CANCHA_ANCHO = 100;
 const CANCHA_ALTO = 60;
 
@@ -10,7 +9,6 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
     const navigate = useNavigate();
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
     
-    // Obtenemos tu ID para saber de qué color pintar a tus jugadores
     const miUsuarioId = String(localStorage.getItem('usuario_id'));
 
     // Actualiza las medidas si el usuario redimensiona la ventana
@@ -26,18 +24,18 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
         actualizarMedidas();
         window.addEventListener('resize', actualizarMedidas);
         return () => window.removeEventListener('resize', actualizarMedidas);
-    }, [estadoJuego]); // Re-calcula cuando carga el primer frame
+    }, [estadoJuego]);
 
     const manejarVolver = () => {
         navigate('/amistosos');
     };
 
-    // Función matemática para mapear coordenadas
+
     const escalar = (coord_back, tope_back, tope_front) => {
         return (coord_back / tope_back) * tope_front;
     };
 
-    // Formatear segundos a reloj digital (ej. 5.033 -> "00:05")
+
     const formatearReloj = (segundosTotales) => {
         if (!segundosTotales) return "00:00";
         const minutos = Math.floor(segundosTotales / 60);
@@ -45,7 +43,7 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
         return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
     };
 
-    // 1. ESTADO DE CARGA
+
     if (!estadoJuego && !partidoTerminado) {
         return (
             <div style={{ textAlign: 'center', marginTop: '50px' }}>
@@ -54,7 +52,6 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
         );
     }
 
-    // 2. ESTADO FINALIZADO
     if (partidoTerminado) {
         const golesIzq = resultadoFinal?.goles?.izquierdo || 0;
         const golesDer = resultadoFinal?.goles?.derecho || 0;
@@ -75,10 +72,10 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
         );
     }
 
-    // 3. ESTADO EN CURSO (Desestructuramos el JSON)
+
     const { tiempo, pelota, jugadores, goles, estados_jugadores } = estadoJuego;
 
-    // Convertimos la lista de estados_jugadores a un diccionario para búsqueda ultrarrápida
+
     const mapaEstados = {};
     estados_jugadores?.forEach(e => {
         mapaEstados[`${e.id_usuario}-${e.id_jugador}`] = e.estado;
@@ -87,7 +84,6 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
             
-            {/* --- SCOREBOARD --- */}
             <div style={{ 
                 display: 'flex', 
                 justifyContent: 'center', 
@@ -121,7 +117,7 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
                 </div>
             </div>
 
-            {/* --- LA CANCHA --- */}
+            {/* ---CANCHA --- */}
             <div 
                 ref={canchaRef}
                 style={{ 
@@ -134,7 +130,7 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
                     overflow: 'hidden'
                 }}
             >
-                {/* LÍNEA DE MITAD DE CANCHA (Decoración) */}
+                {/* LÍNEA DE MITAD DE CANCHA*/}
                 <div style={{
                     position: 'absolute',
                     left: '50%', top: 0, bottom: 0,

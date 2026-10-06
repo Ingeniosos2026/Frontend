@@ -3,23 +3,27 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import CrearJugador from './CrearJugador';
 import { createHttpService } from '../../services/HttpService.js';
+import { MemoryRouter } from 'react-router-dom';
 
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', () => ({
-    useNavigate: () => mockNavigate,
-}));
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+    };
+});
 
 vi.mock('../../services/HttpService.js', () => ({
     createHttpService: vi.fn(),
 }));
 
-describe('CrearJugador', () => {
-    let mockCrearJugador;
+describe('CrearJugador Logic Container', () => {
+    const mockCrearJugador = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
         
-        mockCrearJugador = vi.fn();
         createHttpService.mockReturnValue({
             crearJugador: mockCrearJugador,
         });
@@ -28,9 +32,9 @@ describe('CrearJugador', () => {
     });
 
     it('renderiza con valores por defecto que suman 300 y el botón habilitado', () => {
-        render(<CrearJugador />);
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const textoTotal = screen.getByText(/Total: 300\/300/i);
+        const textoTotal = screen.getByText(/Total Asignado: 300 \/ 300/i);
         const botonCrear = screen.getByRole('button', { name: /Crear Jugador/i });
 
         expect(textoTotal).toBeInTheDocument();
@@ -38,25 +42,25 @@ describe('CrearJugador', () => {
     });
 
     it('deshabilita el botón de crear si los puntos no suman 300', async () => {
-        render(<CrearJugador />);
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const inputPower = screen.getByLabelText(/power:/i);
+        const inputPower = screen.getByLabelText(/power/i);
         const botonCrear = screen.getByRole('button', { name: /Crear Jugador/i });
 
         fireEvent.change(inputPower, { target: { value: '50' } });
 
         await waitFor(() => {
-            expect(screen.getByText(/Total: 290\/300/i)).toBeInTheDocument();
+            expect(screen.getByText(/Total Asignado: 290 \/ 300/i)).toBeInTheDocument();
             expect(botonCrear).toBeDisabled();
         });
     });
 
     it('muestra error de validación al intentar enviar si un atributo es menor a 20', async () => {
-        render(<CrearJugador />);
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const inputAgility = screen.getByLabelText(/agility:/i);
-        const inputPower = screen.getByLabelText(/power:/i);
-        const inputSpeed = screen.getByLabelText(/speed:/i);
+        const inputAgility = screen.getByLabelText(/agility/i);
+        const inputPower = screen.getByLabelText(/power/i);
+        const inputSpeed = screen.getByLabelText(/speed/i);
         const botonCrear = screen.getByRole('button', { name: /Crear Jugador/i });
         
         fireEvent.change(inputAgility, { target: { value: '10' } });
@@ -65,11 +69,10 @@ describe('CrearJugador', () => {
         fireEvent.change(inputSpeed, { target: { value: '85' } });
         
         expect(botonCrear).not.toBeDisabled();
-
         fireEvent.click(botonCrear);
 
         await waitFor(() => {
-            expect(screen.getByText('El mínimo es 20')).toBeInTheDocument();
+            expect(screen.getByText(/Mínimo 20/i)).toBeInTheDocument();
         });
     });
 
@@ -84,16 +87,17 @@ describe('CrearJugador', () => {
             strength: 60
         });
 
-        render(<CrearJugador />);
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const inputNombre = screen.getByLabelText(/Nombre del Jugador:/i);
-        const inputPower = screen.getByLabelText(/power:/i);
-        const inputSpeed = screen.getByLabelText(/speed:/i);
+        const inputNombre = screen.getByLabelText(/Nombre del Jugador/i);
+        const inputPower = screen.getByLabelText(/power/i);
+        const inputSpeed = screen.getByLabelText(/speed/i);
         const botonCrear = screen.getByRole('button', { name: /Crear Jugador/i });
 
         fireEvent.change(inputNombre, { target: { value: 'Schott' } });
         fireEvent.change(inputPower, { target: { value: '50' } });
         fireEvent.change(inputSpeed, { target: { value: '70' } });
+        expect(botonCrear).not.toBeDisabled();
         fireEvent.click(botonCrear);
 
         await waitFor(() => {
@@ -112,24 +116,24 @@ describe('CrearJugador', () => {
     it('muestra un mensaje de error si la petición HTTP falla', async () => {
         mockCrearJugador.mockRejectedValue(new Error('Servidor caído'));
 
-        render(<CrearJugador />);
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const inputNombre = screen.getByLabelText(/Nombre del Jugador:/i);
+        const inputNombre = screen.getByLabelText(/Nombre del Jugador/i);
         const botonCrear = screen.getByRole('button', { name: /Crear Jugador/i });
 
         fireEvent.change(inputNombre, { target: { value: 'Depietri' } });
         fireEvent.click(botonCrear);
 
         await waitFor(() => {
-            expect(screen.getByText(/Error: Servidor caído/i)).toBeInTheDocument();
+            expect(screen.getByText(/Servidor caído/i)).toBeInTheDocument();
             expect(mockNavigate).not.toHaveBeenCalled();
         });
     });
 
-    it('navega a /jugadores al presionar el botón "Volver"', () => {
-        render(<CrearJugador />);
+    it('navega a /jugadores al presionar el botón "Cancelar"', () => {
+        render(<MemoryRouter><CrearJugador /></MemoryRouter>);
         
-        const botonVolver = screen.getByRole('button', { name: /Volver/i });
+        const botonVolver = screen.getByRole('button', { name: /Cancelar/i });
         fireEvent.click(botonVolver);
 
         expect(mockNavigate).toHaveBeenCalledWith('/jugadores');

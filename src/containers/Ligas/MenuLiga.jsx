@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import MenuLiga from '../../components/Ligas/MenuLiga';
 import { createHttpService } from '../../services/HttpService';
 
-const MenuLigaLogic = ({ usuario_id }) => {
+const MenuLigaLogic = ({ }) => {
     const navigate = useNavigate();
     const [interfaz, setInterfaz] = useState("ModuloConstruccion");
-    //const [misLigas, setMisLigas] = useState([]);
     const [ligasDisponibles, setLigasDisponibles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -21,7 +20,6 @@ const MenuLigaLogic = ({ usuario_id }) => {
             try {
                 const res = await obtenerLigas();
                 setLigasDisponibles(res.disponibles || res || []);
-                //setMisLigas(res.misLigas || []);
             
             } catch (error) {
                 console.error("Error al intentar obtener las ligas:", error);
@@ -51,7 +49,6 @@ const MenuLigaLogic = ({ usuario_id }) => {
     return (
         <MenuLiga 
             ligasDisponibles={ligasDisponibles}
-            //misLigas={misLigas}
             loading={loading}
             error={error}
             CrearLiga={handleCrearLiga}

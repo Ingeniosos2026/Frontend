@@ -17,10 +17,7 @@ vi.mock("react-router-dom", async () => {
 it("muestra el menú inicialmente", () => {
     render(<MenuInicio />);
 
-    expect(
-        screen.getByText("Bienvenido")
-    ).toBeTruthy();
-
+    expect(screen.getByText(/FutBot/i)).toBeTruthy();
     expect(
         screen.getByRole("button", { name: "Registrarse" })
     ).toBeTruthy();

@@ -173,7 +173,7 @@ describe("ArmarEquipo Logic Container", () => {
             expect(screen.queryByText("Cargando jugadores y comportamientos...")).toBeNull();
         });
 
-        fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+        fireEvent.click(screen.getByRole("button", { name: /Cancelar/i }));
 
         expect(mockOnCancelar).toHaveBeenCalledTimes(1);
     });
