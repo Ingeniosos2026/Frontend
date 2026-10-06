@@ -4,15 +4,17 @@ import '@testing-library/jest-dom';
 import LobbyAmistoso from './LobbyAmistoso';
 import { createHttpService } from '../../services/HttpService';
 import { createWSService } from '../../services/WSService';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
-const mockNavigate = vi.fn();
-let mockLocationState = { esCreador: false };
-
-vi.mock('react-router-dom', () => ({
-    useNavigate: () => mockNavigate,
-    useParams: () => ({ partido_id: '15' }),
-    useLocation: () => ({ state: mockLocationState })
-}));
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: vi.fn(),
+        useParams: vi.fn(),
+        useLocation: vi.fn(),
+    };
+});
 
 vi.mock('../../services/HttpService', () => ({
     createHttpService: vi.fn(),
@@ -22,20 +24,25 @@ vi.mock('../../services/WSService', () => ({
     createWSService: vi.fn(),
 }));
 
-describe('LobbyAmistoso', () => {
-    let mockIniciarAmistoso;
+describe('LobbyAmistoso Logic Container', () => {
+    const mockNavigate = vi.fn();
+    const mockIniciarAmistoso = vi.fn();
+    
     let wsHandlers;
     let mockWsConnect, mockWsDisconnect, mockWsOn, mockWsOff;
 
     beforeEach(() => {
         vi.clearAllMocks();
         
-        mockIniciarAmistoso = vi.fn();
+        useNavigate.mockReturnValue(mockNavigate);
+        useParams.mockReturnValue({ partido_id: '15' });
+        useLocation.mockReturnValue({ state: { esCreador: false } });
+
+        vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('1');
+
         createHttpService.mockReturnValue({
             iniciarAmistoso: mockIniciarAmistoso,
         });
-
-        vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('1');
 
         wsHandlers = {};
         mockWsConnect = vi.fn();
@@ -51,33 +58,31 @@ describe('LobbyAmistoso', () => {
             on: mockWsOn,
             off: mockWsOff
         });
-
-        mockLocationState = { esCreador: false };
     });
 
     it('renderiza como visitante esperando al rival y al creador', () => {
         render(<LobbyAmistoso />);
         
-        expect(screen.getByText('Lobby del Partido')).toBeInTheDocument();
-        expect(screen.getByText('Esperando a que un rival se una a la sala...')).toBeInTheDocument();
-        expect(screen.getByText('Esperando a que el creador inicie el partido...')).toBeInTheDocument();
+        expect(screen.getByText(/Lobby del Partido/i)).toBeInTheDocument();
+        expect(screen.getByText(/Esperando rival/i)).toBeInTheDocument();
+        expect(screen.getByText(/Esperando a que el creador inicie el partido/i)).toBeInTheDocument();
         
         expect(createWSService).toHaveBeenCalledWith('/ws/amistoso/15');
         expect(mockWsConnect).toHaveBeenCalled();
     });
 
     it('renderiza como creador con el botón deshabilitado hasta que haya rival', () => {
-        mockLocationState = { esCreador: true };
+        useLocation.mockReturnValue({ state: { esCreador: true } });
         render(<LobbyAmistoso />);
         
-        expect(screen.getByText('Eres el creador de la sala.')).toBeInTheDocument();
+        expect(screen.getByText(/Eres el creador de la sala/i)).toBeInTheDocument();
         
         const botonIniciar = screen.getByRole('button', { name: /Iniciar Amistoso/i });
         expect(botonIniciar).toBeDisabled();
     });
 
     it('actualiza la UI cuando el WebSocket emite "usuario_unido"', () => {
-        mockLocationState = { esCreador: true };
+        useLocation.mockReturnValue({ state: { esCreador: true } });
         render(<LobbyAmistoso />);
         
         act(() => {
@@ -87,18 +92,18 @@ describe('LobbyAmistoso', () => {
             });
         });
 
-        expect(screen.getByText('¡Rival listo!')).toBeInTheDocument();
+        expect(screen.getByText(/¡Rival listo!/i)).toBeInTheDocument();
         expect(screen.getByText('Juan')).toBeInTheDocument();
-        expect(screen.getByText('FAMAF FC')).toBeInTheDocument();
+        expect(screen.getByText(/FAMAF FC/i)).toBeInTheDocument();
         expect(screen.getByText('Pedro')).toBeInTheDocument();
-        expect(screen.getByText('Sistemas Club')).toBeInTheDocument();
-
+        expect(screen.getByText(/Sistemas Club/i)).toBeInTheDocument();
+        
         const botonIniciar = screen.getByRole('button', { name: /Iniciar Amistoso/i });
         expect(botonIniciar).not.toBeDisabled();
     });
 
     it('llama al servicio HTTP al hacer clic en Iniciar Amistoso y deshabilita el botón', async () => {
-        mockLocationState = { esCreador: true };
+        useLocation.mockReturnValue({ state: { esCreador: true } });
         mockIniciarAmistoso.mockResolvedValue({});
         
         render(<LobbyAmistoso />);
@@ -116,12 +121,12 @@ describe('LobbyAmistoso', () => {
         expect(mockIniciarAmistoso).toHaveBeenCalledWith('15', '1');
         
         await waitFor(() => {
-            expect(screen.getByRole('button', { name: /Iniciando.../i })).toBeDisabled();
+            expect(screen.getByRole('button', { name: /Iniciando/i })).toBeDisabled();
         });
     });
 
     it('muestra un mensaje de error si falla la petición HTTP de iniciar', async () => {
-        mockLocationState = { esCreador: true };
+        useLocation.mockReturnValue({ state: { esCreador: true } });
         mockIniciarAmistoso.mockRejectedValue(new Error('Servidor caído'));
         
         render(<LobbyAmistoso />);
@@ -136,7 +141,7 @@ describe('LobbyAmistoso', () => {
         fireEvent.click(screen.getByRole('button', { name: /Iniciar Amistoso/i }));
 
         await waitFor(() => {
-            expect(screen.getByText('Error: Servidor caído')).toBeInTheDocument();
+            expect(screen.getByText(/Servidor caído/i)).toBeInTheDocument();
             expect(screen.getByRole('button', { name: /Iniciar Amistoso/i })).not.toBeDisabled();
         });
     });

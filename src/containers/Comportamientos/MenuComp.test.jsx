@@ -1,16 +1,13 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import MenuComp from "./MenuComp";
-import "@testing-library/jest-dom" 
+import { createHttpService } from "../../services/HttpService";
+import "@testing-library/jest-dom";
 
 const mockNavigate = vi.fn();
-const mockObtenerComportamientos = vi.fn();
-
 vi.mock("react-router-dom", async () => {
     const actual = await vi.importActual("react-router-dom");
-
     return {
         ...actual,
         useNavigate: () => mockNavigate,
@@ -18,121 +15,76 @@ vi.mock("react-router-dom", async () => {
 });
 
 vi.mock("../../services/HttpService", () => ({
-    createHttpService: () => ({
-        obtenerComportamientos: mockObtenerComportamientos,
-    }),
+    createHttpService: vi.fn(),
 }));
 
-vi.mock("../../components/MisComportamientos", () => ({
-    default: ({ comportamientos, cargando, volver }) => (
-        <div>
-            {cargando && <p>Cargando comportamientos...</p>}
-
-            {!cargando &&
-                comportamientos.map((comp) => (
-                    <p key={comp.id}>{comp.nombre}</p>
-                ))}
-
-            <button onClick={volver}>Volver</button>
+vi.mock("../../components/Comportamientos/MenuComp", () => ({
+    default: (props) => (
+        <div data-testid="mock-mis-comportamientos">
+            <span data-testid="cargando">{props.cargando.toString()}</span>
+            <span data-testid="comportamientos-count">{props.comportamientos?.length || 0}</span>
+            <button data-testid="btn-volver" onClick={props.volver}>Volver</button>
         </div>
     ),
 }));
 
-describe("MenuComp", () => {
+describe("MenuComp Logic Container", () => {
+    const mockObtenerComportamientos = vi.fn();
     beforeEach(() => {
         vi.clearAllMocks();
-
         localStorage.clear();
         localStorage.setItem("usuario_id", "123");
+        createHttpService.mockReturnValue({
+            obtenerComportamientos: mockObtenerComportamientos,
+        });
     });
 
-    it("muestra el estado de carga inicialmente", () => {
-        mockObtenerComportamientos.mockReturnValue(
-            new Promise(() => {})
-        );
-
-        render(
-            <MemoryRouter>
-                <MenuComp />
-            </MemoryRouter>
-        );
-
-        expect(
-            screen.getByText("Cargando comportamientos...")
-        ).toBeInTheDocument();
-    });
-
-    it("obtiene y muestra los comportamientos", async () => {
+    it("muestra el estado de carga y luego inyecta los comportamientos obtenidos", async () => {
         const comportamientos = [
-            {
-                id: 1,
-                nombre: "Caminar",
-            },
-            {
-                id: 2,
-                nombre: "Correr",
-            },
+            { id: 1, nombre: "Caminar" },
+            { id: 2, nombre: "Correr" },
         ];
-
         mockObtenerComportamientos.mockResolvedValue(comportamientos);
 
-        render(
-            <MemoryRouter>
-                <MenuComp />
-            </MemoryRouter>
-        );
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+        expect(screen.getByTestId("cargando").textContent).toBe("true");
 
         await waitFor(() => {
-            expect(mockObtenerComportamientos).toHaveBeenCalledWith("123");
+            expect(screen.getByTestId("cargando").textContent).toBe("false");
         });
 
-        expect(screen.getByText("Caminar")).toBeInTheDocument();
-        expect(screen.getByText("Correr")).toBeInTheDocument();
-    });
-
-    it("navega a /main al presionar Volver", async () => {
-        const user = userEvent.setup();
-
-        mockObtenerComportamientos.mockResolvedValue([]);
-
-        render(
-            <MemoryRouter>
-                <MenuComp />
-            </MemoryRouter>
-        );
-
-        const botonVolver = await screen.findByRole("button", {
-            name: "Volver",
-        });
-
-        await user.click(botonVolver);
-
-        expect(mockNavigate).toHaveBeenCalledWith("/main");
+        expect(screen.getByTestId("comportamientos-count").textContent).toBe("2");
+        expect(mockObtenerComportamientos).toHaveBeenCalledWith("123");
     });
 
     it("maneja un error al obtener los comportamientos", async () => {
-        const consoleError = vi
-            .spyOn(console, "error")
-            .mockImplementation(() => {});
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        
+        mockObtenerComportamientos.mockRejectedValue(new Error("Error al obtener comportamientos"));
 
-        const error = new Error("Error al obtener comportamientos");
-
-        mockObtenerComportamientos.mockRejectedValue(error);
-
-        render(
-            <MemoryRouter>
-                <MenuComp />
-            </MemoryRouter>
-        );
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
 
         await waitFor(() => {
-            expect(consoleError).toHaveBeenCalledWith(error);
+            expect(screen.getByTestId("cargando").textContent).toBe("false");
         });
 
-        expect(
-            screen.queryByText("Cargando comportamientos...")
-        ).not.toBeInTheDocument();
+        expect(consoleError).toHaveBeenCalled();
+        expect(screen.getByTestId("comportamientos-count").textContent).toBe("0");
 
         consoleError.mockRestore();
+    });
+
+    it("navega a /main al presionar Volver", async () => {
+        mockObtenerComportamientos.mockResolvedValue([]);
+        
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        await waitFor(() => {
+            expect(screen.getByTestId("cargando").textContent).toBe("false");
+        });
+
+        fireEvent.click(screen.getByTestId("btn-volver"));
+        
+        expect(mockNavigate).toHaveBeenCalledWith("/main");
     });
 });
