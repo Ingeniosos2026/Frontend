@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Container, Button, Collapse, Card, Spinner, Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { Container, Button, Collapse, Card, Alert } from 'react-bootstrap';
 
-const MenuAmistosoComp = ({ amistosos, cargando, mensajeError, alCrear, alUnirse, alVolver }) => {
+const MenuAmistosoComp = ({ amistosos, mensajeError, alCrear, alUnirse, alVolver }) => {
     const [amistosoDesplegadaDisp, setAmistosoDesplegadaDisp] = useState(null);
 
     const toggleDispAmistosos = (nombreAmistoso) => {

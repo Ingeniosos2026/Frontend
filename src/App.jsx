@@ -25,8 +25,9 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 // import EditarComp from './containers/Comportamientos/EditarComp';
 
 //Contenedores Liga
-//import MenuLigaLogic from './containers/Ligas/MenuLiga';
-// import CrearLiga from './containers/Ligas/CrearLiga';
+import MenuLiga from './containers/Ligas/MenuLiga';
+//import UnirLiga from './containers/Ligas/UnirLiga';
+import CrearLiga from './containers/Ligas/CrearLiga';
 // import LobbyLiga from './containers/Ligas/LobbyLiga';
 
 //Contenedores Amistoso
@@ -50,18 +51,19 @@ export default function App() {
           <Route path="/auth/registro" element={<FormRegistro />} />
         </Route>
 
+        {/*Rutas Menu*/}
         <Route element={<AppLayout/>}>
           <Route path="/auth" element={<MenuInicio />} />
           <Route path="/main" element={<MenuPrincipal />} />
-          <Route path="/ligas" element={<ModuloConstruccion />} />
+          <Route path="/ligas" element={<MenuLiga/>} />
           <Route path="/amistosos" element={<MenuAmistoso />} />
           <Route path="/jugadores" element={<MenuJugador />} />
           <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
 
-        {/*Rutas liga*/}
-
-        <Route path="/ligas/crear" element={<ModuloConstruccion />} />
+        {/*Rutas Liga*/}
+        <Route path="/ligas/crear" element={<CrearLiga/>} />
+        <Route path="/ligas/unir/:liga_id" element={<ModuloConstruccion />} />
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />
