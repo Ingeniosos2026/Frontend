@@ -4,10 +4,11 @@ import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
-            duracion_partido: 5,
+            nombre: "",
             min: 3,
             max: 6,
-            contraseña: ""
+            duracion_partido: 5,
+            password: ""
         }
     });
 
@@ -43,20 +44,29 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
 
                 <Form onSubmit={handleSubmit(onSubmit)}>
           
-                    <Form.Group className="mb-5" controlId="duracion_partido">
+                    <Form.Group className="mb-5" controlId="nombre">
 
-                        <Form.Label className="fw-bold text-secondary">Nombre de la Liga</Form.Label> 
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem',size: '1rem' }}>
+                            Nombre de la Liga
+                        </Form.Label> 
                         <Form.Control 
                             type="text" 
                             placeholder="Nombre de la Liga..."
-                            className="bg-light border-0 shadow-sm rounded-0"
+                            className="form-control-lg shadow-sm border-success"
                             isInvalid={!!errors.nombre}
                             {...register('nombre', {
                                 required: "Ingrese un nombre"
                             })}
                         />
-                        
-                        <Form.Label className="fw-bold text-secondary">Minima cantidad de clubs</Form.Label>
+                        <Form.Control.Feedback type="invalid" className="fw-bold">
+                            {errors.nombre?.message}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-5" controlId="min">
+                        <Form.Label className="fw-bold text-secondary"style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                            Minima cantidad de clubs
+                        </Form.Label>
                         <Form.Control 
                             type="number" 
                             size="lg"
@@ -68,8 +78,15 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                                 valueAsNumber: true 
                             })} 
                         />
+                        <Form.Control.Feedback type="invalid" className="fw-bold">
+                            {errors.min?.message}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                        <Form.Label className="fw-bold text-secondary">Maxima cantidad de clubs</Form.Label>
+                    <Form.Group className="mb-5" controlId="max">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                            Maxima cantidad de clubs
+                        </Form.Label>
                         <Form.Control 
                             type="number" 
                             size="lg"
@@ -85,7 +102,15 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                                 valueAsNumber: true 
                             })} 
                         />
-                        <Form.Label className="fw-bold text-secondary">Duración de cada partido (minutos)</Form.Label>
+                        <Form.Control.Feedback type="invalid" className="fw-bold">
+                            {errors.max?.message}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-5" controlId="duracion_partido">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                            Duración de cada partido (minutos)
+                        </Form.Label>
                         <Form.Control 
                             type="number" 
                             size="lg"
@@ -97,29 +122,36 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                                 valueAsNumber: true 
                             })} 
                         />
-
-                        <Form.Label className="fw-bold text-secondary">Contraseña para la Liga (Opcional)</Form.Label> 
-                        <Form.Control 
-                            type="password"  
-                            placeholder="Contraseña para la Liga..."
-                            className="bg-light border-0 shadow-sm rounded-0"
-                        />
-                        
                         <Form.Control.Feedback type="invalid" className="fw-bold">
                             {errors.duracion_partido?.message}
-                            {errors.min?.message}
-                            {errors.max?.message}
-                            {errors.max?.nombre}
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <div className="text-center mb-4">
+                    <Form.Group className="mb-5" controlId="password">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                            Contraseña para la Liga (Opcional)
+                        </Form.Label> 
+                        <Form.Control 
+                            type="password"  
+                            placeholder="Contraseña para la Liga..."
+                            className="form-control-lg shadow-sm border-success"
+                            {...register('password')} 
+                        />
+                    </Form.Group>
+
+                    <div className="d-flex justify-content-between border-top pt-4 mt-2">
+                        <Button 
+                            variant="outline-secondary" 
+                            onClick={alVolver} 
+                            className="px-5 shadow-sm fw-bold rounded-pill"
+                        >
+                            ← Volver
+                        </Button>
                         <Button 
                             variant="success" 
                             type="submit" 
-                            size="lg" 
                             disabled={isSubmitting}
-                            className="px-5 shadow-sm fw-bold rounded-pill w-100"
+                            className="px-5 shadow-sm fw-bold rounded-pill"
                             style={{ transition: 'all 0.3s ease' }}
                         >
                             {isSubmitting ? (
@@ -138,19 +170,9 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                                 "Crear Liga"
                             )}
                         </Button>
+
                     </div>
                 </Form>
-
-                <div className="d-flex justify-content-start border-top pt-4 mt-2">
-                    <Button 
-                        variant="outline-secondary" 
-                        size="lg" 
-                        onClick={alVolver} 
-                        className="px-4 shadow-sm fw-bold"
-                    >
-                        ← Volver
-                    </Button>
-                </div>
             </Container>
         </div>
     );

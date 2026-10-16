@@ -20,7 +20,7 @@ const CrearLiga = () => {
         nombre: '',
         min: 3,
         max: 3,
-        contraseña: '',   
+        password: '',   
         duracion_partido: 0,
         jugadores: [],
         formacion: ''
@@ -44,7 +44,7 @@ const CrearLiga = () => {
                 nombre: ligaData.nombre,
                 min:ligaData.min,
                 max:ligaData.max,
-                contraseña:ligaData.contraseña,
+                password:ligaData.password,
                 duracion: ligaData.duracion_partido,
                 jugadores: ligaBody.jugadores,
                 formacion: ligaBody.formacion
