@@ -127,7 +127,7 @@ describe('CrearLiga Logic Container', () => {
     });
 
     it('envía datos combinados al backend y navega al lobby si todo es válido', async () => {
-        mockCrearLiga.mockResolvedValue({ id_liga: 99 });
+        mockCrearLiga.mockResolvedValue({ id: 99 });
 
         render(<MemoryRouter><CrearLiga /></MemoryRouter>);
         avanzarAPaso2();
@@ -149,10 +149,10 @@ describe('CrearLiga Logic Container', () => {
         await waitFor(() => {
             expect(mockCrearLiga).toHaveBeenCalledWith('1', {
                 nombre:'Premier',
-                min:3,
-                max:5,
-                password: 'fairplay',
-                duracion: 5,
+                min_jugadores:3,
+                max_jugadores:5,
+                contraseña: 'fairplay',
+                duracion_partido: 5,
                 jugadores: [
                     { id_jugador: 1, id_comportamiento: 101 },
                     { id_jugador: 2, id_comportamiento: 102 },
