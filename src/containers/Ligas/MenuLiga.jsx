@@ -39,7 +39,7 @@ const MenuLigaLogic = ({ }) => {
 
     const handleUnirseLiga = (liga_id) => {
         console.log(`Iniciando flujo para unirse a la liga: ${liga_id}`);
-        setInterfaz("/ModuloConstruccion");
+        setInterfaz("/ligas/unir");
     };
 
     const handleVolver = () => {

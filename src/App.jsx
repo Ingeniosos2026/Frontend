@@ -37,6 +37,7 @@ import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
 import Partido from './containers/Partido';
+import UnirseLiga from './containers/Ligas/UnirLiga';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -62,6 +63,7 @@ export default function App() {
         {/*Rutas liga*/}
 
         <Route path="/ligas/crear" element={<ModuloConstruccion />} />
+        <Route path="/ligas/unir" element={<UnirseLiga />} />
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />
