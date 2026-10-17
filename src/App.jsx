@@ -64,7 +64,7 @@ export default function App() {
 
         {/*Rutas Liga*/}
         <Route path="/ligas/crear" element={<CrearLiga/>} />
-        <Route path="/ligas/unir/:liga_id" element={<ModuloConstruccion />} />
+        <Route path="/ligas/unir/:liga_id" element={<UnirseLiga />} />
 
 
         {/*Rutas Amistoso*/}
