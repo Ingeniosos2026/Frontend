@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import MenuLiga from '../../components/Ligas/MenuLiga';
+import MenuLigaComp from '../../components/Ligas/MenuLigaComp';
 import { createHttpService } from '../../services/HttpService';
 
-const MenuLigaLogic = ({ }) => {
+const MenuLiga = ({ }) => {
     const navigate = useNavigate();
     const [interfaz, setInterfaz] = useState("ModuloConstruccion");
     const [ligasDisponibles, setLigasDisponibles] = useState([]);
@@ -47,7 +47,7 @@ const MenuLigaLogic = ({ }) => {
     };
 
     return (
-        <MenuLiga 
+        <MenuLigaComp 
             ligasDisponibles={ligasDisponibles}
             loading={loading}
             error={error}
@@ -58,4 +58,4 @@ const MenuLigaLogic = ({ }) => {
     );
 };
 
-export default MenuLigaLogic;
+export default MenuLiga;

@@ -1,6 +1,7 @@
 import { useState} from 'react';
 
-const MenuLiga = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, VerLiga, Volver }) => {
+
+const MenuLigaComp = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, VerLiga, Volver }) => {
 
     const [ligaDesplegadaDisp, setLigaDesplegadaDisp] = useState(null);
 
@@ -54,4 +55,4 @@ const MenuLiga = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, Ver
     );
 };
 
-export default MenuLiga;
+export default MenuLigaComp;
