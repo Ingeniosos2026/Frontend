@@ -32,11 +32,9 @@
 | PUT | /partido/{partido_id}/{usuario_id} | Iniciar partido amistoso |
 | PUT | /partido/{partido_id}/abandonar/{usuario_id} | Abandonar partido amistoso |
 | DELETE | /partido/cancelar/{partido_id}/{usuario_id} | Cancelar partido amistoso |
-| WS | Actualizacion de Entidades | Actualizacion de la nueva posicion (X,Y) de los 6 titulares y la Pelota |
-| WS | Actualizacion de Cronometro | Actualizacion del cronometro del partido |
-| WS | Actualizacion de Marcador | Actualizacion de las anotaciones en el partido |
-| WS | Inicio de Partido | Mensaje de partido inciado |
-| WS | Final del Partido |  Mensaje de partido finalizado |
+| WS | /ws/amistoso/{partido_id} | Eventos del Lobby para amistosos |
+| WS | /ws/partido/{partido_id} | Eventos de Partido en curso |
+| WS | /ws/notificaciones/{usuario_id} | Eventos globales de la App |  
 | WS | Actualizacion de Ventana | Actualizacion de evento para realizar cambios |
 
 ---
@@ -1356,65 +1354,114 @@
 
 ### DESARROLLO WEBSOCKETS
 ---
-### WS Actualizacion de Entidades
+### WS /ws/amistoso/{partido_id}
 
-  #### Body Response
-  ```json
-  {
-    "action": "Position_update",
-    "payload": "(string,int,int)"
-
-  }
-  ```
-  <!-- Entidades: (Jugadores, pelota)-->
-  <!--tupla tipo Coordenadas: (Entidad,coordenada_X,coordenada_Y)-->
-  <!--Ejemplo: (Pelota,5,5)-->
-
-### WS Actualizacion de Cronometro
-
-  #### Body Response
-  ```json
-  {
-    "action": "Time_update",
-    "payload": "int"
-  }
-  ```
-
-### WS Actualizacion de Marcador
-
-  #### Body Response
+#### Body Response
+Se unio un jugador al amistoso
 ```json
 {
-  "action": "Score_update",
-  "payload": "(int,int)"
-
+  "action": "usuario_unido",
+  "payload": {
+    "owner": {
+      "nombre": "string",
+      "club": "string"
+    },
+    "usuario_unido": {
+      "nombre": "string",
+      "club": "string"
+    }
+  }
 }
 ```
-<!--
-  tupla tipo Marcador: (Goles,Goles)
-  Ejemplo: (3,1)
--->
+Inicio el partido
+```json
+{
+  "action": "iniciar_partido",
+  "payload": {}
+}
+```
 
-### WS Inicio de Partido
+### WS /partido/{partido_id}/ws
 
-  #### Body Response
-  ```json
-  {
-    "action": "Start_game",
-    "payload": "string"
+#### Body Response
+Partido iniciado
+```json
+{
+  "action": "partido_iniciado",
+  "payload": {
+    "tiempo": 0
   }
-  ```
-
-### WS Final de Partido
-
-  #### Body Response
-  ```json
-  {
-    "action": "end_game",
-    "payload": "string"
+}
+```
+Estado partido
+```json
+{
+  "action": "estado_partido",
+  "payload": {
+    "tiempo": "float",
+    "pelota": {
+      "x": "float",
+      "y": "float"
+    },
+    "jugadores": [
+      {
+        "id_jugador": "int",
+        "id_usuario": "int",
+        "id_equipo": "int",
+        "x": "float",
+        "y": "float"
+      }
+    ],
+    "goles": {
+      "izquierdo": "int",
+      "derecho": "int"
+    },
+    "estados_jugadores": [
+      {
+        "id_jugador": "int",
+        "id_usuario": "int",
+        "estado": "string"
+      }
+    ],
+    "acciones": [
+      {
+        "id_jugador": "int",
+        "id_usuario": "int",
+        "accion": "string"
+      }
+    ]
   }
-  ```
-  <!-- Ventana de partido =(Mediotiempo, Pausa de hidratacion) -->
+}
+```
+Partido terminado
+```json
+{
+  "action": "partido_terminado",
+  "payload": {
+    "tiempo": "float",
+    "goles": {
+      "izquierdo": "int",
+      "derecho": "int"
+    }
+  }
+}
+```
+
+### WS /ws/notificaciones/{usuario_id}
+
+#### Body Response
+Amistoso creado
+```json
+{
+  "action": "amistoso_creado",
+  "payload": {
+    "id_partido": "int",
+    "duracion": "int",
+    "tipo": "string",
+    "estado": "string"
+  }
+}
+```
 
 ### WS Actualizacion de Ventana
 
