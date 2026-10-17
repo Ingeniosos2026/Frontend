@@ -5,10 +5,10 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
             nombre: "",
-            min: 3,
-            max: 6,
+            min_jugadores: 3,
+            max_jugadores: 6,
             duracion_partido: 5,
-            password: ""
+            contraseña: ""
         }
     });
 
@@ -46,7 +46,7 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
           
                     <Form.Group className="mb-5" controlId="nombre">
 
-                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem',size: '1rem' }}>
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem',size: '1rem' }}>
                             Nombre de la Liga
                         </Form.Label> 
                         <Form.Control 
@@ -63,39 +63,39 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-5" controlId="min">
-                        <Form.Label className="fw-bold text-secondary"style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                    <Form.Group className="mb-5" controlId="min_jugadores">
+                        <Form.Label className="fw-bold text-secondary"style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
                             Minima cantidad de clubs
                         </Form.Label>
                         <Form.Control 
                             type="number" 
                             size="lg"
                             className="shadow-sm border-success"
-                            isInvalid={!!errors.min}
-                            {...register('min', { 
+                            isInvalid={!!errors.min_jugadores}
+                            {...register('min_jugadores', { 
                                 required: "Ingrese un minimo de clubs",
                                 min: { value: 3, message: "El mínimo es de 3 clubs" },
                                 valueAsNumber: true 
                             })} 
                         />
                         <Form.Control.Feedback type="invalid" className="fw-bold">
-                            {errors.min?.message}
+                            {errors.min_jugadores?.message}
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-5" controlId="max">
-                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                    <Form.Group className="mb-5" controlId="max_jugadores">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
                             Maxima cantidad de clubs
                         </Form.Label>
                         <Form.Control 
                             type="number" 
                             size="lg"
                             className="shadow-sm border-success"
-                            isInvalid={!!errors.max}
-                            {...register('max', { 
+                            isInvalid={!!errors.max_jugadores}
+                            {...register('max_jugadores', { 
                                 required: "Ingrese un maximo de clubs",
                                 validate: (value, formValues) => {
-                                    if (value < formValues.min) {
+                                    if (value < formValues.min_jugadores) {
                                         return "El valor máximo debe ser mayor que el mínimo";
                                     }
                                 },
@@ -103,12 +103,12 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                             })} 
                         />
                         <Form.Control.Feedback type="invalid" className="fw-bold">
-                            {errors.max?.message}
+                            {errors.max_jugadores?.message}
                         </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-5" controlId="duracion_partido">
-                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
                             Duración de cada partido (minutos)
                         </Form.Label>
                         <Form.Control 
@@ -127,15 +127,15 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-5" controlId="password">
-                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.7rem', marginBottom: '.2rem' }}>
+                    <Form.Group className="mb-5" controlId="contraseña">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
                             Contraseña para la Liga (Opcional)
                         </Form.Label> 
                         <Form.Control 
                             type="password"  
                             placeholder="Contraseña para la Liga..."
                             className="form-control-lg shadow-sm border-success"
-                            {...register('password')} 
+                            {...register('contraseña')} 
                         />
                     </Form.Group>
 

@@ -18,9 +18,9 @@ const CrearLiga = () => {
 
     const [ligaBody, setligaBody] = useState({
         nombre: '',
-        min: 3,
-        max: 3,
-        password: '',   
+        min_jugadores: 3,
+        max_jugadores: 3,
+        contraseña: '',   
         duracion_partido: 0,
         jugadores: [],
         formacion: ''
@@ -42,16 +42,16 @@ const CrearLiga = () => {
             
             const body = {
                 nombre: ligaData.nombre,
-                min:ligaData.min,
-                max:ligaData.max,
-                password:ligaData.password,
-                duracion: ligaData.duracion_partido,
+                min_jugadores:ligaData.min_jugadores,
+                max_jugadores:ligaData.max_jugadores,
+                contraseña:ligaData.contraseña,
+                duracion_partido: ligaData.duracion_partido,
                 jugadores: ligaBody.jugadores,
                 formacion: ligaBody.formacion
             };
             
             setligaBody(body);
-
+            console.log(body)
             const respuesta = await httpService.crearLiga(usuarioId, body);
             console.log("Liga creada", respuesta);
             navigate(`/ligas/lobby/${respuesta.id_liga}`, { state: { esCreador: true } });
