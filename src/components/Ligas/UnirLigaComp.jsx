@@ -1,12 +1,20 @@
-import { Container, Alert } from "react-bootstrap";
+import { Container, Alert, Form } from "react-bootstrap";
 import ArmarEquipo from '../../containers/Equipo/ArmarEquipo';
+import { useState } from "react";
 
 const UnirseLigaComp = ({ 
-    usuarioId, 
+    usuarioId,
+    esPrivada, 
     mensajeError, 
     onConfirmar, 
     onCancelar 
 }) => {
+    const [contraseña, setContraseña] = useState("");
+
+    const handleConfirmar = (equipoData) => {
+        onConfirmar(equipoData, contraseña);
+    };
+
     return (
 
         <div 
@@ -33,10 +41,24 @@ const UnirseLigaComp = ({
                         <strong>Error:</strong> {mensajeError}
                     </Alert>
                 )}
+
+                {esPrivada && (
+                    <Form.Group className="mb-4">
+                    <Form.Label htmlFor="contraseña">Contraseña de la liga</Form.Label>
+                    <Form.Control
+                        id="contraseña"
+                        type="password"
+                        value={contraseña}
+                        onChange={(e) => setContraseña(e.target.value)}
+                        placeholder="Ingresá la contraseña"
+                        required
+                    />
+                    </Form.Group>
+                )}
                 
                 <ArmarEquipo
                     usuario_id={usuarioId}
-                    onConfirmar={onConfirmar} 
+                    onConfirmar={handleConfirmar} 
                     onCancelar={onCancelar}
                 />
             </Container>

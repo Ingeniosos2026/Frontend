@@ -3,10 +3,11 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import UnirseLiga from "./UnirLiga";
 
-const { unirseLigaMock, navigateMock, useParamsMock } = vi.hoisted(() => ({
+const { unirseLigaMock, obtenerLigasMock, navigateMock, useParamsMock } = vi.hoisted(() => ({
     unirseLigaMock: vi.fn(),
     navigateMock: vi.fn(),
-    useParamsMock: vi.fn()
+    useParamsMock: vi.fn(),
+    obtenerLigasMock: vi.fn()
 }));
 
 vi.mock("react-router-dom", () => ({
@@ -16,7 +17,8 @@ vi.mock("react-router-dom", () => ({
 
 vi.mock("../../services/HttpService", () => ({
     createHttpService: () => ({
-        unirseLiga: unirseLigaMock
+        unirseLiga: unirseLigaMock,
+        obtenerLigas: obtenerLigasMock
     })
 }));
 
@@ -49,6 +51,8 @@ describe("UnirseLiga", () => {
         localStorage.setItem("usuario_id", "7");
         useParamsMock.mockReturnValue({ liga_id: "12" });
         unirseLigaMock.mockResolvedValue({});
+        obtenerLigasMock.mockResolvedValue([{id: 12, privada: false}
+]);
     });
 
     it("llama al servicio y navega al lobby al unirse correctamente", async () => {
@@ -85,6 +89,34 @@ describe("UnirseLiga", () => {
         ).toHaveTextContent("La liga está completa");
 
         expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it("envía la contraseña al unirse a una liga privada", async () => {
+        obtenerLigasMock.mockResolvedValue([{ id: 12, privada: true }]);
+        
+        render(<UnirseLiga />);
+
+        const campoContraseña = await screen.findByLabelText(
+            "Contraseña de la liga"
+        );
+
+        fireEvent.change(campoContraseña, {
+            target: { value: "clave123" }
+        });
+
+        fireEvent.click(
+            screen.getByRole("button", { name: "Confirmar equipo" })
+        );
+
+        await waitFor(() => {
+            expect(unirseLigaMock).toHaveBeenCalledWith(
+                "12",
+                "7",
+                expect.objectContaining({
+                    contraseña: "clave123"
+                })
+            );
+        });
     });
 
     it("vuelve a la lista de ligas al cancelar", () => {
