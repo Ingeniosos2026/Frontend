@@ -26,7 +26,7 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 
 //Contenedores Liga
 import MenuLiga from './containers/Ligas/MenuLiga';
-//import UnirLiga from './containers/Ligas/UnirLiga';
+import UnirLiga from './containers/Ligas/UnirLiga';
 import CrearLiga from './containers/Ligas/CrearLiga';
 // import LobbyLiga from './containers/Ligas/LobbyLiga';
 
@@ -38,7 +38,6 @@ import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
 import Partido from './containers/Partido';
-import UnirseLiga from './containers/Ligas/UnirLiga';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -64,7 +63,7 @@ export default function App() {
 
         {/*Rutas Liga*/}
         <Route path="/ligas/crear" element={<CrearLiga/>} />
-        <Route path="/ligas/unir/:liga_id" element={<UnirseLiga />} />
+        <Route path="/ligas/unir/:liga_id" element={<UnirLiga />} />
 
 
         {/*Rutas Amistoso*/}

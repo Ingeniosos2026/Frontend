@@ -1,18 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import UnirseLiga from "./UnirLiga";
+import UnirLiga from "./UnirLiga";
 
-const { unirseLigaMock, obtenerLigasMock, navigateMock, useParamsMock } = vi.hoisted(() => ({
+const { unirseLigaMock, obtenerLigasMock, navigateMock, useParamsMock, useLocationMock } = vi.hoisted(() => ({
     unirseLigaMock: vi.fn(),
     navigateMock: vi.fn(),
     useParamsMock: vi.fn(),
-    obtenerLigasMock: vi.fn()
+    obtenerLigasMock: vi.fn(),
+    useLocationMock: vi.fn(),
 }));
 
 vi.mock("react-router-dom", () => ({
     useNavigate: () => navigateMock,
-    useParams: useParamsMock
+    useParams: useParamsMock,
+    useLocation: useLocationMock
 }));
 
 vi.mock("../../services/HttpService", () => ({
@@ -51,12 +53,12 @@ describe("UnirseLiga", () => {
         localStorage.setItem("usuario_id", "7");
         useParamsMock.mockReturnValue({ liga_id: "12" });
         unirseLigaMock.mockResolvedValue({});
-        obtenerLigasMock.mockResolvedValue([{id: 12, privada: false}
-]);
+        obtenerLigasMock.mockResolvedValue([{id: 12}]);
+        useLocationMock.mockReturnValue({state: { esPrivada: false }});
     });
 
     it("llama al servicio y navega al lobby al unirse correctamente", async () => {
-        render(<UnirseLiga />);
+        render(<UnirLiga />);
 
         fireEvent.click(
             screen.getByRole("button", { name: "Confirmar equipo" })
@@ -78,7 +80,7 @@ describe("UnirseLiga", () => {
             new Error("La liga está completa")
         );
 
-        render(<UnirseLiga />);
+        render(<UnirLiga />);
 
         fireEvent.click(
             screen.getByRole("button", { name: "Confirmar equipo" })
@@ -92,9 +94,10 @@ describe("UnirseLiga", () => {
     });
 
     it("envía la contraseña al unirse a una liga privada", async () => {
-        obtenerLigasMock.mockResolvedValue([{ id: 12, privada: true }]);
+        obtenerLigasMock.mockResolvedValue([{ id: 12}]);
+        useLocationMock.mockReturnValue({state: { esPrivada: true }});
         
-        render(<UnirseLiga />);
+        render(<UnirLiga />);
 
         const campoContraseña = await screen.findByLabelText(
             "Contraseña de la liga"
@@ -120,7 +123,7 @@ describe("UnirseLiga", () => {
     });
 
     it("vuelve a la lista de ligas al cancelar", () => {
-        render(<UnirseLiga />);
+        render(<UnirLiga />);
 
         fireEvent.click(
             screen.getByRole("button", { name: "Cancelar" })

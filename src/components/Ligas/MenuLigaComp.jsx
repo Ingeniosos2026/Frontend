@@ -36,7 +36,7 @@ const MenuLigaComp = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga,
                                     Participantes: {liga.participantes}/{liga.max_jugadores}
                                 </div>
                                 <div className="Unirse_liga">
-                                    <button onClick={() => UnirseLiga(liga.nombre)}>
+                                    <button onClick={() => UnirseLiga(liga.privada, liga.id )}>
                                         Unirse
                                     </button>
                                 </div>

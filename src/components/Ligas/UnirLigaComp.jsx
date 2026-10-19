@@ -2,7 +2,7 @@ import { Container, Alert, Form } from "react-bootstrap";
 import ArmarEquipo from '../../containers/Equipo/ArmarEquipo';
 import { useState } from "react";
 
-const UnirseLigaComp = ({ 
+const UnirLigaComp = ({ 
     usuarioId,
     esPrivada, 
     mensajeError, 
@@ -66,4 +66,4 @@ const UnirseLigaComp = ({
     );
 };
 
-export default UnirseLigaComp;
+export default UnirLigaComp;

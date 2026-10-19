@@ -1,55 +1,34 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createHttpService } from '../../services/HttpService';
-import UnirseLigaComp from '../../components/Ligas/UnirLigaComp';
+import UnirLigaComp from '../../components/Ligas/UnirLigaComp';
 
-const UnirseLiga = () => {
+const UnirLiga = () => {
     const navigate = useNavigate();
     const [mensajeError, setError] = useState(null);
-    const { unirseLiga, obtenerLigas } = createHttpService();
-    const [esPrivada, setEsPrivada] = useState(false);
+    const { unirseLiga } = createHttpService();
+    const location = useLocation();
+    const esPrivada = location.state?.esPrivada;
 
     const usuarioId = localStorage.getItem('usuario_id');
     const {liga_id} = useParams();
 
-    useEffect(() => {
-        const cargarLiga = async () => {
-            try {
-                const ligas = await obtenerLigas();
-
-                const liga = ligas.find(
-                    (liga) => String(liga.id) === String(liga_id)
-                );
-
-                if (!liga) {
-                    setError("No se encontró la liga seleccionada.");
-                } else {
-                    setEsPrivada(liga.privada);
-                }
-            } catch (error) {
-                setError(error.message || "Error al cargar la liga.");
-            }
-        };
-        cargarLiga();
-    }, [liga_id, obtenerLigas]);
-
     const handleUnirse = async (equipoData, contraseña) => {
         try {
             setError(null);
-            console.log(`Intentando unirse a la liga: ${liga_id}`);
 
             const datosUnirse = {
                 ...equipoData,
                 ...(esPrivada ? { contraseña } : {})
             };
-            
+            console.log(datosUnirse);
             await unirseLiga(liga_id, usuarioId, datosUnirse);
             
             navigate(`/ligas/lobby/${liga_id}`);
 
         } catch (error) {
             console.error("Error al intentar unirse a la liga", error);
-            setError(error.message || "");
+            setError(error.message);
         }
     };
 
@@ -58,7 +37,7 @@ const UnirseLiga = () => {
     };
 
     return (
-        <UnirseLigaComp
+        <UnirLigaComp
             usuarioId={usuarioId}
             esPrivada={esPrivada}
             mensajeError={mensajeError}
@@ -68,4 +47,4 @@ const UnirseLiga = () => {
     );
 };
 
-export default UnirseLiga;
+export default UnirLiga;
