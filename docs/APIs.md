@@ -22,6 +22,7 @@
 | GET | /ligas | Obtener lista de ligas disponibles |
 | GET | /liga/{liga_id}/fixture | Obtener Fixture de la liga |
 | GET | /liga/{liga_id}/tabla | Obtener Tabla de la liga |
+| GET | /liga/{liga_id}/usuarios | Obtener usuarios en la liga |
 | PUT | /liga/{liga_id}/unirse/{usuario_id} | Unirse a una liga |
 | PUT | /liga/{liga_id}/abandonar/{usuario_id} | Abandonar una liga |
 | DELETE | /liga/{liga_id}/{usuario_id} | Cancelar liga |
@@ -35,6 +36,7 @@
 | WS | /ws/amistoso/{partido_id} | Eventos del Lobby para amistosos |
 | WS | /ws/partido/{partido_id} | Eventos de Partido en curso |
 | WS | /ws/notificaciones/{usuario_id} | Eventos globales de la App |  
+| WS | /ws/liga/{liga_id} | Eventos del Lobby para ligas |
 | WS | Actualizacion de Ventana | Actualizacion de evento para realizar cambios |
 
 ---
@@ -798,7 +800,16 @@
   200 OK
   ```json
   {
-      "fixture_liga": "[({usuario_id},{usuario_id})]"
+      "fixture_liga": [
+        {
+          "club_izq": "string",
+          "club_der": "string",
+          "usuario_id_izq": "int",
+          "usuario_id_der": "int",
+          "fecha": "int",
+          "partido_id": "int"
+        }
+      ]
   }
   ```
   <!--lista ordenada de tuplas de usuario_id-->
@@ -840,10 +851,13 @@
   ```json
   [
     {
-      "usuario":"string",
-      "partidos_jugados":"int",
-      "puntos":"int",
-      "diferencia_goles":"int",
+      "club":"string",
+      "partidos_ganados":"int",
+      "partidos_empatados": "int",
+      "partidos_perdidos": "int",
+      "puntos": "int",
+      "goles_a_favor":"int",
+      "goles_en_contra": "int"
     }
   ]
   ```
@@ -874,6 +888,42 @@
 
   ---
 
+### GET /liga/{liga_id}/usuarios
+
+  #### Request Body
+  ```json
+  No tiene
+  ```
+  #### Body Response
+  200 OK
+  ```json
+  [
+    {
+      "nombre": "string",
+      "club": "string",
+      "id": "int",
+      "avatar": "int"
+    }
+  ]
+  ```
+  
+  404 Not Found
+  ```json
+
+  {
+      "error": "RECURSO_NO_ENCONTRADO",
+      "mensaje": "La liga no existe"
+  }
+  ```
+  500 Internal Server Error
+  ```json
+  {
+      "error": "ERROR_INTERNO",
+      "mensaje": "No se pudieron obtener los usuarios de la liga"
+  }
+  ```
+
+  ---
 
 ### PUT /liga/{liga_id}/unirse/{usuario_id}
 
@@ -1462,6 +1512,63 @@ Amistoso creado
   }
 }
 ```
+
+### WS /ws/liga/{liga_id}  
+
+#### Body Response  
+Se unio un club a la liga
+```json
+{
+  "action": "club_unido",
+  "payload": {
+    "nombre": "string",
+    "club": "string",
+    "id": "int",
+    "avatar": "int"
+  }
+}
+```
+Inicio la liga
+```json
+{
+  "action": "liga_iniciada",
+  "payload": {
+    "liga_id": "int"
+  }
+
+}
+```
+Finalizó la liga
+```json
+{
+  "action": "liga_finalizada",
+  "payload": {
+    "liga_id": "int"
+  }
+
+}
+```
+Inicio un partido
+```json
+{
+  "action": "partido_iniciado",
+  "payload": {
+    "partido_id": "int"
+  }
+
+}
+```
+Termino un partido
+```json
+{
+  "action": "partido_finalizado",
+  "payload": {
+    "partido_id": "int"
+  }
+
+}
+```
+
 
 ### WS Actualizacion de Ventana
 
