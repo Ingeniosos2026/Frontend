@@ -1516,7 +1516,7 @@ Amistoso creado
 ### WS /ws/liga/{liga_id}  
 
 #### Body Response  
-Se unio un club a la liga
+Se unio un club a la liga, se recibe cuando alguien llamó al endpoint unirse a liga
 ```json
 {
   "action": "club_unido",
@@ -1528,7 +1528,19 @@ Se unio un club a la liga
   }
 }
 ```
-Inicio la liga
+Un club abandono la liga, se recibe cuando alguien llamó al endpoint abandonar liga
+```json
+{
+  "action": "club_salio",
+  "payload": {
+    "nombre": "string",
+    "club": "string",
+    "id": "int",
+    "avatar": "int"
+  }
+}
+```
+Inicio la liga, se recibe cuando alguien llamó al endpoint Iniciar liga
 ```json
 {
   "action": "liga_iniciada",
@@ -1538,7 +1550,7 @@ Inicio la liga
 
 }
 ```
-Finalizó la liga
+Finalizó la liga, se recibe cuando se jugaron todos los partidos de la liga
 ```json
 {
   "action": "liga_finalizada",
@@ -1548,7 +1560,7 @@ Finalizó la liga
 
 }
 ```
-Inicio un partido
+Inicio un partido, se recibe cuando se comienza a ejecutar un partido de liga
 ```json
 {
   "action": "partido_iniciado",
@@ -1558,14 +1570,22 @@ Inicio un partido
 
 }
 ```
-Termino un partido
+Termino un partido, se recibe cuando se termina de ejecutar un partido de liga
 ```json
 {
   "action": "partido_finalizado",
   "payload": {
     "partido_id": "int"
   }
-
+}
+```
+Liga cancelada, se recibe cuando el creador de la liga llama al endpoint cancelar liga
+```json
+{
+  "action": "liga_cancelada",
+  "payload": {
+    "liga_id": "int"
+  }
 }
 ```
 
