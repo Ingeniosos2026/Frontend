@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import UnirLiga from "./UnirLiga";
+import { useFormAction } from "react-router-dom";
 
 const { unirseLigaMock, obtenerLigasMock, navigateMock, useParamsMock, useLocationMock } = vi.hoisted(() => ({
     unirseLigaMock: vi.fn(),
@@ -32,7 +33,8 @@ vi.mock("../../containers/Equipo/ArmarEquipo", () => ({
             <button
                 onClick={() =>
                     onConfirmar({
-                        jugadores: [1, 2, 3, 4, 5, 6]
+                        jugadores: [[1,1], [2,3], [3,1], [4,1], [5,2], [6,3]],
+                        formacion: "ofensiva"
                     })
                 }
             >
@@ -65,12 +67,7 @@ describe("UnirseLiga", () => {
         );
 
         await waitFor(() => {
-            expect(unirseLigaMock).toHaveBeenCalledWith(
-                "12",
-                "7",
-                { jugadores: [1, 2, 3, 4, 5, 6] }
-            );
-
+            expect(unirseLigaMock).toHaveBeenCalledWith("12","7",{ contraseña: "", formacion: "ofensiva", jugadores: [[1,1], [2,3], [3,1], [4,1], [5,2], [6,3]] });
             expect(navigateMock).toHaveBeenCalledWith("/ligas/lobby/12");
         });
     });
@@ -110,13 +107,15 @@ describe("UnirseLiga", () => {
         fireEvent.click(
             screen.getByRole("button", { name: "Confirmar equipo" })
         );
-
+        console.log(unirseLigaMock.mock.calls[0]);
         await waitFor(() => {
             expect(unirseLigaMock).toHaveBeenCalledWith(
                 "12",
                 "7",
                 expect.objectContaining({
-                    contraseña: "clave123"
+                    contraseña: "clave123",
+                    formacion: "ofensiva",
+                    jugadores: [[1,1], [2,3], [3,1], [4,1], [5,2], [6,3]]
                 })
             );
         });

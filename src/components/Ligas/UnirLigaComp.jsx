@@ -12,7 +12,12 @@ const UnirLigaComp = ({
     const [contraseña, setContraseña] = useState("");
 
     const handleConfirmar = (equipoData) => {
-        onConfirmar(equipoData, contraseña);
+        if(esPrivada){
+            onConfirmar(equipoData, contraseña);
+        }else{
+            onConfirmar(equipoData,"");
+        }
+
     };
 
     return (
@@ -42,7 +47,7 @@ const UnirLigaComp = ({
                     </Alert>
                 )}
 
-                {esPrivada && (
+                {esPrivada ? (
                     <Form.Group className="mb-4">
                     <Form.Label htmlFor="contraseña">Contraseña de la liga</Form.Label>
                     <Form.Control
@@ -54,7 +59,8 @@ const UnirLigaComp = ({
                         required
                     />
                     </Form.Group>
-                )}
+                ):
+                <p></p>}
                 
                 <ArmarEquipo
                     usuario_id={usuarioId}

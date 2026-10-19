@@ -9,26 +9,32 @@ const UnirLiga = () => {
     const { unirseLiga } = createHttpService();
     const location = useLocation();
     const esPrivada = location.state?.esPrivada;
-
     const usuarioId = localStorage.getItem('usuario_id');
     const {liga_id} = useParams();
+
+    const [unirBody, setUnirBody] = useState({  
+        jugadores: [],
+        formacion: '',
+        contraseña: '' 
+    });
 
     const handleUnirse = async (equipoData, contraseña) => {
         try {
             setError(null);
 
-            const datosUnirse = {
-                ...equipoData,
-                ...(esPrivada ? { contraseña } : {})
+            const unirBody = {
+                jugadores: equipoData.jugadores,
+                formacion: equipoData.formacion,
+                contraseña: contraseña
             };
-            console.log(datosUnirse);
-            await unirseLiga(liga_id, usuarioId, datosUnirse);
+
+            await unirseLiga(liga_id, usuarioId, unirBody);
             
             navigate(`/ligas/lobby/${liga_id}`);
 
         } catch (error) {
             console.error("Error al intentar unirse a la liga", error);
-            setError(error.message);
+            setError(error.message || "");
         }
     };
 
