@@ -5,7 +5,6 @@ import { createHttpService } from '../../services/HttpService';
 
 const MenuLiga = ({ }) => {
     const navigate = useNavigate();
-    const [interfaz, setInterfaz] = useState("ModuloConstruccion");
     const [ligasDisponibles, setLigasDisponibles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -37,9 +36,8 @@ const MenuLiga = ({ }) => {
         navigate("/ligas/crear");
     };
 
-    const handleUnirseLiga = (liga_id) => {
-        console.log(`Iniciando flujo para unirse a la liga: ${liga_id}`);
-        setInterfaz("/ModuloConstruccion");
+    const handleUnirseLiga = (privada, liga_id) => {
+        navigate(`/ligas/unir/${liga_id}`,{ state: { esPrivada: privada } });
     };
 
     const handleVolver = () => {

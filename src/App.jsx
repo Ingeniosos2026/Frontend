@@ -26,7 +26,7 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 
 //Contenedores Liga
 import MenuLiga from './containers/Ligas/MenuLiga';
-//import UnirLiga from './containers/Ligas/UnirLiga';
+import UnirLiga from './containers/Ligas/UnirLiga';
 import CrearLiga from './containers/Ligas/CrearLiga';
 // import LobbyLiga from './containers/Ligas/LobbyLiga';
 
@@ -63,7 +63,8 @@ export default function App() {
 
         {/*Rutas Liga*/}
         <Route path="/ligas/crear" element={<CrearLiga/>} />
-        <Route path="/ligas/unir/:liga_id" element={<ModuloConstruccion />} />
+        <Route path="/ligas/unir/:liga_id" element={<UnirLiga />} />
+
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />
