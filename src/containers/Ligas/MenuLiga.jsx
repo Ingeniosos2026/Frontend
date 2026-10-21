@@ -5,7 +5,6 @@ import { createHttpService } from '../../services/HttpService';
 
 const MenuLigaLogic = ({ }) => {
     const navigate = useNavigate();
-    const [interfaz, setInterfaz] = useState("ModuloConstruccion");
     const [ligasDisponibles, setLigasDisponibles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +18,7 @@ const MenuLigaLogic = ({ }) => {
             
             try {
                 const res = await obtenerLigas();
-                setLigasDisponibles(res.disponibles || res || []);
+                setLigasDisponibles(res);
             
             } catch (error) {
                 console.error("Error al intentar obtener las ligas:", error);
@@ -37,9 +36,8 @@ const MenuLigaLogic = ({ }) => {
         navigate("/ligas/crear");
     };
 
-    const handleUnirseLiga = (liga_id) => {
-        console.log(`Iniciando flujo para unirse a la liga: ${liga_id}`);
-        setInterfaz("/ModuloConstruccion");
+    const handleUnirseLiga = (privada,liga_id,min_jugadores) => {
+        navigate(`/ligas/unir/${liga_id}`,{ state: { esPrivada: privada , minimo : min_jugadores } });
     };
 
     const handleVolver = () => {

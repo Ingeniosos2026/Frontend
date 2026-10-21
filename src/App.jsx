@@ -37,6 +37,7 @@ import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
 import Partido from './containers/Partido';
+import LobbyLiga from './containers/Ligas/LobbyLiga';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -49,11 +50,19 @@ export default function App() {
           <Route path="/auth/login" element={<FormInicioSesion/>} />
           <Route path="/auth/registro" element={<FormRegistro />} />
         </Route>
+<<<<<<< Updated upstream
 
         <Route element={<AppLayout/>}>
           <Route path="/auth" element={<MenuInicio />} />
           <Route path="/main" element={<MenuPrincipal />} />
           <Route path="/ligas" element={<ModuloConstruccion />} />
+=======
+        <Route path="/ligas" element={<MenuLiga/>} />
+        {/*Rutas Menu*/}
+        <Route element={<AppLayout/>}>
+          <Route path="/auth" element={<MenuInicio />} />
+          <Route path="/main" element={<MenuPrincipal />} />
+>>>>>>> Stashed changes
           <Route path="/amistosos" element={<MenuAmistoso />} />
           <Route path="/jugadores" element={<MenuJugador />} />
           <Route path="/comportamientos" element={<MenuComp/>} />
@@ -76,7 +85,7 @@ export default function App() {
 
         {/*Rutas Lobby*/} 
         <Route element={<LobbyLayout />}>   
-          <Route path="/ligas/lobby/:liga_id" element={<ModuloConstruccion/>} />
+          <Route path="/ligas/lobby/:liga_id" element={<LobbyLiga/>} />
           <Route path="/amistosos/lobby/:partido_id" element={<LobbyAmistoso/>} />
         </Route>
 

@@ -1,6 +1,11 @@
 import { useState} from 'react';
 
+<<<<<<< Updated upstream:src/components/Ligas/MenuLiga.jsx
 const MenuLiga = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, VerLiga, Volver }) => {
+=======
+
+const MenuLigaComp = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, Volver }) => {
+>>>>>>> Stashed changes:src/components/Ligas/MenuLigaComp.jsx
 
     const [ligaDesplegadaDisp, setLigaDesplegadaDisp] = useState(null);
 
@@ -28,14 +33,11 @@ const MenuLiga = ({ ligasDisponibles, loading, error, CrearLiga, UnirseLiga, Ver
                         
                         {ligaDesplegadaDisp === liga.nombre && (
                             <div id="Detalles_colapsables">
-                                <div className="max_jugadores">
-                                    Máx Jugadores: {liga.max_jugadores}
-                                </div>
                                 <div className="participantes">
                                     Participantes: {liga.participantes}/{liga.max_jugadores}
                                 </div>
                                 <div className="Unirse_liga">
-                                    <button onClick={() => UnirseLiga(liga.nombre)}>
+                                    <button onClick={() => UnirseLiga(liga.privada,liga.id,liga.min_jugadores)}>
                                         Unirse
                                     </button>
                                 </div>
