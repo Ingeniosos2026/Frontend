@@ -14,9 +14,10 @@ import MenuInicio from './containers/Auth/MenuInicio';
 import FormInicioSesion from './containers/Auth/InicioSesion';
 import FormRegistro from './containers/Auth/Registro';
 
-//Contenedores Dashboard/Menu/Hub
+//Contenedor Menu Principal
 import MenuPrincipal from './components/MenuPrincipal';
 
+//Contenedores Jugador
 import MenuJugador from './containers/Jugadores/MenuJugador';
 import CrearJugador from './containers/Jugadores/CrearJugador';
 
@@ -25,9 +26,10 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 // import EditarComp from './containers/Comportamientos/EditarComp';
 
 //Contenedores Liga
-//import MenuLigaLogic from './containers/Ligas/MenuLiga';
-// import CrearLiga from './containers/Ligas/CrearLiga';
-// import LobbyLiga from './containers/Ligas/LobbyLiga';
+import MenuLiga from './containers/Ligas/MenuLiga';
+import UnirLiga from './containers/Ligas/UnirLiga';
+import CrearLiga from './containers/Ligas/CrearLiga';
+import LobbyLiga from './containers/Ligas/LobbyLiga';
 
 //Contenedores Amistoso
 import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
@@ -37,7 +39,6 @@ import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
 import Partido from './containers/Partido';
-import LobbyLiga from './containers/Ligas/LobbyLiga';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -50,27 +51,20 @@ export default function App() {
           <Route path="/auth/login" element={<FormInicioSesion/>} />
           <Route path="/auth/registro" element={<FormRegistro />} />
         </Route>
-<<<<<<< Updated upstream
 
-        <Route element={<AppLayout/>}>
-          <Route path="/auth" element={<MenuInicio />} />
-          <Route path="/main" element={<MenuPrincipal />} />
-          <Route path="/ligas" element={<ModuloConstruccion />} />
-=======
-        <Route path="/ligas" element={<MenuLiga/>} />
         {/*Rutas Menu*/}
         <Route element={<AppLayout/>}>
           <Route path="/auth" element={<MenuInicio />} />
           <Route path="/main" element={<MenuPrincipal />} />
->>>>>>> Stashed changes
+          <Route path="/ligas" element={<MenuLiga />} />
           <Route path="/amistosos" element={<MenuAmistoso />} />
           <Route path="/jugadores" element={<MenuJugador />} />
           <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
 
         {/*Rutas liga*/}
-
-        <Route path="/ligas/crear" element={<ModuloConstruccion />} />
+        <Route path="/ligas/crear" element={<CrearLiga />} />
+        <Route path="/ligas/unir/:liga_id" element={<UnirLiga />} />
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />

@@ -23,15 +23,7 @@ const LobbyLiga = () => {
         const wsService = createWSService(`/ws/liga/${liga_id}`);
         wsService.connect();
 
-        const competidoresIniciales = (payload) => {
-            if (payload.competidores) {
-                setCompetidores(payload.competidores);
-            }
-        };
-
         const manejarUnirse = (payload) => {
-            console.log(`Se unió ${payload.usuario_unido.nombre} con el club ${payload.usuario_unido.club}`);
-
             const nuevoCompetidor = {
                 id: payload.usuario_unido.id,
                 nombre: payload.usuario_unido.nombre,
@@ -55,7 +47,6 @@ const LobbyLiga = () => {
             //
         };
 
-        wsService.on('usuario_unido_liga', competidoresIniciales);
         wsService.on('usuario_unido_liga', manejarUnirse);
         wsService.on('iniciar_partido', manejarIniciar);
 
@@ -79,7 +70,8 @@ const LobbyLiga = () => {
     };
 
     return (
-        <LobbyLigaComp 
+        <LobbyLigaComp
+            myId={Number(usuarioId)}
             mensajeError={mensajeError}
             esCreador={esCreador}
             competidores={competidores}

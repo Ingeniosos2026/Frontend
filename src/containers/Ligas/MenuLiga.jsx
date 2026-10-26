@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import MenuLiga from '../../components/Ligas/MenuLiga';
 import { createHttpService } from '../../services/HttpService';
@@ -32,7 +32,6 @@ const MenuLigaLogic = ({ }) => {
     }, []);
 
     const handleCrearLiga = () => {
-        console.log("Desplegando componente Crear Liga...");
         navigate("/ligas/crear");
     };
 
