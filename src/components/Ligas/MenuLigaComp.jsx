@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container, Button, Collapse, Card, Alert } from 'react-bootstrap';
 
 
-const MenuLiga= ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }) => {
+const MenuLigaComp = ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }) => {
 
     const [ligaDesplegadaDisp, setLigaDesplegadaDisp] = useState(null);
 
@@ -93,4 +93,4 @@ const MenuLiga= ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }) => 
     );
 };
 
-export default MenuLiga;
+export default MenuLigaComp;
