@@ -51,10 +51,9 @@ const CrearLiga = () => {
             };
             
             setligaBody(body);
-            console.log(body)
             const respuesta = await httpService.crearLiga(usuarioId, body);
             console.log("Liga creada", respuesta);
-            navigate(`/ligas/lobby/${respuesta.id}`, { state: { esCreador: true } });
+            navigate(`/ligas/lobby/${respuesta.id}`, { state: { esCreador: true,  minimo : respuesta.min_jugadores } });
         } catch (error) {
             console.error(error);
             setError(error.message);

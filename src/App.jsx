@@ -14,9 +14,10 @@ import MenuInicio from './containers/Auth/MenuInicio';
 import FormInicioSesion from './containers/Auth/InicioSesion';
 import FormRegistro from './containers/Auth/Registro';
 
-//Contenedores Dashboard/Menu/Hub
+//Contenedor Menu Principal
 import MenuPrincipal from './components/MenuPrincipal';
 
+//Contenedores Jugador
 import MenuJugador from './containers/Jugadores/MenuJugador';
 import CrearJugador from './containers/Jugadores/CrearJugador';
 
@@ -28,7 +29,7 @@ import MenuComp from './containers/Comportamientos/MenuComp';
 import MenuLiga from './containers/Ligas/MenuLiga';
 import UnirLiga from './containers/Ligas/UnirLiga';
 import CrearLiga from './containers/Ligas/CrearLiga';
-// import LobbyLiga from './containers/Ligas/LobbyLiga';
+import LobbyLiga from './containers/Ligas/LobbyLiga';
 
 //Contenedores Amistoso
 import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
@@ -55,16 +56,15 @@ export default function App() {
         <Route element={<AppLayout/>}>
           <Route path="/auth" element={<MenuInicio />} />
           <Route path="/main" element={<MenuPrincipal />} />
-          <Route path="/ligas" element={<MenuLiga/>} />
+          <Route path="/ligas" element={<MenuLiga />} />
           <Route path="/amistosos" element={<MenuAmistoso />} />
           <Route path="/jugadores" element={<MenuJugador />} />
           <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
 
-        {/*Rutas Liga*/}
-        <Route path="/ligas/crear" element={<CrearLiga/>} />
+        {/*Rutas liga*/}
+        <Route path="/ligas/crear" element={<CrearLiga />} />
         <Route path="/ligas/unir/:liga_id" element={<UnirLiga />} />
-
 
         {/*Rutas Amistoso*/}
         <Route path="/amistosos/crear" element={<CrearAmistoso />} />
@@ -79,7 +79,7 @@ export default function App() {
 
         {/*Rutas Lobby*/} 
         <Route element={<LobbyLayout />}>   
-          <Route path="/ligas/lobby/:liga_id" element={<ModuloConstruccion/>} />
+          <Route path="/ligas/lobby/:liga_id" element={<LobbyLiga/>} />
           <Route path="/amistosos/lobby/:partido_id" element={<LobbyAmistoso/>} />
         </Route>
 

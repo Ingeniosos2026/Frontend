@@ -25,7 +25,7 @@ const UnirLigaComp = ({
         <div 
             className="min-vh-100 d-flex flex-column align-items-center py-5"
             style={{
-                backgroundColor: '#21503a',
+                backgroundColor: '#0d6efd',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundAttachment: 'fixed',
@@ -37,7 +37,7 @@ const UnirLigaComp = ({
                 style={{ maxWidth: '900px', opacity: '0.95' }}
             >
                 <div className="text-center mb-4">
-                    <h2 className="fw-bold mb-3" style={{ color: '#198754' }}>Unirse a Liga</h2>
+                    <h2 className="fw-bold mb-3" style={{ color: '#0d6efd' }}>Unirse a Liga</h2>
                     <p className="text-muted">Arma tu Equipo antes de ingresar al lobby de la liga</p>
                 </div>
                 

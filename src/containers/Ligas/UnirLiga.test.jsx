@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import UnirLiga from "./UnirLiga";
-import { useFormAction } from "react-router-dom";
 
 const { unirseLigaMock, obtenerLigasMock, navigateMock, useParamsMock, useLocationMock } = vi.hoisted(() => ({
     unirseLigaMock: vi.fn(),
@@ -56,7 +55,7 @@ describe("UnirseLiga", () => {
         useParamsMock.mockReturnValue({ liga_id: "12" });
         unirseLigaMock.mockResolvedValue({});
         obtenerLigasMock.mockResolvedValue([{id: 12}]);
-        useLocationMock.mockReturnValue({state: { esPrivada: false }});
+        useLocationMock.mockReturnValue({state: { esPrivada: false, minimo: 4 }});
     });
 
     it("llama al servicio y navega al lobby al unirse correctamente", async () => {
@@ -68,7 +67,12 @@ describe("UnirseLiga", () => {
 
         await waitFor(() => {
             expect(unirseLigaMock).toHaveBeenCalledWith("12","7",{ contraseña: "", formacion: "ofensiva", jugadores: [[1,1], [2,3], [3,1], [4,1], [5,2], [6,3]] });
-            expect(navigateMock).toHaveBeenCalledWith("/ligas/lobby/12");
+        });
+        expect(navigateMock).toHaveBeenCalledWith("/ligas/lobby/12", {
+            state: { 
+                esCreador: false, 
+                minimo: 4
+            }
         });
     });
 
