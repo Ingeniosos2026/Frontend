@@ -13,7 +13,7 @@ const EditarComp = () => {
     const manejarCrearComp = async (comportamientoData) => {
         try {
             setError(null);
-            //const respuesta = await httpService.editarComportamiento(usuarioId,compId,comportamientoData);
+            const respuesta = await httpService.editarComportamiento(usuarioId,compId,comportamientoData);
             console.log("Comportamiento editado", respuesta);
             navigate('/comportamientos');
         } catch (error) {
