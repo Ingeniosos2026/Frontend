@@ -134,6 +134,15 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerFixtureLiga = async (ligaId) => {
+    const data = await request(`/liga/${ligaId}/fixture`);
+    return data.fixture_liga;
+  };
+
+  const obtenerTablaLiga = async (ligaId) => {
+    return request(`/liga/${ligaId}/tabla`);
+  };
+
   // --- AMISTOSOS ---
   const obtenerAmistosos = async () => {
     return request('/partidos');
