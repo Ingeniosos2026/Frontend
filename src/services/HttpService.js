@@ -180,6 +180,8 @@ const createHttpService = () => {
     obtenerInformacionComportamiento,
     asignarComportamiento,
     obtenerLigas,
+    obtenerFixtureLiga,
+    obtenerTablaLiga,
     crearLiga,
     unirseLiga,
     abandonarLiga,
