@@ -102,7 +102,15 @@ const LigaEnCursoComp = ({
                                                     <span className={partido.usuario_id_izq === miUsuarioId ? 'text-primary' : ''}>
                                                         {partido.club_izq}
                                                     </span>
-                                                    <span className="text-muted mx-2 fs-6">VS</span>
+                                                    
+                                                    {finalizado && partido.goles_izq !== undefined && partido.goles_der !== undefined ? (
+                                                        <span className="bg-dark text-white px-3 py-1 rounded fs-4 shadow-sm">
+                                                            {partido.goles_izq} - {partido.goles_der}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-muted mx-2 fs-6">VS</span>
+                                                    )}
+
                                                     <span className={partido.usuario_id_der === miUsuarioId ? 'text-primary' : ''}>
                                                         {partido.club_der}
                                                     </span>

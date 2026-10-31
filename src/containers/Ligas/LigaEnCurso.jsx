@@ -54,6 +54,8 @@ const LigaEnCurso = () => {
 
         const manejarPartidoFinalizado = async (payload) => {
             const partidoId = payload.partido_id;
+            const goles_izq = payload.goles_izq;
+            const goles_der = payload.goles_der;
             
             setPartidosEnCurso(prev => {
                 const nuevo = new Set(prev);
@@ -65,6 +67,14 @@ const LigaEnCurso = () => {
                 nuevo.add(partidoId);
                 return nuevo;
             });
+
+            setFixtureLiga(prevFixture => 
+                prevFixture.map(partido => 
+                    partido.partido_id === partidoId 
+                        ? { ...partido, goles_izq, goles_der } 
+                        : partido
+                )
+            );
 
             try {
                 const tablaActualizada = await httpService.obtenerTablaLiga(liga_id);
