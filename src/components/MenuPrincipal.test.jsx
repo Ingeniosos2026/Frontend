@@ -42,6 +42,9 @@ describe("MenuPrincipal", () => {
 
         const titulosComportamientos = screen.getAllByText("COMPORTAMIENTOS");
         expect(titulosComportamientos.length).toBeGreaterThan(0);
+
+        const titulosRanking = screen.getAllByText("RANKING GLOBAL");
+        expect(titulosComportamientos.length).toBeGreaterThan(0);
     });
 
     it("muestra la interfaz de liga al hacer clic", () => {
@@ -87,5 +90,16 @@ describe("MenuPrincipal", () => {
 
         fireEvent.click(screen.getAllByText("COMPORTAMIENTOS")[0]);
         expect(navigateMock).toHaveBeenCalledWith("/comportamientos");
+    });
+
+    it("muestra el ranking de clubes al hacer clic", () => {
+        render (
+            <MemoryRouter>
+                <PagPrincipal />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getAllByText("RANKING GLOBAL")[0]);
+        expect(navigateMock).toHaveBeenCalledWith("/ranking");
     });
 });
