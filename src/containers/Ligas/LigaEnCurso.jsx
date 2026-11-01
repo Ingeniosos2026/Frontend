@@ -94,7 +94,18 @@ const LigaEnCurso = () => {
                 const tabla = await httpService.obtenerTablaLiga(liga_id);
                 const fixture = await httpService.obtenerFixtureLiga(liga_id);
                 
-                tabla.sort((a, b) => b.puntos - a.puntos);
+                tabla.sort((a, b) => {
+                    const diferenciaPuntos = b.puntos - a.puntos;
+                    
+                    if (diferenciaPuntos !== 0) {
+                        return diferenciaPuntos; 
+                    }
+
+                    const difGolesA = a.goles_a_favor - a.goles_en_contra;
+                    const difGolesB = b.goles_a_favor - b.goles_en_contra;
+
+                    return difGolesB - difGolesA;
+                });
                 
                 setTablaLiga(tabla);
                 setFixtureLiga(fixture);

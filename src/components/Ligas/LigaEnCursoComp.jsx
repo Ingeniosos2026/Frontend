@@ -51,6 +51,7 @@ const LigaEnCursoComp = ({
                                             <th>PP</th>
                                             <th>GF</th>
                                             <th>GC</th>
+                                            <th>DG</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -63,6 +64,7 @@ const LigaEnCursoComp = ({
                                                 <td>{fila.partidos_perdidos}</td>
                                                 <td>{fila.goles_a_favor}</td>
                                                 <td>{fila.goles_en_contra}</td>
+                                                <td>{fila.goles_a_favor - fila.goles_en_contra}</td>
                                             </tr>
                                         ))}
                                     </tbody>
