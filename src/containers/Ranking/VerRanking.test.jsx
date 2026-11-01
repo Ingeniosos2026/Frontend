@@ -18,32 +18,6 @@ vi.mock("../../services/HttpService", () => ({
     })
 }));
 
-vi.mock("../../components/Ranking/VerRankingComp", () =>({
-    default: ({ ranking, mensajeError, onVerPerfil, iD }) => (
-        <div>
-            {mensajeError && <p>{mensajeError}</p>}
-
-            <table>
-                <tbody>
-                    {ranking.map((club, index) => (
-                        
-                        <tr key={club.usuario_id}>
-                            <td>{index + 1}</td>
-                            <td>{String(club.usuario_id) === String(iD) ? 'Tú' : club.nombre}</td>
-                            <td>{club.puntos_ranking}</td>
-                            <td>
-                                <button onClick={() => onVerPerfil(club.usuario_id)}>
-                                    Ver Perfil
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    )
-}));
-
 describe ("Ver Ranking Container", () => {
     
     beforeEach(() => {
