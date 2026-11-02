@@ -29,7 +29,7 @@ const CrearComp = () => {
     return (
         <CrearCComp
             mensajeError={mensajeError}
-            alCrear={manejarCrearComp}
+            alConfirmar={manejarCrearComp}
             alVolver={manejarVolver}
         />
     );

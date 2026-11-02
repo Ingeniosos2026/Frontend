@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { createHttpService } from '../../services/HttpService.js';
-import EditarCComp from "../../components/Comportamientos/CrearCComp";
+import EditarCComp from "../../components/Comportamientos/EditarCComp";
 
 const EditarComp = () => {
     const navigate = useNavigate();
     const [httpService] = useState(() => createHttpService());
     const [mensajeError, setError] = useState(null);
-
     const usuarioId = localStorage.getItem('usuario_id');
+    const {comp_id} = useParams();
 
     const manejarCrearComp = async (comportamientoData) => {
         try {
             setError(null);
-            const respuesta = await httpService.editarComportamiento(usuarioId,compId,comportamientoData);
+            const respuesta = await httpService.editarComportamiento(usuarioId,comp_id,comportamientoData);
             console.log("Comportamiento editado", respuesta);
             navigate('/comportamientos');
         } catch (error) {
@@ -29,7 +29,7 @@ const EditarComp = () => {
     return (
         <EditarCComp
             mensajeError={mensajeError}
-            alCrear={manejarCrearComp}
+            alConfirmar={manejarCrearComp}
             alVolver={manejarVolver}
         />
     );

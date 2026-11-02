@@ -14,7 +14,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
         <div 
             className="min-vh-100 d-flex flex-column align-items-center py-5"
             style={{
-                backgroundColor: '#21503a',
+                backgroundColor: '#6f42c1',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundAttachment: 'fixed',
@@ -26,7 +26,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                 style={{ maxWidth: '600px', opacity: '0.95' }}
             >
                 <div className="text-center mb-5">
-                    <h2 className="fw-bold mb-3" style={{ color: '#198754' }}>Crear Comportamiento</h2>
+                    <h2 className="fw-bold mb-3" style={{ color: '#8b59e7' }}>Crear Comportamiento</h2>
                 </div>
 
                 {mensajeError && (
@@ -63,11 +63,11 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                         <Controller
                             name="codigo"
                             control={control}
-                            rules={{ required: "El contenido del editor es obligatorio" }}
+                            rules={{ required: "Ingrese un codigo de comportamiento" }}
                             render={({ field }) => (
                                 <div className={errors.codigo ? "border border-danger rounded" : ""}>
                                     <EditorTexto 
-                                        {...field} 
+                                        {...field}
                                     />
                                 </div>
                             )}
@@ -85,14 +85,14 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                             onClick={alVolver} 
                             className="px-4 shadow-sm fw-bold rounded-pill"
                         >
-                            ← Volver
+                            ← Cancelar
                         </Button>
                         <Button 
                             variant="success" 
                             type="submit" 
                             disabled={isSubmitting}
                             className="px-5 shadow-sm fw-bold rounded-pill"
-                            style={{ transition: 'all 0.3s ease' }}
+                            style={{ backgroundColor:'#8b59e7' ,borderColor: '#8b59e7',transition: 'all 0.3s ease' }}
                         >
                             {isSubmitting ? (
                                 <>
