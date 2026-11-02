@@ -1,6 +1,7 @@
 import { Container, Table, Alert, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-const RankingComp = ({ ranking, mensajeError, onVerPerfil, iD }) => {
+const RankingComp = ({ ranking, mensajeError, onVerPerfil, iD, volver }) => {
 
     if (mensajeError) {
         return <Alert variant="danger">{mensajeError}</Alert>;
@@ -37,6 +38,9 @@ const RankingComp = ({ ranking, mensajeError, onVerPerfil, iD }) => {
                     ))}
                 </tbody>
             </Table>
+            <Button onClick={volver}>
+                Volver
+            </Button>
         </Container>
     );
 };

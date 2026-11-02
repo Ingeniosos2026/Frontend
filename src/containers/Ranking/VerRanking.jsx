@@ -28,12 +28,17 @@ const Ranking = () => {
         navigate(`/perfil/${usuarioId}`);
     };
 
+    const volver = () => {
+        navigate("/main");
+    }
+
     return (
         <RankingComp
             ranking={ranking}
             mensajeError={mensajeError}
             onVerPerfil={verPerfil}
             iD={myId}
+            volver={volver}
         />
     );
 };

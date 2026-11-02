@@ -72,6 +72,16 @@ describe ("Ver Ranking Container", () => {
 
         expect(navigateMock).toHaveBeenCalledWith("/perfil/1");
     });
+
+    it("vuelve a la pagina principal al seleccionar volver", async () => {
+        render(<Ranking />);
+
+        const buttonVolver = await screen.findByRole("button", { name: "Volver"});
+
+        fireEvent.click(buttonVolver);
+
+        expect(navigateMock).toHaveBeenCalledWith("/main");
+    })
 });
 
 
