@@ -1,6 +1,6 @@
 import { Container, Card, Button, Spinner, Alert, ListGroup} from 'react-bootstrap';
 
-const LobbyLigaComp = ({ myId, mensajeError, esCreador, competidores, iniciando, alIniciar, minimo }) => {
+const LobbyLigaComp = ({ myId, mensajeError, esCreador, competidores, abandonar, alAbandonar, iniciando, alIniciar, minimo }) => {
     return (
         <div 
             className="min-vh-100 d-flex flex-column align-items-center py-5"
@@ -89,13 +89,35 @@ const LobbyLigaComp = ({ myId, mensajeError, esCreador, competidores, iniciando,
                             </Button>
                         </>
                     ) : (
+                        <>
                         <Alert variant="light" className="border shadow-sm text-center w-100 m-0">
                             <Spinner animation="grow" variant="primary" size="sm" className="me-2" />
                             <strong className="text-secondary">Esperando a que el creador inicie la Liga...</strong>
                         </Alert>
+
+                        <Button
+                            variant="danger"
+                            className="mt-3 px-4 rounded-pill fw-bold"
+                            onClick={alAbandonar}
+                            disabled={abandonar}
+                        >
+                            {abandonar ? (
+                                <>
+                                    <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    className="me-2"
+                                    />
+                                    Abandonando...
+                                </>
+                            ) : (
+                                "Abandonar Liga"
+                            )}
+                        </Button>
+                        </>
                     )}
                 </div>
-
             </Container>
         </div>
     );

@@ -27,6 +27,7 @@ vi.mock('../../services/WSService', () => ({
 describe('LobbyLiga Logic Container', () => {
     const mockNavigate = vi.fn();
     const mockIniciarLiga = vi.fn();
+    const mockAbandonarLiga = vi.fn();
     
     let wsHandlers;
     let mockWsConnect, mockWsDisconnect, mockWsOn, mockWsOff;
@@ -43,6 +44,7 @@ describe('LobbyLiga Logic Container', () => {
 
         createHttpService.mockReturnValue({
             iniciarLiga: mockIniciarLiga,
+            abandonarLiga: mockAbandonarLiga
         });
 
         wsHandlers = {};
@@ -175,5 +177,24 @@ describe('LobbyLiga Logic Container', () => {
         expect(mockWsOff).toHaveBeenCalledWith('usuario_unido_liga', expect.any(Function));
         expect(mockWsOff).toHaveBeenCalledWith('iniciar_partido', expect.any(Function));
         expect(mockWsDisconnect).toHaveBeenCalled();
+    });
+
+    it('se invoca al endpoint Abandonar Liga y navega a la lista de ligas', async () => {
+        useLocation.mockReturnValue({ state: { esCreador: false, minimo: 2 } });
+        mockAbandonarLiga.mockResolvedValue({});
+
+        render(<LobbyLiga />);
+
+        const botonAbandonar = screen.getByRole('button', {
+            name: /Abandonar Liga/i
+        });
+
+        fireEvent.click(botonAbandonar);
+
+        expect(mockAbandonarLiga).toHaveBeenCalledWith('20', '1');
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith('/main');
+        });
     });
 });
