@@ -1,5 +1,4 @@
 import { Container, Table, Alert, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 const RankingComp = ({ ranking, mensajeError, onVerPerfil, iD, volver }) => {
 
