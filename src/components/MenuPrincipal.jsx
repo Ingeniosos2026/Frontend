@@ -128,6 +128,34 @@ const PagPrincipal = () => {
                         </div>
                     </Carousel.Item>
 
+                    <Carousel.Item>
+                        <div 
+                            onClick={() => navigate("/ranking")} 
+                            className="position-relative w-100"
+                            style={{ 
+                                cursor: "pointer", 
+                                height: '400px',
+                                backgroundColor: '#0d6efd',
+                                backgroundImage: `url(${Liga})`,
+                                backgroundSize: 'contain',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                            }} 
+                        >
+                            
+                            <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+
+                            <div className="position-relative d-flex h-100 justify-content-center align-items-center pb-5">
+                                <h1 className="display-2 fw-bold text-white tracking-wide"></h1>
+                            </div>
+                            
+                            
+                            <Carousel.Caption className="bg-dark bg-opacity-50 m-0 pb-3 pt-2 w-100 start-0 px-3">
+                                <h5 className="fw-bold tracking-wide text-white mb-0">RANKING GLOBAL</h5>
+                            </Carousel.Caption>
+                        </div>
+                    </Carousel.Item>
+
                 </Carousel>
             </Container>
         </div>
