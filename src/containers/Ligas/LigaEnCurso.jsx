@@ -95,74 +95,78 @@ const LigaEnCurso = () => {
     }, [httpService, usuarioId, liga_id, navigate]);
 
     useEffect(() => {
-        const manejarPartidoIniciado = (payload) => {
-            const partidoId = payload.partido_id;
+        const manejarProximoPartido = (payload) => {
+            const partido_id = payload.id_proximo_partido;
+            const proximo_turno = payload.turno;
             
+            setIdPartidoActual(partido_id);
             setPartidosEnCurso(prev => {
                 const nuevo = new Set(prev);
-                nuevo.add(partidoId);
+                nuevo.add(partido_id);
                 return nuevo;
             });
 
             const miPartido = fixtureRef.current.find(
-                p => p.partido_id === partidoId && 
-                (p.usuario_id_izq === usuarioIdRef.current || p.usuario_id_der === usuarioIdRef.current)
+                p => p.turno === proximo_turno && 
+                (p.equipo_izq.id_equipo === usuarioId || p.equipo_der.id_equipo === usuarioId)
             );
             
             if (miPartido) {
-                navigate(`/partido/${partidoId}`, { 
-                    state: { returnTo: `/ligas/lobby/${liga_id}` }
-                });
+                const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
+                if (String(partido_id) !== ultimoJugado) {
+                    sessionStorage.setItem(`ultimo_jugado_${liga_id}`, partido_id);
+                    navigate(`/partido/${partido_id}`, { 
+                        state: { returnTo: `/ligas/en_curso/${liga_id}` }
+                    });
+                }
             }
         };
 
-        const manejarPartidoFinalizado = async (payload) => {
-            const partidoId = payload.partido_id;
-            const goles_izq = payload.goles_izq;
-            const goles_der = payload.goles_der;
+        const manejarPartidoFinalizado = (payload) => {
+            const fila_fixture = payload.fixture;
+            const fila_tabla_eq_iza = payload.tabla_actualizada[0];
+            const fila_tabla_eq_der = payload.tabla_actualizada[1];
             
             setPartidosEnCurso(prev => {
                 const nuevo = new Set(prev);
-                nuevo.delete(partidoId);
+                nuevo.delete(fila_fixture.id_partido);
                 return nuevo;
             });
             setPartidosFinalizados(prev => {
                 const nuevo = new Set(prev);
-                nuevo.add(partidoId);
+                nuevo.add(fila_fixture.id_partido)
                 return nuevo;
             });
 
-            setFixtureLiga(prevFixture => 
-                prevFixture.map(partido => 
-                    partido.partido_id === partidoId 
-                        ? { ...partido, goles_izq, goles_der } 
-                        : partido
-                )
-            );
+            setFixtureLiga(prevFixture => prevFixture.map(fila => 
+                fila.id_partido === fila_fixture.id_partido ? fila_fixture : fila
+            ));
 
-            try {
-                const tablaActualizada = await httpService.obtenerTablaLiga(liga_id);
-                setTablaLiga(tablaActualizada);
-            } catch (error) {
-                console.error("Error al refrescar la tabla:", error);
-            }
+            setTablaLiga(prevTabla => {
+                const actualizado = prevTabla.map(fila => {
+                    if (fila.id_equipo === fila_tabla_eq_iza.id_equipo) return fila_tabla_eq_iza;
+                    if (fila.id_equipo === fila_tabla_eq_der.id_equipo) return fila_tabla_eq_der;
+                    return fila;
+                });
+                return ordenarTabla(actualizado);
+            });
         };
 
-        const manejarLigaFinalizada = (payload) => {
+        const manejarLigaTerminada = (payload) => {
             console.log("La liga finalizó. ID:", payload.liga_id);
         };
 
         if (!wsService.isConnected) {
             wsService.connect();
-            wsService.on('partido_iniciado', manejarPartidoIniciado);
-            wsService.on('partido_finalizado', manejarPartidoFinalizado);
-            wsService.on('liga_finalizada', manejarLigaFinalizada);
+            wsService.on('proximo_partido', manejarProximoPartido);
+            wsService.on('resultado_partido', manejarPartidoFinalizado);
+            wsService.on('liga_terminada', manejarLigaTerminada);
         }
 
         return () => {
-            wsService.off('partido_iniciado', manejarPartidoIniciado);
-            wsService.off('partido_finalizado', manejarPartidoFinalizado);
-            wsService.off('liga_finalizada', manejarLigaFinalizada);
+            wsService.off('proximo_partido', manejarProximoPartido);
+            wsService.off('resultado_partido', manejarPartidoFinalizado);
+            wsService.off('liga_terminada', manejarLigaTerminada);
             wsService.disconnect();
         };
     }, [liga_id, usuarioId, navigate]);
