@@ -179,7 +179,7 @@ describe('LobbyLiga Logic Container', () => {
         expect(mockWsDisconnect).toHaveBeenCalled();
     });
 
-    it('se invoca al endpoint Abandonar Liga y navega a la lista de ligas', async () => {
+    it('se invoca al endpoint Abandonar Liga y navega a la pagina principal', async () => {
         useLocation.mockReturnValue({ state: { esCreador: false, minimo: 2 } });
         mockAbandonarLiga.mockResolvedValue({});
 
