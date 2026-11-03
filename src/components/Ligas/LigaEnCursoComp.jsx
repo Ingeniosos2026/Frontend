@@ -8,7 +8,8 @@ const LigaEnCursoComp = ({
     partidosEnCurso, 
     partidosFinalizados, 
     miUsuarioId,
-    esCreador
+    esCreador,
+    partidoActualId
 }) => {
     
     if (cargando) {
@@ -57,7 +58,7 @@ const LigaEnCursoComp = ({
                                     <tbody>
                                         {tablaLiga.map((fila, index) => (
                                             <tr key={index} className="text-center fw-semibold">
-                                                <td className="text-start ps-3 fw-bold">{fila.club}</td>
+                                                <td className="text-start ps-3 fw-bold">{fila.nombre_club}</td>
                                                 <td className="text-primary fs-5">{fila.puntos}</td>
                                                 <td>{fila.partidos_ganados}</td>
                                                 <td>{fila.partidos_empatados}</td>
@@ -84,9 +85,9 @@ const LigaEnCursoComp = ({
                             </Card.Header>
                             <Card.Body className="p-3" style={{ maxHeight: '600px', overflowY: 'auto' }}>
                                 {fixtureLiga.map((partido, index) => {
-                                    const enCurso = partidosEnCurso.has(partido.partido_id);
-                                    const finalizado = partidosFinalizados.has(partido.partido_id);
-                                    const meTocaJugar = partido.usuario_id_izq === miUsuarioId || partido.usuario_id_der === miUsuarioId;
+                                    const enCurso = partidosEnCurso.has(partido.id_partido);
+                                    const finalizado = partidosFinalizados.has(partido.id_partido);                
+                                    const meTocaJugar = partido.equipo_izq.id_equipo === miUsuarioId || partido.equipo_der.id_equipo === miUsuarioId;
 
                                     return (
                                         <Card 
@@ -95,17 +96,17 @@ const LigaEnCursoComp = ({
                                         >
                                             <Card.Body className="p-3">
                                                 <div className="d-flex justify-content-between align-items-center mb-2">
-                                                    <span className="small text-muted fw-bold">Partido #{partido.partido_id}</span>
+                                                    <span className="small text-muted fw-bold">Partido #{partido.turno}</span>
                                                     {enCurso && <Badge bg="success" className="pulse-animation">En Curso</Badge>}
                                                     {finalizado && <Badge bg="secondary">Finalizado</Badge>}
                                                     {!enCurso && !finalizado && <Badge bg="light" text="dark" className="border">Pendiente</Badge>}
                                                 </div>
                                                 <div className="d-flex justify-content-between align-items-center fs-5 fw-bold">
-                                                    <span className={partido.usuario_id_izq === miUsuarioId ? 'text-primary' : ''}>
-                                                        {partido.club_izq}
+                                                    <span className={partido.equipo_izq.id_equipo === miUsuarioId ? 'text-primary' : ''}>
+                                                        {partido.equipo_izq.nombre_club}
                                                     </span>
                                                     
-                                                    {finalizado && partido.goles_izq !== undefined && partido.goles_der !== undefined ? (
+                                                    {finalizado && partido.goles_izq !== null && partido.goles_der !== null ? (
                                                         <span className="bg-dark text-white px-3 py-1 rounded fs-4 shadow-sm">
                                                             {partido.goles_izq} - {partido.goles_der}
                                                         </span>
@@ -113,8 +114,8 @@ const LigaEnCursoComp = ({
                                                         <span className="text-muted mx-2 fs-6">VS</span>
                                                     )}
 
-                                                    <span className={partido.usuario_id_der === miUsuarioId ? 'text-primary' : ''}>
-                                                        {partido.club_der}
+                                                    <span className={partido.equipo_der.id_equipo === miUsuarioId ? 'text-primary' : ''}>
+                                                        {partido.equipo_der.nombre_club}
                                                     </span>
                                                 </div>
                                             </Card.Body>

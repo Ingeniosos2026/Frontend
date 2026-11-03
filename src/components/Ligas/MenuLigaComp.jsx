@@ -63,7 +63,7 @@ const MenuLigaComp = ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }
                                                 <Button 
                                                     variant="primary" 
                                                     className="px-4 fw-bold shadow-sm"
-                                                    onClick={() => UnirseLiga(liga.privada, liga.id, liga.min_jugadores)}
+                                                    onClick={() => UnirseLiga(liga.es_privada, liga.id_liga, liga.min_jugadores)}
                                                 >
                                                     Unirse a la Liga
                                                 </Button>
