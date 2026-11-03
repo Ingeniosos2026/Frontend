@@ -3,6 +3,12 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { createWSService } from '../../services/WSService';
 import { createHttpService } from '../../services/HttpService';
 import LigaEnCursoComp from '../../components/Ligas/LigaEnCursoComp';
+import LigaFinalizadaComp from '../../components/Ligas/LigaFinalizadaComp';
+
+const estados = { 
+    EN_CURSO: 'en_curso',
+    FINALIZADA: 'finalizada'
+};
 
 const ordenarTabla = (tabla) => {
     return [...tabla].sort((a, b) => {
@@ -32,6 +38,7 @@ const LigaEnCurso = () => {
     
     const [mensajeError, setError] = useState(null);
     const [cargando, setCargando] = useState(true);
+    const [estadoLiga, setEstadoLiga] = useState(estados.EN_CURSO);
     
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
@@ -154,6 +161,7 @@ const LigaEnCurso = () => {
 
         const manejarLigaTerminada = (payload) => {
             console.log("La liga finalizó. ID:", payload.liga_id);
+            setEstadoLiga(estados.FINALIZADA);
         };
 
         if (!wsService.isConnected) {
@@ -171,6 +179,20 @@ const LigaEnCurso = () => {
         };
     }, [liga_id, usuarioId, navigate]);
     
+    const manejarVolver = () => {
+        sessionStorage.removeItem(`ultimo_jugado_${liga_id}`);
+        navigate('/ligas');
+    };
+
+    if (estadoLiga === estados.FINALIZADA) {
+        return (
+            <LigaFinalizadaComp 
+                alVolver={manejarVolver}
+                tablaLiga={tablaLiga}    
+            />
+        );
+    }
+
     return (
         <LigaEnCursoComp
             cargando={cargando}
@@ -181,6 +203,7 @@ const LigaEnCurso = () => {
             partidosFinalizados={partidosFinalizados}
             miUsuarioId={usuarioId}
             esCreador={esCreador}
+            partidoActualId={idPartidoActual}
         />  
     );
 };
