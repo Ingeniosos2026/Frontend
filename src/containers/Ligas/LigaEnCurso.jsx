@@ -33,8 +33,13 @@ const LigaEnCurso = () => {
     const usuarioId = Number(localStorage.getItem('usuario_id'));
     const esCreador = location.state?.esCreador || false;
 
-    const [httpService] = useState(() => createHttpService());
-    const [wsService] = useState(() => createWSService(`/ws/liga/${liga_id}`));
+    const httpService = useRef(createHttpService()).current;
+    
+    const wsServiceRef = useRef(null);
+    if (!wsServiceRef.current) {
+        wsServiceRef.current = createWSService(`/ws/liga/${liga_id}`);
+    }
+    const wsService = wsServiceRef.current;
     
     const [mensajeError, setError] = useState(null);
     const [cargando, setCargando] = useState(true);
