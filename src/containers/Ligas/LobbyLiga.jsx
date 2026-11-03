@@ -48,11 +48,21 @@ const LobbyLiga = () => {
             //
         };
 
+        const manejarAbandonar = (payload) => {
+            const usuarioAbandono = payload.usuario_abandono.id;
+
+            setCompetidores((prev) =>
+                prev.filter((c) => c.id !== usuarioAbandono)
+            );
+        }
+
         wsService.on('usuario_unido_liga', manejarUnirse);
+        wsService.on('usuario_abandono_liga', manejarAbandonar);
         wsService.on('iniciar_partido', manejarIniciar);
 
         return () => {
             wsService.off('usuario_unido_liga', manejarUnirse);
+            wsService.off('usuario_abandono_liga', manejarAbandonar);
             wsService.off('iniciar_partido', manejarIniciar);
             wsService.disconnect();
         };
