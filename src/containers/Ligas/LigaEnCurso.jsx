@@ -119,6 +119,14 @@ const LigaEnCurso = () => {
                 return nuevo;
             });
 
+            setFixtureLiga(prevFixture => 
+                prevFixture.map(fila => 
+                    fila.turno === proximo_turno 
+                        ? { ...fila, id_partido: partido_id }
+                        : fila
+                )
+            );
+
             const miPartido = fixtureRef.current.find(
                 p => p.turno === proximo_turno && 
                 (p.equipo_izq.id_equipo === usuarioId || p.equipo_der.id_equipo === usuarioId)
@@ -151,16 +159,31 @@ const LigaEnCurso = () => {
                 return nuevo;
             });
 
-            setFixtureLiga(prevFixture => prevFixture.map(fila => 
-                fila.id_partido === fila_fixture.id_partido ? fila_fixture : fila
-            ));
+            setFixtureLiga(prevFixture => {
+                const existe = prevFixture.some(fila => fila.turno === fila_fixture.turno);
+                
+                const actualizado = existe
+                    ? prevFixture.map(fila => fila.turno === fila_fixture.turno ? fila_fixture : fila)
+                    : [...prevFixture, fila_fixture];
+
+                return ordenarFixture(actualizado);
+            });
 
             setTablaLiga(prevTabla => {
-                const actualizado = prevTabla.map(fila => {
-                    if (fila.id_equipo === fila_tabla_eq_iza.id_equipo) return fila_tabla_eq_iza;
-                    if (fila.id_equipo === fila_tabla_eq_der.id_equipo) return fila_tabla_eq_der;
-                    return fila;
+                let actualizado = [...prevTabla];
+
+                [fila_tabla_eq_iza, fila_tabla_eq_der].forEach(nuevo_fila => {
+                    const existe = actualizado.some(fila => fila.id_usuario === nuevo_fila.id_usuario);
+                    
+                    if (existe) {
+                        actualizado = actualizado.map(fila => 
+                            fila.id_usuario === nuevo_fila.id_usuario ? nuevo_fila : fila
+                        );
+                    } else {
+                        actualizado.push(nuevo_fila);
+                    }
                 });
+
                 return ordenarTabla(actualizado);
             });
         };
