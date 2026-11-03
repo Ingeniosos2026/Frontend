@@ -33,13 +33,11 @@ const LigaEnCurso = () => {
     const usuarioId = Number(localStorage.getItem('usuario_id'));
     const esCreador = location.state?.esCreador || false;
 
-    const httpService = useRef(createHttpService()).current;
-    
-    const wsServiceRef = useRef(null);
-    if (!wsServiceRef.current) {
-        wsServiceRef.current = createWSService(`/ws/liga/${liga_id}`);
+    const httpServiceRef = useRef(null);
+    if (!httpServiceRef.current) {
+        httpServiceRef.current = createHttpService();
     }
-    const wsService = wsServiceRef.current;
+    const httpService = httpServiceRef.current;
     
     const [mensajeError, setError] = useState(null);
     const [cargando, setCargando] = useState(true);
@@ -107,6 +105,9 @@ const LigaEnCurso = () => {
     }, [httpService, usuarioId, liga_id, navigate]);
 
     useEffect(() => {
+        const wsService = createWSService(`/ws/liga/${liga_id}`);
+        wsService.connect();
+
         const manejarProximoPartido = (payload) => {
             const partido_id = payload.id_proximo_partido;
             const proximo_turno = payload.turno;
@@ -169,12 +170,9 @@ const LigaEnCurso = () => {
             setEstadoLiga(estados.FINALIZADA);
         };
 
-        if (!wsService.isConnected) {
-            wsService.connect();
-            wsService.on('proximo_partido', manejarProximoPartido);
-            wsService.on('resultado_partido', manejarPartidoFinalizado);
-            wsService.on('liga_terminada', manejarLigaTerminada);
-        }
+        wsService.on('proximo_partido', manejarProximoPartido);
+        wsService.on('resultado_partido', manejarPartidoFinalizado);
+        wsService.on('liga_terminada', manejarLigaTerminada);
 
         return () => {
             wsService.off('proximo_partido', manejarProximoPartido);
@@ -182,7 +180,7 @@ const LigaEnCurso = () => {
             wsService.off('liga_terminada', manejarLigaTerminada);
             wsService.disconnect();
         };
-    }, [liga_id, usuarioId, navigate]);
+    }, [liga_id, usuarioId]);
     
     const manejarVolver = () => {
         sessionStorage.removeItem(`ultimo_jugado_${liga_id}`);
