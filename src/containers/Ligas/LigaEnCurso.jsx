@@ -4,6 +4,22 @@ import { createWSService } from '../../services/WSService';
 import { createHttpService } from '../../services/HttpService';
 import LigaEnCursoComp from '../../components/Ligas/LigaEnCursoComp';
 
+const ordenarTabla = (tabla) => {
+    return [...tabla].sort((a, b) => {
+        const diferenciaPuntos = b.puntos - a.puntos;
+        if (diferenciaPuntos !== 0) return diferenciaPuntos; 
+        
+        const difGolesA = a.goles_a_favor - a.goles_en_contra;
+        const difGolesB = b.goles_a_favor - b.goles_en_contra;
+        return difGolesB - difGolesA;
+    });
+};
+const ordenarFixture = (fixture) => {
+    return [...fixture].sort((a, b) => {
+        return a.turno - b.turno;
+    });
+};
+
 const LigaEnCurso = () => {
     const { liga_id } = useParams();
     const navigate = useNavigate();
@@ -31,28 +47,17 @@ const LigaEnCurso = () => {
     }, [fixtureLiga]);
 
     useEffect(() => {
-
         const init = async () => {
             try {
                 setCargando(true);
                 const tabla = await httpService.obtenerTablaLiga(liga_id);
                 const fixture = await httpService.obtenerFixtureLiga(liga_id);
                 
-                tabla.sort((a, b) => {
-                    const diferenciaPuntos = b.puntos - a.puntos;
-                    
-                    if (diferenciaPuntos !== 0) {
-                        return diferenciaPuntos; 
-                    }
-
-                    const difGolesA = a.goles_a_favor - a.goles_en_contra;
-                    const difGolesB = b.goles_a_favor - b.goles_en_contra;
-
-                    return difGolesB - difGolesA;
-                });
+                const tabla_ordenada = ordenarTabla(tabla);
+                const fixture_ordenado = ordenarFixture(fixture);
                 
-                setTablaLiga(tabla);
-                setFixtureLiga(fixture);
+                setTablaLiga(tabla_ordenada);
+                setFixtureLiga(fixture_ordenado);
 
             } catch (error) {
                 console.error(error.message);
