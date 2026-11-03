@@ -31,6 +31,42 @@ const LigaEnCurso = () => {
     }, [fixtureLiga]);
 
     useEffect(() => {
+
+        const init = async () => {
+            try {
+                setCargando(true);
+                const tabla = await httpService.obtenerTablaLiga(liga_id);
+                const fixture = await httpService.obtenerFixtureLiga(liga_id);
+                
+                tabla.sort((a, b) => {
+                    const diferenciaPuntos = b.puntos - a.puntos;
+                    
+                    if (diferenciaPuntos !== 0) {
+                        return diferenciaPuntos; 
+                    }
+
+                    const difGolesA = a.goles_a_favor - a.goles_en_contra;
+                    const difGolesB = b.goles_a_favor - b.goles_en_contra;
+
+                    return difGolesB - difGolesA;
+                });
+                
+                setTablaLiga(tabla);
+                setFixtureLiga(fixture);
+
+            } catch (error) {
+                console.error(error.message);
+                setError(error.message);
+            } finally {
+                setCargando(false);
+            }
+        };
+
+        init();
+
+    }, [httpService, usuarioId, liga_id, navigate]);
+
+    useEffect(() => {
         const manejarPartidoIniciado = (payload) => {
             const partidoId = payload.partido_id;
             
@@ -88,43 +124,12 @@ const LigaEnCurso = () => {
             console.log("La liga finalizó. ID:", payload.liga_id);
         };
 
-        const init = async () => {
-            try {
-                setCargando(true);
-                const tabla = await httpService.obtenerTablaLiga(liga_id);
-                const fixture = await httpService.obtenerFixtureLiga(liga_id);
-                
-                tabla.sort((a, b) => {
-                    const diferenciaPuntos = b.puntos - a.puntos;
-                    
-                    if (diferenciaPuntos !== 0) {
-                        return diferenciaPuntos; 
-                    }
-
-                    const difGolesA = a.goles_a_favor - a.goles_en_contra;
-                    const difGolesB = b.goles_a_favor - b.goles_en_contra;
-
-                    return difGolesB - difGolesA;
-                });
-                
-                setTablaLiga(tabla);
-                setFixtureLiga(fixture);
-
-                if (!wsService.isConnected) {
-                    wsService.connect();
-                    wsService.on('partido_iniciado', manejarPartidoIniciado);
-                    wsService.on('partido_finalizado', manejarPartidoFinalizado);
-                    wsService.on('liga_finalizada', manejarLigaFinalizada);
-                }
-            } catch (error) {
-                console.error(error.message);
-                setError(error.message);
-            } finally {
-                setCargando(false);
-            }
-        };
-
-        init();
+        if (!wsService.isConnected) {
+            wsService.connect();
+            wsService.on('partido_iniciado', manejarPartidoIniciado);
+            wsService.on('partido_finalizado', manejarPartidoFinalizado);
+            wsService.on('liga_finalizada', manejarLigaFinalizada);
+        }
 
         return () => {
             wsService.off('partido_iniciado', manejarPartidoIniciado);
@@ -132,7 +137,7 @@ const LigaEnCurso = () => {
             wsService.off('liga_finalizada', manejarLigaFinalizada);
             wsService.disconnect();
         };
-    }, [httpService, wsService, liga_id, navigate]);
+    }, [liga_id, usuarioId, navigate]);
     
     return (
         <LigaEnCursoComp
