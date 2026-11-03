@@ -39,9 +39,9 @@ const LobbyLiga = () => {
             });
         };
 
-        const manejarIniciar = () => {
+        const manejarIniciar = (payload) => {
             console.log("El creador inició la liga. Armando fixture...");
-            navigate(`/ligas/en_curso/${liga_id}`, { state: { esCreador: esCreador} });
+            navigate(`/ligas/en_curso/${liga_id}`, { state: { esCreador: esCreador, fixture: payload.fixture, tabla: payload.tabla, id_partido_actual: payload.id_partido_actual } });
         };
 
         wsService.on('usuario_unido_liga', manejarUnirse);
