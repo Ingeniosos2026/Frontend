@@ -78,13 +78,13 @@ const LigaEnCurso = () => {
 
                     const miPartido = fixture_ordenado.find(
                         p => p.id_partido === partido_actual_id && 
-                        (p.equipo_izq.id_equipo === usuarioId || p.equipo_der.id_equipo === usuarioId)
+                        (Number(p.equipo_izq.id_usuario) === usuarioId || Number(p.equipo_der.id_usuario) === usuarioId)
                     );
 
                     if (miPartido) {
                         const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
-                        if (String(partido_actual_id) !== ultimoJugado) {
-                            sessionStorage.setItem(`ultimo_jugado_${liga_id}`, partido_actual_id);
+                        if (Number(partido_actual_id) !== Number(ultimoJugado)) {
+                            sessionStorage.setItem(`ultimo_jugado_${liga_id}`, Number(partido_actual_id));
                             navigate(`/partido/${partido_actual_id}`, { 
                                 state: { returnTo: `/ligas/en_curso/${liga_id}` }
                             });
@@ -129,13 +129,13 @@ const LigaEnCurso = () => {
 
             const miPartido = fixtureRef.current.find(
                 p => p.turno === proximo_turno && 
-                (p.equipo_izq.id_equipo === usuarioId || p.equipo_der.id_equipo === usuarioId)
+                (Number(p.equipo_izq.id_usuario) === usuarioId || Number(p.equipo_der.id_usuario) === usuarioId)
             );
             
             if (miPartido) {
                 const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
-                if (String(partido_id) !== ultimoJugado) {
-                    sessionStorage.setItem(`ultimo_jugado_${liga_id}`, partido_id);
+                if (Number(partido_id) !== Number(ultimoJugado)) {
+                    sessionStorage.setItem(`ultimo_jugado_${liga_id}`, Number(partido_id));
                     navigate(`/partido/${partido_id}`, { 
                         state: { returnTo: `/ligas/en_curso/${liga_id}` }
                     });
@@ -189,7 +189,7 @@ const LigaEnCurso = () => {
         };
 
         const manejarLigaTerminada = (payload) => {
-            console.log("La liga finalizó. ID:", payload.liga_id);
+            console.log("La liga finalizó. ID:", payload.id_liga);
             setEstadoLiga(estados.FINALIZADA);
         };
 
