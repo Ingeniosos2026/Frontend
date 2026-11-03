@@ -35,7 +35,7 @@ const LigaEnCurso = () => {
     
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
-    
+    const [idPartidoActual, setIdPartidoActual] = useState(null);
     const [partidosEnCurso, setPartidosEnCurso] = useState(new Set());
     const [partidosFinalizados, setPartidosFinalizados] = useState(new Set());
 
@@ -56,8 +56,31 @@ const LigaEnCurso = () => {
                 const tabla_ordenada = ordenarTabla(tabla);
                 const fixture_ordenado = ordenarFixture(fixture);
                 
+                const partido_actual_obj = fixture_ordenado.toReversed().find(f => f.id_partido !== null);
+                const partido_actual_id = partido_actual_obj ? partido_actual_obj.id_partido : null;
+                
                 setTablaLiga(tabla_ordenada);
                 setFixtureLiga(fixture_ordenado);
+                setIdPartidoActual(partido_actual_id);
+
+                if (partido_actual_id) {
+                    setPartidosEnCurso(new Set([partido_actual_id]));
+
+                    const miPartido = fixture_ordenado.find(
+                        p => p.id_partido === partido_actual_id && 
+                        (p.equipo_izq.id_equipo === usuarioId || p.equipo_der.id_equipo === usuarioId)
+                    );
+
+                    if (miPartido) {
+                        const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
+                        if (String(partido_actual_id) !== ultimoJugado) {
+                            sessionStorage.setItem(`ultimo_jugado_${liga_id}`, partido_actual_id);
+                            navigate(`/partido/${partido_actual_id}`, { 
+                                state: { returnTo: `/ligas/en_curso/${liga_id}` }
+                            });
+                        }
+                    }
+                }
 
             } catch (error) {
                 console.error(error.message);
