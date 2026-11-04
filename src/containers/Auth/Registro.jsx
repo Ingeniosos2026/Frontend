@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { createHttpService } from "../../services/HttpService";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
@@ -8,11 +8,19 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import fondoCancha from "../../assets/fondoRegistroSesion.jpg"; 
 
 const FormRegistro = () => {
-    const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm();
+    const { register, control,formState: { errors, isSubmitting }, handleSubmit } = useForm({ defaultValues: { avatar: 5}});
     const { crearUsuario } = createHttpService();
     const [mensaje, setMensaje] = useState("");
     const [errorRegistro, setErrorRegistro] = useState("");
     const navigate = useNavigate();
+    const avatares = [
+    { id: 1, imagen: '../src/assets/avatars/avatar_1.png' },
+    { id: 2, imagen: '../src/assets/avatars/avatar_2.png' },
+    { id: 3, imagen: '../src/assets/avatars/avatar_3.png' },
+    { id: 4, imagen: '../src/assets/avatars/avatar_4.png' },
+    { id: 5, imagen: '../src/assets/avatars/avatar_5.png' },
+    { id: 6, imagen: '../src/assets/avatars/avatar_6.png' }
+    ];
     
     const onSubmit = async (data) => {
         setMensaje("");
@@ -47,7 +55,7 @@ const FormRegistro = () => {
                         
                         <h2 className="fw-bold mb-4 text-start">Registrarse</h2>
 
-                        <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Form onSubmit={handleSubmit(onSubmit)} noValidate>
                             {/* Campo Nombre */}
                             <Form.Group className="mb-3" controlId="nombre">
                                 <Form.Label className="text-muted small fw-bold">Nombre</Form.Label>
@@ -120,14 +128,75 @@ const FormRegistro = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            {/* Campo Avatar (Opcional) */}
                             <Form.Group className="mb-4" controlId="avatar">
-                                <Form.Label className="text-muted small fw-bold">Avatar</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    placeholder="Elige un avatar..."
-                                    className="bg-light border-0 shadow-sm rounded-0"
-                                    {...register("avatar")}
+                                <Form.Label className=" mt-2 text-muted small fw-bold">Selecciona el Avatar de tu Club</Form.Label>
+                                
+                                <Controller
+                                    name="avatar"
+                                    control={control}
+                                    rules={{ required: "Seleccione un avatar" }}
+                                    render={({ field: { onChange, value } }) => (
+                                        <div>
+                                            <style>
+                                                {`
+                                                .scroll-sutil {
+                                                    scrollbar-width: thin; 
+                                                    scrollbar-color: #dee2e6 transparent; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar {
+                                                    height: 6px; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-track {
+                                                    background: transparent; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-thumb {
+                                                    background-color: #dee2e6; 
+                                                    border-radius: 10px; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-thumb:hover {
+                                                    background-color: #adb5bd; 
+                                                }
+                                                `}
+                                            </style>
+                                            <div 
+                                                className="d-flex flex-row pb-2 scroll-sutil" 
+                                                style={{ overflowX: 'auto', gap: '15px' }}
+                                            >
+                                                {avatares.map((avatar) => (
+                                                    <div
+                                                        key={avatar.id}
+                                                        onClick={() => onChange(avatar.id)}
+                                                        className="flex-shrink-0 rounded-circle"
+                                                        style={{ 
+                                                            cursor: 'pointer',
+                                                            // Borde azul de Bootstrap si está seleccionado, transparente si no (para evitar saltos en la interfaz)
+                                                            border: value === avatar.id ? '1px solid #a0a0a0' : '3px solid transparent',
+                                                            padding: '2px', // Espacio entre el borde y la imagen
+                                                            
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={avatar.imagen}
+                                                            alt={`Avatar ${avatar.id}`}
+                                                            width="50"
+                                                            height="50"
+                                                            style={{ 
+                                                                objectFit: "scale-down", 
+                                                                borderRadius: "50%",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Mensaje de error de React Hook Form */}
+                                            {errors.avatar && (
+                                                <div className="text-danger small mt-1">
+                                                    {errors.avatar.message}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 />
                             </Form.Group>
 
