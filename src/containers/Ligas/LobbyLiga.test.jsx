@@ -27,6 +27,7 @@ vi.mock('../../services/WSService', () => ({
 describe('LobbyLiga Logic Container', () => {
     const mockNavigate = vi.fn();
     const mockIniciarLiga = vi.fn();
+    const mockAbandonarLiga = vi.fn();
     
     let wsHandlers;
     let mockWsConnect, mockWsDisconnect, mockWsOn, mockWsOff;
@@ -43,6 +44,7 @@ describe('LobbyLiga Logic Container', () => {
 
         createHttpService.mockReturnValue({
             iniciarLiga: mockIniciarLiga,
+            abandonarLiga: mockAbandonarLiga
         });
 
         wsHandlers = {};
@@ -175,5 +177,40 @@ describe('LobbyLiga Logic Container', () => {
         expect(mockWsOff).toHaveBeenCalledWith('usuario_unido_liga', expect.any(Function));
         expect(mockWsOff).toHaveBeenCalledWith('liga_iniciada', expect.any(Function));
         expect(mockWsDisconnect).toHaveBeenCalled();
+    });
+
+    it('se invoca al endpoint Abandonar Liga y navega a la pagina principal', async () => {
+        useLocation.mockReturnValue({ state: { esCreador: false, minimo: 2 } });
+        mockAbandonarLiga.mockResolvedValue({});
+
+        render(<LobbyLiga />);
+
+        const botonAbandonar = screen.getByRole('button', {
+            name: /Abandonar Liga/i
+        });
+
+        fireEvent.click(botonAbandonar);
+
+        expect(mockAbandonarLiga).toHaveBeenCalledWith('20', '1');
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith('/main');
+        });
+    });
+
+    it('elimina de la tabla al usuario que abandono la liga', async () => {
+        useLocation.mockReturnValue({ state: { esCreador: true, minimo: 3 } });
+        render(<LobbyLiga />);
+        
+        act(() => {
+            wsHandlers['usuario_unido_liga']({ usuario_unido: { id: 1, nombre: 'Fassi', club: 'Talleres' } });
+        });
+        expect(screen.getByText(/Faltan 2 competidores/i)).toBeInTheDocument();
+
+        act(() => {
+            wsHandlers['usuario_abandono_liga']({ usuario_abandono: { id: 1, nombre: 'Fassi', club: 'Talleres' } });
+        });
+        
+        expect(screen.getByText(/Faltan 3 competidores/i)).toBeInTheDocument();
     });
 });

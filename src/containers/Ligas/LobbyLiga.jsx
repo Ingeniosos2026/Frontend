@@ -18,6 +18,7 @@ const LobbyLiga = () => {
     const [mensajeError, setError] = useState(null);
 
     const [iniciando, setIniciando] = useState(false);
+    const [abandonando, setAbandonando] = useState(false);
 
     useEffect(() => {
         const wsService = createWSService(`/ws/liga/${liga_id}`);
@@ -44,12 +45,22 @@ const LobbyLiga = () => {
             navigate(`/ligas/en_curso/${liga_id}`, { state: { esCreador: esCreador, fixture: payload.fixture, tabla: payload.tabla, id_partido_actual: payload.id_partido_actual } });
         };
 
+        const manejarAbandonar = (payload) => {
+            const usuarioAbandono = payload.usuario_abandono.id;
+
+            setCompetidores((prev) =>
+                prev.filter((c) => c.id !== usuarioAbandono)
+            );
+        }
+
         wsService.on('usuario_unido_liga', manejarUnirse);
+        wsService.on('usuario_abandono_liga', manejarAbandonar);
         wsService.on('liga_iniciada', manejarIniciar);
 
         return () => {
             wsService.off('usuario_unido_liga', manejarUnirse);
-            wsService.off('liga_iniciada', manejarIniciar);
+            wsService.off('usuario_abandono_liga', manejarAbandonar);
+            wsService.off('iniciar_partido', manejarIniciar);
             wsService.disconnect();
         };
     }, [liga_id, navigate]);
@@ -66,6 +77,18 @@ const LobbyLiga = () => {
         }
     };
 
+    const manejarAbandonarLiga = async () => {
+        try {
+            setAbandonando(true);
+            await httpService.abandonarLiga(liga_id, usuarioId);
+            navigate("/main");
+        } catch (error) {
+            console.error("Error al abandonar liga:", error);
+            setAbandonando(false);
+            setError(error.message);
+        }
+    };
+
     return (
         <LobbyLigaComp
             myId={Number(usuarioId)}
@@ -73,6 +96,8 @@ const LobbyLiga = () => {
             esCreador={esCreador}
             competidores={competidores}
             iniciando={iniciando}
+            abandonar={abandonando}
+            alAbandonar={manejarAbandonarLiga}
             alIniciar={manejarIniciarLiga}
             minimo={minimo}
         />

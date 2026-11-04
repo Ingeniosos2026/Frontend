@@ -22,8 +22,8 @@ import MenuJugador from './containers/Jugadores/MenuJugador';
 import CrearJugador from './containers/Jugadores/CrearJugador';
 
 import MenuComp from './containers/Comportamientos/MenuComp';
-// import CrearComp from './containers/Comportamientos/CrearComp';
-// import EditarComp from './containers/Comportamientos/EditarComp';
+import CrearComp from './containers/Comportamientos/CrearComp';
+import EditarComp from './containers/Comportamientos/EditarComp';
 
 //Contenedores Liga
 import MenuLiga from './containers/Ligas/MenuLiga';
@@ -40,6 +40,9 @@ import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
 import Partido from './containers/Partido';
+
+//Contenedor Ranking
+import Ranking from './containers/Ranking/VerRanking';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -63,6 +66,10 @@ export default function App() {
           <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
 
+        {/*Rutas ranking*/}
+        <Route path="/ranking" element={<Ranking />} />
+        <Route path="/perfil/:usuario_id" element={<ModuloConstruccion />} />
+        
         {/*Rutas liga*/}
         <Route path="/ligas/crear" element={<CrearLiga />} />
         <Route path="/ligas/unir/:liga_id" element={<UnirLiga />} />
@@ -75,8 +82,8 @@ export default function App() {
         <Route path="/jugadores/crear" element={<CrearJugador/>} />
 
         {/*Rutas Comportamiento*/}          
-        <Route path="/comportamientos/crear" element={<ModuloConstruccion/>} />
-        <Route path="/comportamientos/editar/:comp_id" element={<ModuloConstruccion/>} />
+        <Route path="/comportamientos/crear" element={<CrearComp/>} />
+        <Route path="/comportamientos/editar/:comp_id" element={<EditarComp/>} />
 
         {/*Rutas Lobby*/} 
         <Route element={<LobbyLayout />}>   

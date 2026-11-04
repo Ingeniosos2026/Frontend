@@ -1,77 +1,46 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createHttpService } from "../../services/HttpService";
-import MisComportamientos from "../../components/Comportamientos/MenuComp";
-
+import MenuCComp from "../../components/Comportamientos/MenuCComp";
 
 const MenuComp = () => {
-
     const [comps, setComps] = useState([]);
-
     const { obtenerComportamientos } = createHttpService();
-
-    const [cargandoComportamientos, setCargando] = useState(true);
-
     const usuarioId = localStorage.getItem("usuario_id");
-
     const navigate = useNavigate();
 
-
-
     useEffect(() => {
-
         const cargarComportamientos = async () => {
-
             try {
-
-                setCargando(true);
-
                 const data = await obtenerComportamientos(usuarioId);
-
-                setComps(data || []);
-
+                setComps(data);
             } catch (error) {
-
                 console.error(error);
-
-            } finally {
-
-                setCargando(false);
-
             }
-
         };
-
         cargarComportamientos();
-
     }, [usuarioId]);
 
-
-
-    const irVolver = () => {
-
-        navigate("/main");
-
+    const crearComp = () => {
+        navigate("/comportamientos/crear");
     };
 
+    const editarComp = (comp_id) => {
+        navigate(`/comportamientos/editar/${comp_id}`);
+    };
 
+    const irVolver = () => {
+        navigate("/main");
+    };
 
     return (
-
-        <MisComportamientos
-
+        <MenuCComp
             comportamientos={comps}
-
-            cargando={cargandoComportamientos}
-
+            crear = {crearComp}
+            editar = {editarComp}
             volver= {irVolver}
-
         />
-
     );
-
 };
-
-
 
 export default MenuComp;
