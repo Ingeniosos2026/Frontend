@@ -153,7 +153,7 @@ describe('LobbyAmistoso Logic Container', () => {
             wsHandlers['iniciar_partido']();
         });
 
-        expect(mockNavigate).toHaveBeenCalledWith('/partido/15');
+        expect(mockNavigate).toHaveBeenCalledWith('/partido/15', { state: { returnTo: '/amistosos' } });
     });
 
     it('desconecta el WebSocket y remueve los listeners al desmontar el componente', () => {
