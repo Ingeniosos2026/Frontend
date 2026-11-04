@@ -86,7 +86,7 @@ const LigaFinalizadaComp = ({ alVolver, tablaLiga }) => {
                         onClick={alVolver}
                         style={{ transition: 'all 0.3s ease' }}
                     >
-                        Volver al Menú Principal
+                        Ver Ligas Disponibles
                     </Button>
                 </div>
 

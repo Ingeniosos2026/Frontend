@@ -15,17 +15,29 @@ const LigaEnCursoComp = ({
     
     if (cargando) {
         return (
-            <div className="min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: '#f8f9fa' }}>
-                <Spinner animation="border" variant="primary" style={{ width: '4rem', height: '4rem' }} />
+            <div 
+                className="min-vh-100 d-flex justify-content-center align-items-center" 
+                style={{ backgroundColor: '#0d6efd' }}
+            >
+                <Spinner animation="border" variant="light" style={{ width: '4rem', height: '4rem' }} />
             </div>
         );
     }
 
     return (
-        <div className="min-vh-100 py-5" style={{ backgroundColor: '#f0f2f5' }}>
-            <Container>
+        <div 
+            className="min-vh-100 py-5 d-flex flex-column align-items-center" 
+            style={{
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
+                backgroundRepeat: 'no-repeat',
+                backgroundColor: '#0d6efd'
+            }}
+        >
+            <Container fluid="lg" className="px-3 px-md-4">
                 <div className="text-center mb-4">
-                    <h2 className="fw-bold text-uppercase" style={{ color: '#0d6efd' }}>Desarrollo de la Liga</h2>
+                    <h2 className="fw-bold text-white">Estadisticas de la Liga</h2>
                 </div>
 
                 {mensajeError && (
@@ -38,8 +50,8 @@ const LigaEnCursoComp = ({
                 <Row className="g-4">
                     {/* COLUMNA IZQUIERDA: TABLA DE POSICIONES */}
                     <Col lg={7}>
-                        <Card className="shadow-sm border-0 h-100">
-                            <Card.Header className="bg-primary text-white fw-bold">
+                        <Card className="shadow-lg border-0 h-100 bg-white" style={{ opacity: '0.98' }}>
+                            <Card.Header className="bg-primary text-white fw-bold py-3">
                                 🏆 Tabla de Posiciones
                             </Card.Header>
                             <Card.Body className="p-0">
@@ -58,7 +70,7 @@ const LigaEnCursoComp = ({
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tablaLiga.map((fila, index) => {
+                                        {tablaLiga.map((fila) => {
                                             const pj = fila.partidos_ganados + fila.partidos_empatados + fila.partidos_perdidos;
                                             return (
                                                 <tr key={fila.id_equipo} className="text-center fw-semibold">
@@ -85,8 +97,8 @@ const LigaEnCursoComp = ({
 
                     {/* COLUMNA DERECHA: FIXTURE */}
                     <Col lg={5}>
-                        <Card className="shadow-sm border-0 h-100">
-                            <Card.Header className="bg-dark text-white fw-bold">
+                        <Card className="shadow-lg border-0 h-100 bg-white" style={{ opacity: '0.98' }}>
+                            <Card.Header className="bg-dark text-white fw-bold py-3">
                                 📅 Fixture Oficial
                             </Card.Header>
                             <Card.Body className="p-3" style={{ maxHeight: '600px', overflowY: 'auto' }}>
@@ -130,7 +142,7 @@ const LigaEnCursoComp = ({
                                                 {enCurso && (
                                                     <div className="text-center mt-3">
                                                         <button 
-                                                            className="btn btn-sm btn-outline-success rounded-pill fw-bold"
+                                                            className="btn btn-sm btn-outline-success rounded-pill fw-bold px-4"
                                                             onClick={() => verPartido(partido.id_partido)}
                                                         >
                                                             Ver Partido
