@@ -197,4 +197,20 @@ describe('LobbyLiga Logic Container', () => {
             expect(mockNavigate).toHaveBeenCalledWith('/main');
         });
     });
+
+    it('elimina de la tabla al usuario que abandono la liga', async () => {
+        useLocation.mockReturnValue({ state: { esCreador: true, minimo: 3 } });
+        render(<LobbyLiga />);
+        
+        act(() => {
+            wsHandlers['usuario_unido_liga']({ usuario_unido: { id: 1, nombre: 'Fassi', club: 'Talleres' } });
+        });
+        expect(screen.getByText(/Faltan 2 competidores/i)).toBeInTheDocument();
+
+        act(() => {
+            wsHandlers['usuario_abandono_liga']({ usuario_abandono: { id: 1, nombre: 'Fassi', club: 'Talleres' } });
+        });
+        
+        expect(screen.getByText(/Faltan 3 competidores/i)).toBeInTheDocument();
+    });
 });
