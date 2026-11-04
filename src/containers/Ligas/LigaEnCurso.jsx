@@ -50,7 +50,6 @@ const LigaEnCurso = () => {
     const [partidosFinalizados, setPartidosFinalizados] = useState(new Set());
 
     const fixtureRef = useRef([]);
-    const usuarioIdRef = useRef(usuarioId);
 
     useEffect(() => {
         fixtureRef.current = fixtureLiga;
@@ -95,6 +94,9 @@ const LigaEnCurso = () => {
             } catch (error) {
                 console.error(error.message);
                 setError(error.message);
+                if (error.tipo === "LIGA_NO_DISPONIBLE") {
+                    setEstadoLiga(estados.FINALIZADA);
+                }
             } finally {
                 setCargando(false);
             }
@@ -173,11 +175,11 @@ const LigaEnCurso = () => {
                 let actualizado = [...prevTabla];
 
                 [fila_tabla_eq_iza, fila_tabla_eq_der].forEach(nuevo_fila => {
-                    const existe = actualizado.some(fila => fila.id_usuario === nuevo_fila.id_usuario);
+                    const existe = actualizado.some(fila => fila.id_equipo === nuevo_fila.id_equipo);
                     
                     if (existe) {
                         actualizado = actualizado.map(fila => 
-                            fila.id_usuario === nuevo_fila.id_usuario ? nuevo_fila : fila
+                            fila.id_equipo === nuevo_fila.id_equipo ? nuevo_fila : fila
                         );
                     } else {
                         actualizado.push(nuevo_fila);
