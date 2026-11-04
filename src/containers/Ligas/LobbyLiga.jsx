@@ -60,7 +60,7 @@ const LobbyLiga = () => {
         return () => {
             wsService.off('usuario_unido_liga', manejarUnirse);
             wsService.off('usuario_abandono_liga', manejarAbandonar);
-            wsService.off('iniciar_partido', manejarIniciar);
+            wsService.off('liga_iniciada', manejarIniciar);
             wsService.disconnect();
         };
     }, [liga_id, navigate]);
