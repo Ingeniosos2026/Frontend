@@ -29,9 +29,7 @@ const ordenarFixture = (fixture) => {
 const LigaEnCurso = () => {
     const { liga_id } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
     const usuarioId = Number(localStorage.getItem('usuario_id'));
-    const esCreador = location.state?.esCreador || false;
 
     const httpServiceRef = useRef(null);
     if (!httpServiceRef.current) {
@@ -238,7 +236,6 @@ const LigaEnCurso = () => {
             partidosEnCurso={partidosEnCurso}
             partidosFinalizados={partidosFinalizados}
             miUsuarioId={usuarioId}
-            esCreador={esCreador}
             partidoActualId={idPartidoActual}
             verPartido={manejarVerPartido}
         />  

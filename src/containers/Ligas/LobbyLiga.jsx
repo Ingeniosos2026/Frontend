@@ -42,7 +42,7 @@ const LobbyLiga = () => {
 
         const manejarIniciar = (payload) => {
             console.log("El creador inició la liga. Armando fixture...");
-            navigate(`/ligas/en_curso/${liga_id}`, { state: { esCreador: esCreador, fixture: payload.fixture, tabla: payload.tabla, id_partido_actual: payload.id_partido_actual } });
+            navigate(`/ligas/en_curso/${liga_id}`);
         };
 
         const manejarAbandonar = (payload) => {
