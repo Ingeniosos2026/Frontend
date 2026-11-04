@@ -74,7 +74,7 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
 
         render(<LigaEnCurso />);
 
-        expect(await screen.findByText('Desarrollo de la Liga')).toBeInTheDocument();
+        expect(await screen.findByText('Estadisticas de la Liga')).toBeInTheDocument();
 
         const filas = screen.getAllByRole('row');
         const filaEquipoA = filas.find(fila => fila.textContent.includes('Equipo A'));
@@ -91,7 +91,7 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
         mockHttpService.obtenerFixtureLiga.mockResolvedValueOnce(mockFixtureInicial);
 
         render(<LigaEnCurso />);
-        await screen.findByText('Desarrollo de la Liga');
+        await screen.findByText('Estadisticas de la Liga');
 
         const payloadResultado = {
             fixture: { 
