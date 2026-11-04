@@ -44,8 +44,6 @@ const LigaEnCurso = () => {
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
     const [idPartidoActual, setIdPartidoActual] = useState(null);
-    const [partidosEnCurso, setPartidosEnCurso] = useState(new Set());
-    const [partidosFinalizados, setPartidosFinalizados] = useState(new Set());
 
     const fixtureRef = useRef([]);
 
@@ -71,7 +69,6 @@ const LigaEnCurso = () => {
                 setIdPartidoActual(partido_actual_id);
 
                 if (partido_actual_id) {
-                    setPartidosEnCurso(new Set([partido_actual_id]));
 
                     const miPartido = fixture_ordenado.find(
                         p => p.id_partido === partido_actual_id && 
@@ -79,13 +76,9 @@ const LigaEnCurso = () => {
                     );
 
                     if (miPartido) {
-                        const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
-                        if (Number(partido_actual_id) !== Number(ultimoJugado)) {
-                            sessionStorage.setItem(`ultimo_jugado_${liga_id}`, Number(partido_actual_id));
-                            navigate(`/partido/${partido_actual_id}`, { 
-                                state: { returnTo: `/ligas/en_curso/${liga_id}` }
-                            });
-                        }
+                        navigate(`/partido/${partido_actual_id}`, { 
+                            state: { returnTo: `/ligas/en_curso/${liga_id}` }
+                        });
                     }
                 }
 
@@ -113,11 +106,6 @@ const LigaEnCurso = () => {
             const proximo_turno = payload.turno;
             
             setIdPartidoActual(partido_id);
-            setPartidosEnCurso(prev => {
-                const nuevo = new Set(prev);
-                nuevo.add(partido_id);
-                return nuevo;
-            });
 
             setFixtureLiga(prevFixture => 
                 prevFixture.map(fila => 
@@ -133,31 +121,18 @@ const LigaEnCurso = () => {
             );
             
             if (miPartido) {
-                const ultimoJugado = sessionStorage.getItem(`ultimo_jugado_${liga_id}`);
-                if (Number(partido_id) !== Number(ultimoJugado)) {
-                    sessionStorage.setItem(`ultimo_jugado_${liga_id}`, Number(partido_id));
-                    navigate(`/partido/${partido_id}`, { 
-                        state: { returnTo: `/ligas/en_curso/${liga_id}` }
-                    });
-                }
+                navigate(`/partido/${partido_id}`, { 
+                    state: { returnTo: `/ligas/en_curso/${liga_id}` }
+                });
             }
         };
 
         const manejarPartidoFinalizado = (payload) => {
             const fila_fixture = payload.fixture;
-            const fila_tabla_eq_iza = payload.tabla_actualizada[0];
+            const fila_tabla_eq_izq = payload.tabla_actualizada[0];
             const fila_tabla_eq_der = payload.tabla_actualizada[1];
             
-            setPartidosEnCurso(prev => {
-                const nuevo = new Set(prev);
-                nuevo.delete(fila_fixture.id_partido);
-                return nuevo;
-            });
-            setPartidosFinalizados(prev => {
-                const nuevo = new Set(prev);
-                nuevo.add(fila_fixture.id_partido)
-                return nuevo;
-            });
+            setIdPartidoActual(null);
 
             setFixtureLiga(prevFixture => {
                 const existe = prevFixture.some(fila => fila.turno === fila_fixture.turno);
@@ -172,7 +147,7 @@ const LigaEnCurso = () => {
             setTablaLiga(prevTabla => {
                 let actualizado = [...prevTabla];
 
-                [fila_tabla_eq_iza, fila_tabla_eq_der].forEach(nuevo_fila => {
+                [fila_tabla_eq_izq, fila_tabla_eq_der].forEach(nuevo_fila => {
                     const existe = actualizado.some(fila => fila.id_equipo === nuevo_fila.id_equipo);
                     
                     if (existe) {
@@ -222,7 +197,8 @@ const LigaEnCurso = () => {
         return (
             <LigaFinalizadaComp 
                 alVolver={manejarVolver}
-                tablaLiga={tablaLiga}    
+                tablaLiga={tablaLiga}
+                mensajeError={mensajeError}    
             />
         );
     }
@@ -233,8 +209,6 @@ const LigaEnCurso = () => {
             tablaLiga={tablaLiga}
             fixtureLiga={fixtureLiga}
             mensajeError={mensajeError}
-            partidosEnCurso={partidosEnCurso}
-            partidosFinalizados={partidosFinalizados}
             miUsuarioId={usuarioId}
             partidoActualId={idPartidoActual}
             verPartido={manejarVerPartido}

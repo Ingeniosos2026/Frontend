@@ -5,10 +5,7 @@ const LigaEnCursoComp = ({
     tablaLiga, 
     fixtureLiga, 
     mensajeError, 
-    partidosEnCurso, 
-    partidosFinalizados, 
     miUsuarioId,
-    esCreador,
     partidoActualId,
     verPartido
 }) => {
@@ -103,9 +100,8 @@ const LigaEnCursoComp = ({
                             </Card.Header>
                             <Card.Body className="p-3" style={{ maxHeight: '600px', overflowY: 'auto' }}>
                                 {fixtureLiga.map((partido) => {
-                                    const enCurso = partidosEnCurso.has(partido.id_partido);
-                                    const finalizado = partidosFinalizados.has(partido.id_partido) || 
-                                                       (partido.goles_izq !== null && partido.goles_der !== null);                
+                                    const enCurso = partido.id_partido !== null && partido.id_partido === partidoActualId;
+                                    const finalizado = (partido.goles_izq !== null && partido.goles_der !== null);                
                                     const meTocaJugar = Number(partido.equipo_izq.id_usuario) === Number(miUsuarioId) || 
                                                         Number(partido.equipo_der.id_usuario) === Number(miUsuarioId);
 
