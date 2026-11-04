@@ -16,7 +16,8 @@ const createHttpService = () => {
       
       if (!response.ok) {
 
-        let mensajeBackend = 'Error HTTP: ${response.status}';
+        let mensajeBackend = `Error HTTP: ${response.status}`;
+        let errorTipo = null;
 
         try {
           const errorData = await response.json();
@@ -26,11 +27,18 @@ const createHttpService = () => {
           } else if (errorData.detail) {
             mensajeBackend = JSON.stringify(errorData.detail);
           }
+          if (errorData.error) {
+            errorTipo = errorData.error;
+          }
         } catch (e) {
             console.warn("El servidor no devolvió un JSON de error válido");
         }
 
-        throw new Error(mensajeBackend);
+        const err = new Error(mensajeBackend);
+        if (errorTipo) {
+          err.tipo = errorTipo;
+        }
+        throw err;
       }
       
       return await response.json();
@@ -136,11 +144,12 @@ const createHttpService = () => {
 
   const obtenerFixtureLiga = async (ligaId) => {
     const data = await request(`/liga/${ligaId}/fixture`);
-    return data.fixture_liga;
+    return data.fixture;
   };
 
   const obtenerTablaLiga = async (ligaId) => {
-    return request(`/liga/${ligaId}/tabla`);
+    const data = await request(`/liga/${ligaId}/tabla`);
+    return data.tabla;
   };
 
   // --- AMISTOSOS ---
