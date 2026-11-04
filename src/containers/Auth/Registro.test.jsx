@@ -24,7 +24,7 @@ const datosUsuario = {
     email: "joel@gmail.com",
     contraseña: "123456",
     club: "Barcelona",
-    avatar: "avatar.png"
+    avatar: 1
 };
 
 // Utilizamos RegEx para que soporte variaciones e íconos en el DOM
@@ -78,7 +78,7 @@ describe("FormRegistro", () => {
         
         Object.entries(datosUsuario).forEach(([campo, valor]) => {
             const input = screen.getByLabelText(labels[campo]);
-            expect(input.value).toBe(valor);
+            expect(input.value).toBe(String(valor));
         });
     });
 
@@ -135,5 +135,16 @@ describe("FormRegistro", () => {
 
         fireEvent.click(screen.getByRole("button", { name: /Volver/i }));
         expect(mockNavigate).toHaveBeenCalledWith(-1);
+    });
+
+    it("muestra el catalogo de avatares", async () => {
+        render(<MemoryRouter><FormRegistro /></MemoryRouter>);
+
+        expect(await screen.findByText(/ID:\s*1/i)).toBeTruthy();
+        expect(await screen.findByText(/ID:\s*2/i)).toBeTruthy();
+        expect(await screen.findByText(/ID:\s*3/i)).toBeTruthy();
+        expect(await screen.findByText(/ID:\s*4/i)).toBeTruthy();
+        expect(await screen.findByText(/ID:\s*5/i)).toBeTruthy();
+        expect(await screen.findByText(/ID:\s*6/i)).toBeTruthy();
     });
 });

@@ -8,11 +8,19 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import fondoCancha from "../../assets/fondoRegistroSesion.jpg"; 
 
 const FormRegistro = () => {
-    const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm();
+    const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm({ defaultValues: { avatar: 1}});
     const { crearUsuario } = createHttpService();
     const [mensaje, setMensaje] = useState("");
     const [errorRegistro, setErrorRegistro] = useState("");
     const navigate = useNavigate();
+    const avatares = [
+    { id: 1, imagen: '../src/assets/avatars/avatar_1.png' },
+    { id: 2, imagen: '../src/assets/avatars/avatar_2.png' },
+    { id: 3, imagen: '../src/assets/avatars/avatar_3.png' },
+    { id: 4, imagen: '../src/assets/avatars/avatar_4.png' },
+    { id: 5, imagen: '../src/assets/avatars/avatar_5.png' },
+    { id: 6, imagen: '../src/assets/avatars/avatar_6.png' }
+    ];
     
     const onSubmit = async (data) => {
         setMensaje("");
@@ -47,7 +55,7 @@ const FormRegistro = () => {
                         
                         <h2 className="fw-bold mb-4 text-start">Registrarse</h2>
 
-                        <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Form onSubmit={handleSubmit(onSubmit)} noValidate>
                             {/* Campo Nombre */}
                             <Form.Group className="mb-3" controlId="nombre">
                                 <Form.Label className="text-muted small fw-bold">Nombre</Form.Label>
@@ -120,15 +128,53 @@ const FormRegistro = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
+                            {/* Catálogo de avatares */}
+                            <Form.Group className="mb-3">
+                                <Form.Label className="text-muted small fw-bold">
+                                    Avatares disponibles
+                                </Form.Label>
+
+                            <Row className="g-3">
+                                {avatares.map((avatar) => (
+                                <Col xs={4} md={4} key={avatar.id}>
+                                    <div className="text-center">
+                                        <img
+                                            src={avatar.imagen}
+                                            alt={`Avatar ${avatar.id}`}
+                                            width="70"
+                                            height="70"
+                                            style={{
+                                                objectFit: "cover",
+                                                borderRadius: "50%"
+                                            }}
+                                        />
+                                        <p className="mb-0">ID: {avatar.id}</p>
+                                    </div>
+                                </Col>
+                                ))}
+                            </Row>
+                            </Form.Group>
+
                             {/* Campo Avatar (Opcional) */}
                             <Form.Group className="mb-4" controlId="avatar">
                                 <Form.Label className="text-muted small fw-bold">Avatar</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    placeholder="Elige un avatar..."
+                                <Form.Control
+                                    type="number"
+                                    min="1"
+                                    max="6"
+                                    placeholder="Ingrese el id del avatar..."
                                     className="bg-light border-0 shadow-sm rounded-0"
-                                    {...register("avatar")}
-                                />
+                                    {...register("avatar", {
+                                        valueAsNumber: true,
+                                        required: "Seleccione un avatar",
+                                        min: { value: 1, message: "El ID mínimo es 1" },
+                                        max: { value: 6, message: "El ID máximo es 6" }
+                                    })}
+                                    isInvalid={!!errors.avatar}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.avatar?.message}
+                                    </Form.Control.Feedback>
                             </Form.Group>
 
                             {/* Mensajes de feedback de la API */}
