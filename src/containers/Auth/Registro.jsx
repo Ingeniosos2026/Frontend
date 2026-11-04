@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { createHttpService } from "../../services/HttpService";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
@@ -8,7 +8,7 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import fondoCancha from "../../assets/fondoRegistroSesion.jpg"; 
 
 const FormRegistro = () => {
-    const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm({ defaultValues: { avatar: 1}});
+    const { register, control,formState: { errors, isSubmitting }, handleSubmit } = useForm({ defaultValues: { avatar: 5}});
     const { crearUsuario } = createHttpService();
     const [mensaje, setMensaje] = useState("");
     const [errorRegistro, setErrorRegistro] = useState("");
@@ -128,53 +128,76 @@ const FormRegistro = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            {/* Catálogo de avatares */}
-                            <Form.Group className="mb-3">
-                                <Form.Label className="text-muted small fw-bold">
-                                    Avatares disponibles
-                                </Form.Label>
-
-                            <Row className="g-3">
-                                {avatares.map((avatar) => (
-                                <Col xs={4} md={4} key={avatar.id}>
-                                    <div className="text-center">
-                                        <img
-                                            src={avatar.imagen}
-                                            alt={`Avatar ${avatar.id}`}
-                                            width="70"
-                                            height="70"
-                                            style={{
-                                                objectFit: "cover",
-                                                borderRadius: "50%"
-                                            }}
-                                        />
-                                        <p className="mb-0">ID: {avatar.id}</p>
-                                    </div>
-                                </Col>
-                                ))}
-                            </Row>
-                            </Form.Group>
-
-                            {/* Campo Avatar (Opcional) */}
                             <Form.Group className="mb-4" controlId="avatar">
-                                <Form.Label className="text-muted small fw-bold">Avatar</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    min="1"
-                                    max="6"
-                                    placeholder="Ingrese el id del avatar..."
-                                    className="bg-light border-0 shadow-sm rounded-0"
-                                    {...register("avatar", {
-                                        valueAsNumber: true,
-                                        required: "Seleccione un avatar",
-                                        min: { value: 1, message: "El ID mínimo es 1" },
-                                        max: { value: 6, message: "El ID máximo es 6" }
-                                    })}
-                                    isInvalid={!!errors.avatar}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.avatar?.message}
-                                    </Form.Control.Feedback>
+                                <Form.Label className=" mt-2 text-muted small fw-bold">Selecciona el Avatar de tu Club</Form.Label>
+                                
+                                <Controller
+                                    name="avatar"
+                                    control={control}
+                                    rules={{ required: "Seleccione un avatar" }}
+                                    render={({ field: { onChange, value } }) => (
+                                        <div>
+                                            <style>
+                                                {`
+                                                .scroll-sutil {
+                                                    scrollbar-width: thin; 
+                                                    scrollbar-color: #dee2e6 transparent; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar {
+                                                    height: 6px; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-track {
+                                                    background: transparent; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-thumb {
+                                                    background-color: #dee2e6; 
+                                                    border-radius: 10px; 
+                                                }
+                                                .scroll-sutil::-webkit-scrollbar-thumb:hover {
+                                                    background-color: #adb5bd; 
+                                                }
+                                                `}
+                                            </style>
+                                            <div 
+                                                className="d-flex flex-row pb-2 scroll-sutil" 
+                                                style={{ overflowX: 'auto', gap: '15px' }}
+                                            >
+                                                {avatares.map((avatar) => (
+                                                    <div
+                                                        key={avatar.id}
+                                                        onClick={() => onChange(avatar.id)}
+                                                        className="flex-shrink-0 rounded-circle"
+                                                        style={{ 
+                                                            cursor: 'pointer',
+                                                            // Borde azul de Bootstrap si está seleccionado, transparente si no (para evitar saltos en la interfaz)
+                                                            border: value === avatar.id ? '1px solid #a0a0a0' : '3px solid transparent',
+                                                            padding: '2px', // Espacio entre el borde y la imagen
+                                                            
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={avatar.imagen}
+                                                            alt={`Avatar ${avatar.id}`}
+                                                            width="50"
+                                                            height="50"
+                                                            style={{ 
+                                                                objectFit: "scale-down", 
+                                                                borderRadius: "50%",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Mensaje de error de React Hook Form */}
+                                            {errors.avatar && (
+                                                <div className="text-danger small mt-1">
+                                                    {errors.avatar.message}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                />
                             </Form.Group>
 
                             {/* Mensajes de feedback de la API */}

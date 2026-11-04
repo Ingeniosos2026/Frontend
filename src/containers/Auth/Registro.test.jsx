@@ -4,7 +4,6 @@ import FormRegistro from "./Registro";
 import { MemoryRouter } from "react-router-dom";
 import { createHttpService } from "../../services/HttpService";
 
-// 1. Mock seguro de react-router-dom sin usar vi.hoisted
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => { 
     const actual = await vi.importActual("react-router-dom"); 
@@ -27,23 +26,24 @@ const datosUsuario = {
     avatar: 1
 };
 
-// Utilizamos RegEx para que soporte variaciones e íconos en el DOM
 const labels = {
     nombre: /Nombre/i,
     email: /Email/i,
     contraseña: /Contraseña/i,
-    club: /Club/i,
-    avatar: /Avatar/i
+    club: /Club/i
 };
 
 const completarFormulario = () => {
     Object.entries(datosUsuario).forEach(([campo, valor]) => {
-        const input = screen.getByLabelText(labels[campo]);
-        fireEvent.change(input, {
-            target: { value: valor }
-        });
+        if (campo === "avatar") {
+            const escudoImg = screen.getByAltText(`Avatar ${valor}`);
+            fireEvent.click(escudoImg);
+        } else {
+            const input = screen.getByLabelText(labels[campo]);
+            fireEvent.change(input, { target: { value: valor } });
+        }
     });
-};
+}
 
 describe("FormRegistro", () => {
     const mockCrearUsuario = vi.fn();
@@ -65,7 +65,7 @@ describe("FormRegistro", () => {
         expect(screen.getByLabelText(/Email/i)).toBeTruthy();
         expect(screen.getByLabelText(/Contraseña/i)).toBeTruthy();
         expect(screen.getByLabelText(/Club/i)).toBeTruthy();
-        expect(screen.getByLabelText(/Avatar/i)).toBeTruthy();
+        expect(screen.getByText(/Selecciona el Avatar de tu Club/i)).toBeTruthy();
         
         expect(screen.getByRole("button", { name: /Volver/i })).toBeTruthy();
         expect(screen.getByRole("button", { name: /Registrar/i })).toBeTruthy();
@@ -77,8 +77,10 @@ describe("FormRegistro", () => {
         completarFormulario();
         
         Object.entries(datosUsuario).forEach(([campo, valor]) => {
-            const input = screen.getByLabelText(labels[campo]);
-            expect(input.value).toBe(String(valor));
+            if (campo !== "avatar") {
+                const input = screen.getByLabelText(labels[campo]);
+                expect(input.value).toBe(String(valor));
+            }
         });
     });
 
@@ -137,14 +139,15 @@ describe("FormRegistro", () => {
         expect(mockNavigate).toHaveBeenCalledWith(-1);
     });
 
-    it("muestra el catalogo de avatares", async () => {
+    it("muestra el catalogo de avatares", () => {
         render(<MemoryRouter><FormRegistro /></MemoryRouter>);
 
-        expect(await screen.findByText(/ID:\s*1/i)).toBeTruthy();
-        expect(await screen.findByText(/ID:\s*2/i)).toBeTruthy();
-        expect(await screen.findByText(/ID:\s*3/i)).toBeTruthy();
-        expect(await screen.findByText(/ID:\s*4/i)).toBeTruthy();
-        expect(await screen.findByText(/ID:\s*5/i)).toBeTruthy();
-        expect(await screen.findByText(/ID:\s*6/i)).toBeTruthy();
+        // Ahora comprobamos que las imágenes existan buscando su atributo 'alt'
+        expect(screen.getByAltText("Avatar 1")).toBeTruthy();
+        expect(screen.getByAltText("Avatar 2")).toBeTruthy();
+        expect(screen.getByAltText("Avatar 3")).toBeTruthy();
+        expect(screen.getByAltText("Avatar 4")).toBeTruthy();
+        expect(screen.getByAltText("Avatar 5")).toBeTruthy();
+        expect(screen.getByAltText("Avatar 6")).toBeTruthy();
     });
 });
