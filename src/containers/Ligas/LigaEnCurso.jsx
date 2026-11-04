@@ -212,6 +212,14 @@ const LigaEnCurso = () => {
         navigate('/ligas');
     };
 
+    const manejarVerPartido = (partidoId) => {
+        if (partidoId) {
+            navigate(`/partido/${partidoId}`, { 
+                state: { returnTo: `/ligas/en_curso/${liga_id}` }
+            });
+        }
+    }
+
     if (estadoLiga === estados.FINALIZADA) {
         return (
             <LigaFinalizadaComp 
@@ -232,6 +240,7 @@ const LigaEnCurso = () => {
             miUsuarioId={usuarioId}
             esCreador={esCreador}
             partidoActualId={idPartidoActual}
+            verPartido={manejarVerPartido}
         />  
     );
 };

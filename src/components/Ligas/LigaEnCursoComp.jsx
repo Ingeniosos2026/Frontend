@@ -9,7 +9,8 @@ const LigaEnCursoComp = ({
     partidosFinalizados, 
     miUsuarioId,
     esCreador,
-    partidoActualId
+    partidoActualId,
+    verPartido
 }) => {
     
     if (cargando) {
@@ -47,6 +48,7 @@ const LigaEnCursoComp = ({
                                         <tr className="text-center text-muted small">
                                             <th className="text-start ps-3">CLUB</th>
                                             <th>PTS</th>
+                                            <th>PJ</th>
                                             <th>PG</th>
                                             <th>PE</th>
                                             <th>PP</th>
@@ -56,18 +58,22 @@ const LigaEnCursoComp = ({
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tablaLiga.map((fila, index) => (
-                                            <tr key={index} className="text-center fw-semibold">
-                                                <td className="text-start ps-3 fw-bold">{fila.nombre_club}</td>
-                                                <td className="text-primary fs-5">{fila.puntos}</td>
-                                                <td>{fila.partidos_ganados}</td>
-                                                <td>{fila.partidos_empatados}</td>
-                                                <td>{fila.partidos_perdidos}</td>
-                                                <td>{fila.goles_a_favor}</td>
-                                                <td>{fila.goles_en_contra}</td>
-                                                <td>{fila.goles_a_favor - fila.goles_en_contra}</td>
-                                            </tr>
-                                        ))}
+                                        {tablaLiga.map((fila, index) => {
+                                            const pj = fila.partidos_ganados + fila.partidos_empatados + fila.partidos_perdidos;
+                                            return (
+                                                <tr key={fila.id_equipo} className="text-center fw-semibold">
+                                                    <td className="text-start ps-3 fw-bold">{fila.nombre_club}</td>
+                                                    <td className="text-primary fs-5">{fila.puntos}</td>
+                                                    <td>{pj}</td>
+                                                    <td>{fila.partidos_ganados}</td>
+                                                    <td>{fila.partidos_empatados}</td>
+                                                    <td>{fila.partidos_perdidos}</td>
+                                                    <td>{fila.goles_a_favor}</td>
+                                                    <td>{fila.goles_en_contra}</td>
+                                                    <td>{fila.goles_a_favor - fila.goles_en_contra}</td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </Table>
                                 {tablaLiga.length === 0 && (
@@ -84,14 +90,16 @@ const LigaEnCursoComp = ({
                                 📅 Fixture Oficial
                             </Card.Header>
                             <Card.Body className="p-3" style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                                {fixtureLiga.map((partido, index) => {
+                                {fixtureLiga.map((partido) => {
                                     const enCurso = partidosEnCurso.has(partido.id_partido);
-                                    const finalizado = partidosFinalizados.has(partido.id_partido);                
-                                    const meTocaJugar = partido.equipo_izq.id_equipo === miUsuarioId || partido.equipo_der.id_equipo === miUsuarioId;
+                                    const finalizado = partidosFinalizados.has(partido.id_partido) || 
+                                                       (partido.goles_izq !== null && partido.goles_der !== null);                
+                                    const meTocaJugar = Number(partido.equipo_izq.id_usuario) === Number(miUsuarioId) || 
+                                                        Number(partido.equipo_der.id_usuario) === Number(miUsuarioId);
 
                                     return (
                                         <Card 
-                                            key={index} 
+                                            key={partido.turno} 
                                             className={`mb-3 border-start border-4 ${meTocaJugar ? 'border-primary shadow-sm' : 'border-secondary'}`}
                                         >
                                             <Card.Body className="p-3">
@@ -102,22 +110,33 @@ const LigaEnCursoComp = ({
                                                     {!enCurso && !finalizado && <Badge bg="light" text="dark" className="border">Pendiente</Badge>}
                                                 </div>
                                                 <div className="d-flex justify-content-between align-items-center fs-5 fw-bold">
-                                                    <span className={partido.equipo_izq.id_equipo === miUsuarioId ? 'text-primary' : ''}>
+                                                    <span className={Number(partido.equipo_izq.id_usuario) === Number(miUsuarioId) ? 'text-primary' : ''}>
                                                         {partido.equipo_izq.nombre_club}
                                                     </span>
                                                     
                                                     {finalizado && partido.goles_izq !== null && partido.goles_der !== null ? (
                                                         <span className="bg-dark text-white px-3 py-1 rounded fs-4 shadow-sm">
-                                                            {partido.goles_izq} - {partido.goles_der}
+                                                             {partido.goles_izq} - {partido.goles_der}
                                                         </span>
                                                     ) : (
                                                         <span className="text-muted mx-2 fs-6">VS</span>
                                                     )}
 
-                                                    <span className={partido.equipo_der.id_equipo === miUsuarioId ? 'text-primary' : ''}>
+                                                    <span className={Number(partido.equipo_der.id_usuario) === Number(miUsuarioId) ? 'text-primary' : ''}>
                                                         {partido.equipo_der.nombre_club}
                                                     </span>
                                                 </div>
+                                                
+                                                {enCurso && (
+                                                    <div className="text-center mt-3">
+                                                        <button 
+                                                            className="btn btn-sm btn-outline-success rounded-pill fw-bold"
+                                                            onClick={() => verPartido(partido.id_partido)}
+                                                        >
+                                                            Ver Partido
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </Card.Body>
                                         </Card>
                                     );
