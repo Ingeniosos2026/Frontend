@@ -9,6 +9,7 @@ const EditarComp = () => {
     const [mensajeError, setError] = useState(null);
     const usuarioId = localStorage.getItem('usuario_id');
     const {comp_id} = useParams();
+    const [compName, setCompName] = useState("");
     const [compInfo, setCompInfo] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
@@ -17,6 +18,7 @@ const EditarComp = () => {
             setError(null);
             const respuesta = await httpService.obtenerInformacionComportamiento(usuarioId,comp_id);
             setCompInfo(respuesta.codigo);
+            setCompName(respuesta.nombre);
         } catch (error) {
             console.error(error);
             setError(error.message);
@@ -51,6 +53,7 @@ const EditarComp = () => {
             mensajeError={mensajeError}
             alConfirmar={manejarCrearComp}
             alVolver={manejarVolver}
+            nombreOld={compName}
             codigoOld={compInfo}
         />
     );

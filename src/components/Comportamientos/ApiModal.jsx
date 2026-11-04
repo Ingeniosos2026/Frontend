@@ -10,65 +10,66 @@ function ApiComp(props) {
       centered
     >
       <Modal.Body style={{ fontSize: '14px' }}>
-        <h1 className="text-center mb-4" style={{ color: '#7b4fcc' }}>API de Primitivas</h1>
-        
+        <h1 className="text-center mb-1" style={{
+            color: '#7b4fcc',fontFamily:'Consolas, "Courier New", monospace',fontWeight: 'bold'
+           }}>API de Primitivas</h1>
         <Table hover responsive className="mt-4 align-middle">
           <thead className="text-center">
             <tr>
-              <th>Metodo</th>
-              <th>Código</th>
-              <th>Argumento</th>
-              <th>Resultado</th>
+              <th style={{fontSize: '18px' }}>Metodo</th>
+              <th style={{fontSize: '18px' }}>Código</th>
+              <th style={{fontSize: '18px' }}>Argumento</th>
+              <th style={{fontSize: '18px' }}>Resultado</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td className="fw-bold">Correr</td>
               <td><code style={{ color: '#6f42c1' }}>correr(destino: coordenadas)</code></td>
-              <td style={{ textAlign: 'justify' }}>destino: coordenadas a las que se desea desplazar el jugador.</td>
-              <td style={{ textAlign: 'justify' }}>Modifica el estado de la partida actualizando la posición del jugador.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500' }}>destino: coordenadas a las que se desea desplazar el jugador.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500' }}>Modifica el estado de la partida actualizando la posición del jugador.</td>
             </tr>
             <tr>
               <td className="fw-bold">Patear</td>
               <td><code style={{ color: '#6f42c1' }}>patear(direccion: coordenadas)</code></td>
-              <td style={{ textAlign: 'justify' }}>direccion: coordenadas de la dirección a la que se desea enviar la pelota.</td>
-              <td style={{ textAlign: 'justify' }}>Modifica el estado de la partida actualizando el estado de la pelota.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>direccion: coordenadas de la dirección a la que se desea enviar la pelota.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Modifica el estado de la partida actualizando el estado de la pelota.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Pelota</td>
               <td><code style={{ color: '#6f42c1' }}>direccionPelota()</code></td>
-              <td style={{ textAlign: 'justify' }}>Ninguno.</td>
-              <td style={{ textAlign: 'justify' }}>Devuelve las coordenadas donde se encuentra la pelota.</td>
+              <td style={{ textAlign: 'center' ,fontWeight: '500', color: '#707072'}}>Ninguno</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve las coordenadas donde se encuentra la pelota.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Compañero</td>
               <td><code style={{ color: '#6f42c1' }}>direccionCompanero(companero: int)</code></td>
-              <td style={{ textAlign: 'justify' }}>Recibe un id de un compañero de equipo.</td>
-              <td style={{ textAlign: 'justify' }}>Devuelve las coordenadas donde se encuentra el compañero de equipo.</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Recibe un id de un compañero de equipo.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve las coordenadas donde se encuentra el compañero de equipo.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Rival</td>
               <td><code style={{ color: '#6f42c1' }}>direccionRival(rival: int)</code></td>
-              <td style={{ textAlign: 'justify' }}>Recibe un id de un jugador rival.</td>
-              <td style={{ textAlign: 'justify' }}>Devuelve las coordenadas donde se encuentra ese jugador rival.</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Recibe un id de un jugador rival.</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra ese jugador rival.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Arco Rival</td>
               <td><code style={{ color: '#6f42c1' }}>direccionArcoRival()</code></td>
-              <td style={{ textAlign: 'justify' }}>Ninguno.</td>
-              <td style={{ textAlign: 'justify' }}>Devuelve las coordenadas donde se encuentra el arco del equipo rival.</td>
+              <td style={{ textAlign: 'center',fontWeight: '500', color: '#707072'}}>Ninguno</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve las coordenadas donde se encuentra el arco del equipo rival.</td>
             </tr>
             <tr>
               <td className="fw-bold">Pelota Cerca</td>
               <td><code style={{ color: '#6f42c1' }}>pelotaCerca(jugador: int)</code></td>
-              <td style={{ textAlign: 'justify' }}>Recibe un id de un jugador.</td>
-              <td style={{ textAlign: 'justify' }}>Verdadero si la pelota se encuentra dentro de la distancia considerada cercana al jugador, falso en caso contrario.</td>
+              <td style={{ textAlign: 'center' ,fontWeight: '500' }}>Recibe un id de un jugador.</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Verdadero si la pelota se encuentra dentro de la distancia considerada cercana al jugador, falso en caso contrario.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Arco Propio</td>
               <td><code style={{ color: '#6f42c1' }}>direccionArcoPropio()</code></td>
-              <td style={{ textAlign: 'justify' }}>Ninguno.</td>
-              <td style={{ textAlign: 'justify' }}>Devuelve las coordenadas donde se encuentra el arco del equipo propio.</td>
+              <td style={{ textAlign: 'center',fontWeight: '500', color: '#707072'}}>Ninguno</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra el arco del equipo propio.</td>
             </tr>
           </tbody>
         </Table>

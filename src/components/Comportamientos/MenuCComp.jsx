@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container, Button, Collapse, Card } from 'react-bootstrap';
 
-const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
+const MenuCComp = ({ comportamientos,crear,editar, volver }) => {
     const [comportamiento, setComportamiento] = useState(null);
     const mostrarOpciones = (comp) => {
         if (comportamiento?.id === comp.id) {
@@ -151,4 +151,4 @@ const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
     );
 };
 
-export default MisComportamientos;
+export default MenuCComp;

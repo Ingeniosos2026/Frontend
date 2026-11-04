@@ -3,7 +3,7 @@ import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import EditorTexto from '../../containers/Comportamientos/EditorTexto';
 import ApiModal from './ApiModal';
 
-const EditarCComp = ({ cargando, mensajeError, alConfirmar, alVolver, codigoOld }) => {
+const EditarCComp = ({ cargando, mensajeError, alConfirmar, alVolver, nombreOld, codigoOld }) => {
     const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm({
         values: {
             nombre: "",
@@ -52,7 +52,7 @@ const EditarCComp = ({ cargando, mensajeError, alConfirmar, alVolver, codigoOld 
                             </Form.Label> 
                             <Form.Control 
                                 type="text" 
-                                placeholder="Defender"
+                                placeholder={nombreOld}
                                 className="form-control-lg shadow-sm border-success"
                                 isInvalid={!!errors.nombre}
                                 {...register('nombre', {

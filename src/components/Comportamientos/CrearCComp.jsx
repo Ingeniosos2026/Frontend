@@ -45,7 +45,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                         <Form.Control 
                             type="text" 
                             placeholder="Defender"
-                            className="form-control-lg shadow-sm border-success"
+                            className="form-control-lg shadow-sm "
                             isInvalid={!!errors.nombre}
                             {...register('nombre', {
                                 required: "Ingrese un nombre"

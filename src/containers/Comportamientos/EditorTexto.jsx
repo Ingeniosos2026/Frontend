@@ -1,8 +1,6 @@
-
 import EditorTextoComp from '../../components/Comportamientos/EditorTextoComp';
-import { useState} from "react";
 
-const EditorTexto = ({ value, onChange, onCodeUpdate }) => {
+const EditorTexto = ({ value, onChange, onValidationChange }) => {
 
     const handleChange = (newValue) => {
         if (onChange) {
@@ -11,9 +9,10 @@ const EditorTexto = ({ value, onChange, onCodeUpdate }) => {
     };
 
     const handleValidation = (markers) => {
-        const tieneErrores = markers.some((marker) => marker.severity === 8);
-        if (onCodeUpdate) {
-            onCodeUpdate(value, !tieneErrores);
+        const errores = markers.some((marker) => marker.severity >= 4);
+        
+        if (onValidationChange) {
+            onValidationChange(!errores); 
         }
     };
 
@@ -116,10 +115,10 @@ const EditorTexto = ({ value, onChange, onCodeUpdate }) => {
     
     return (
         <EditorTextoComp
-        value={value}
-        onChange={handleChange}
-        onValidate={handleValidation}
-        beforeMount={handleEditorWillMount}
+            value={value}
+            onChange={handleChange}
+            onValidate={handleValidation}
+            beforeMount={handleEditorWillMount}
         />
     );
 };
