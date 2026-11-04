@@ -1,8 +1,8 @@
-import { Container, Card, Button, ListGroup, Table, Badge } from 'react-bootstrap';
+import { Container, Card, Button, Table, Badge, Alert } from 'react-bootstrap';
 
-const LigaFinalizadaComp = ({ alVolver, tablaLiga }) => {
+const LigaFinalizadaComp = ({ alVolver, tablaLiga, mensajeError }) => {
     
-    const campeon = tablaLiga.length > 0 ? tablaLiga[0] : null;
+    const campeon = tablaLiga && tablaLiga.length > 0 ? tablaLiga[0] : null;
 
     return (
         <div 
@@ -27,6 +27,13 @@ const LigaFinalizadaComp = ({ alVolver, tablaLiga }) => {
                     </h2>
                 </div> 
 
+                {mensajeError && (
+                    <Alert variant="danger" className="shadow-sm d-flex justify-content-center align-items-center mb-4">
+                        <span className="me-2 fs-4">⚠️</span>
+                        <span className="fw-semibold">{mensajeError}</span>
+                    </Alert>
+                )}
+
                 {campeon && (
                     <Card className="mb-4 border-0 shadow-sm bg-light">
                         <Card.Body className="text-center py-4">
@@ -41,41 +48,43 @@ const LigaFinalizadaComp = ({ alVolver, tablaLiga }) => {
                     </Card>
                 )}
 
-                <Card className="shadow-sm mb-4" style={{ borderWidth: '1px' }}>
-                    <Card.Header className="bg-dark text-white fw-bold d-flex justify-content-center align-items-center py-3">
-                        <span>📊 Posiciones Finales</span>
-                    </Card.Header>
-                    <Card.Body className="p-0">
-                        <Table responsive hover striped className="mb-0 align-middle text-center">
-                            <thead className="bg-light text-muted small">
-                                <tr>
-                                    <th>#</th>
-                                    <th className="text-start ps-3">CLUB</th>
-                                    <th>PTS</th>
-                                    <th>PG</th>
-                                    <th>PE</th>
-                                    <th>PP</th>
-                                    <th>DIF</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {tablaLiga.map((equipo, index) => (
-                                    <tr key={equipo.id_equipo} className={index === 0 ? "table-warning fw-bold" : "fw-semibold"}>
-                                        <td>
-                                            {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
-                                        </td>
-                                        <td className="text-start ps-3">{equipo.nombre_club}</td>
-                                        <td className="fs-5">{equipo.puntos}</td>
-                                        <td>{equipo.partidos_ganados}</td>
-                                        <td>{equipo.partidos_empatados}</td>
-                                        <td>{equipo.partidos_perdidos}</td>
-                                        <td>{equipo.goles_a_favor - equipo.goles_en_contra}</td>
+                {tablaLiga && tablaLiga.length > 0 && (
+                    <Card className="shadow-sm mb-4" style={{ borderWidth: '1px' }}>
+                        <Card.Header className="bg-dark text-white fw-bold d-flex justify-content-center align-items-center py-3">
+                            <span>Posiciones Finales</span>
+                        </Card.Header>
+                        <Card.Body className="p-0">
+                            <Table responsive hover striped className="mb-0 align-middle text-center">
+                                <thead className="bg-light text-muted small">
+                                    <tr>
+                                        <th>#</th>
+                                        <th className="text-start ps-3">CLUB</th>
+                                        <th>PTS</th>
+                                        <th>PG</th>
+                                        <th>PE</th>
+                                        <th>PP</th>
+                                        <th>DIF</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </Card.Body>
-                </Card>
+                                </thead>
+                                <tbody>
+                                    {tablaLiga.map((equipo, index) => (
+                                        <tr key={equipo.id_equipo} className={index === 0 ? "table-warning fw-bold" : "fw-semibold"}>
+                                            <td>
+                                                {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
+                                            </td>
+                                            <td className="text-start ps-3">{equipo.nombre_club}</td>
+                                            <td className="fs-5">{equipo.puntos}</td>
+                                            <td>{equipo.partidos_ganados}</td>
+                                            <td>{equipo.partidos_empatados}</td>
+                                            <td>{equipo.partidos_perdidos}</td>
+                                            <td>{equipo.goles_a_favor - equipo.goles_en_contra}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </Card.Body>
+                    </Card>
+                )}
 
                 {/* BOTÓN PARA VOLVER */}
                 <div className="d-flex justify-content-center pt-3">

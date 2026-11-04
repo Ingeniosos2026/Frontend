@@ -5,11 +5,14 @@ import LigaEnCurso from './LigaEnCurso';
 // metodos mockeados
 
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', () => ({
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
     useParams: () => ({ liga_id: '1' }),
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ state: {} })
-}));
+    };
+});
 
 const mockHttpService = {
     obtenerTablaLiga: vi.fn(),
@@ -210,5 +213,42 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
         expect(mockNavigate).toHaveBeenCalledWith('/partido/300', { 
             state: { returnTo: '/ligas/en_curso/1' } 
         });
+    });
+
+    it('cambia a pantalla Finalizada y muestra las posiciones finales al recibir evento "liga_terminada"', async () => {
+        mockHttpService.obtenerTablaLiga.mockResolvedValueOnce(mockTablaInicial);
+        mockHttpService.obtenerFixtureLiga.mockResolvedValueOnce(mockFixtureInicial);
+
+        render(<LigaEnCurso />);
+        
+        await screen.findAllByText('Equipo A');
+
+        act(() => {
+            wsCallbacks['liga_terminada']({ id_liga: 1 });
+        });
+
+        const tituloFinalizada = await screen.findByText('Resultados Finales');
+        expect(tituloFinalizada).toBeInTheDocument();
+        
+        expect(screen.getByText('Posiciones Finales')).toBeInTheDocument();
+        
+        const elementosEquipoA = screen.getAllByText('Equipo A');
+        expect(elementosEquipoA.length).toBeGreaterThan(0);
+    });
+
+    it('navega al listado de ligas al hacer clic en "Ver Ligas Disponibles" en pantalla finalizada', async () => {
+        mockHttpService.obtenerTablaLiga.mockRejectedValueOnce({ 
+            tipo: "LIGA_NO_DISPONIBLE", 
+            message: "La liga terminó" 
+        });
+
+        render(<LigaEnCurso />);
+
+        const botonVolver = await screen.findByRole('button', { name: /ver ligas disponibles/i });
+        expect(botonVolver).toBeInTheDocument();
+
+        fireEvent.click(botonVolver);
+
+        expect(mockNavigate).toHaveBeenCalledWith('/ligas');
     });
 });
