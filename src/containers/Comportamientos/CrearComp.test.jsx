@@ -46,6 +46,8 @@ describe('CrearComp Logic Container', () => {
     it('muestra error por omision de campos', async () => {
         render(<MemoryRouter><CrearComp /></MemoryRouter>);
         
+        const editorTexto = screen.getByTestId('mock-editor-texto');
+        fireEvent.change(editorTexto, { target: { value: '' } });
 
         const botonCrear = screen.getByRole('button', { name: /Crear/i });
         fireEvent.click(botonCrear);
@@ -56,7 +58,26 @@ describe('CrearComp Logic Container', () => {
         });
     });
 
-    it('envía los datos al backend y navega al éxito si el formulario es válido', async () => {
+    it('muestra error por nombre o codigo invalido', async () => {
+
+        mockCrearComp.mockRejectedValue(new Error('El nombre o los datos del comportamiento no son validos'));
+
+        render(<MemoryRouter><CrearComp /></MemoryRouter>);
+        
+        const editorTexto = screen.getByTestId('mock-editor-texto');
+        const inputNombre = screen.getByLabelText(/Nombre del comportamiento/i);
+        const botonCrear = screen.getByRole('button', { name: /Crear/i });
+
+        fireEvent.change(inputNombre, { target: { value: 'Invalidar' } });
+        fireEvent.change(editorTexto, { target: { value: 'def nada (' } });
+        fireEvent.click(botonCrear);
+
+        await waitFor(() => {
+            expect(screen.getByText(/El nombre o los datos del comportamiento no son validos/i)).toBeInTheDocument();
+        });
+    });
+
+    it('envía los datos, crea comp navega al Menu Comportamientos y muestra comp creado', async () => {
         mockCrearComp.mockResolvedValue({
             nombre: 'traicionar',
             codigo: "def traicionar():\nprimitivas.patear(primitivas.direccionArcoPropio())"
@@ -78,6 +99,7 @@ describe('CrearComp Logic Container', () => {
                 codigo: "def traicionar():\nprimitivas.patear(primitivas.direccionArcoPropio())"
             });
             expect(mockNavigate).toHaveBeenCalledWith('/comportamientos');
+            expect(screen.getByText(/traicionar/i)).toBeInTheDocument();
         });
     });
 

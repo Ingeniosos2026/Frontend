@@ -74,11 +74,28 @@ describe("MenuComp Logic Container", () => {
 
         const btnAcordeon = await screen.findByRole("button", { name: /Pasar al Rival/i });
         fireEvent.click(btnAcordeon);
+        
+        expect(await screen.findByText(/def Pasar_Rival\(\):/i)).toBeInTheDocument();
+        expect(await screen.findByText(/primitivas\.patear\(direccionRival\)/i)).toBeInTheDocument();
 
         const btnEditar = await screen.findByRole("button", { name: /Editar/i });
         fireEvent.click(btnEditar);
 
         expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/editar/67");
+    });
+
+    it("despliega detalle y no permite editar comportamiento default", async () => {
+        const comportamientos = [
+            { id: 1, nombre: "Defender", codigo:"def comportamiento_defender(primitivas):\n    primitivas.patear(direccionRival)\n" },
+        ];
+        mockObtenerComportamientos.mockResolvedValue(comportamientos);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnAcordeon = await screen.findByRole("button", { name: /Defender/i });
+        fireEvent.click(btnAcordeon);
+
+        const btnEditar = screen.queryByRole("button", { name: /Editar/i });
+        expect(btnEditar).not.toBeInTheDocument();
     });
 
     it("navega a /main al presionar Volver", async () => {

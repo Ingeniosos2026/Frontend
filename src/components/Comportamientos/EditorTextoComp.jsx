@@ -1,17 +1,27 @@
+import { Editor } from "@monaco-editor/react";
 
-const EditorTextoComp = () => {
-
-
+const EditorTextoComp = ({ value, onChange, onValidate, beforeMount }) => {
+    
     return (
-        <div className="min-vh-30 d-flex flex-column align-items-center py-5"
-            style={{
-                backgroundColor: '#1d1f1e',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundAttachment: 'fixed',
-                backgroundRepeat: 'no-repeat'
-            }}>
-            <h1>IDE</h1>
+        <div w="100%" border="1px solid #333" overflow="hidden">
+            <Editor
+                options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    wordWrap: "on",
+                    contextmenu: false,
+                    suggestOnTriggerCharacters: true,
+                    scrollBeyondLastLine: false,
+                    
+                }}
+                height="300px"
+                theme="vs-dark"
+                language="python"
+                value={value}
+                onChange={onChange}
+                onValidate={onValidate}
+                beforeMount={beforeMount}
+            />
         </div>
     );
 };

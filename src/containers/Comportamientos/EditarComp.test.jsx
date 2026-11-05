@@ -33,23 +33,33 @@ vi.mock('../../containers/Comportamientos/EditorTexto', () => {
 
 describe('EditarComp Logic Container', () => {
     const mockEditarComp = vi.fn();
-    const mockUseParams = vi.fn();
+    const mockObtenerInfo = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
         
         createHttpService.mockReturnValue({
             editarComportamiento: mockEditarComp,
+            obtenerInformacionComportamiento: mockObtenerInfo,
         });
 
         vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('1');
+        
+        mockObtenerInfo.mockResolvedValue({
+            nombre: 'Controlar Area',
+            codigo: 'def original():\n  pass'
+        });
     });
 
     it('muestra error por omision de campos', async () => {
         render(<MemoryRouter><EditarComp /></MemoryRouter>);
         
-
-        const botonEditar = screen.getByRole('button', { name: /Editar/i });
+        const botonEditar = await screen.findByRole('button', { name: /Editar/i });
+        const inputNombre = screen.getByLabelText(/Nombre del comportamiento/i);
+        const editorTexto = screen.getByTestId('mock-editor-texto');
+        
+        fireEvent.change(inputNombre, { target: { value: '' } });
+        fireEvent.change(editorTexto, { target: { value: '' } });
         fireEvent.click(botonEditar);
 
         await waitFor(() => {
@@ -58,8 +68,26 @@ describe('EditarComp Logic Container', () => {
         });
     });
 
+    it('muestra error por nombre o codigo invalido', async () => {
+
+        mockEditarComp.mockRejectedValue(new Error('El nombre o los datos del comportamiento no son validos'));
+
+        render(<MemoryRouter><EditarComp /></MemoryRouter>);
+        
+        const botonEditar = await screen.findByRole('button', { name: /Editar/i });
+        const inputNombre = screen.getByLabelText(/Nombre del comportamiento/i);
+        const editorTexto = screen.getByTestId('mock-editor-texto');
+
+        fireEvent.change(inputNombre, { target: { value: 'Invalidar' } });
+        fireEvent.change(editorTexto, { target: { value: 'def nada (' } });
+        fireEvent.click(botonEditar);
+
+        await waitFor(() => {
+            expect(screen.getByText(/El nombre o los datos del comportamiento no son validos/i)).toBeInTheDocument();
+        });
+    });
+
     it('envía los datos al backend si el formulario es válido', async () => {
-        mockUseParams.mockReturnValue({ comp_id: '4' });
         mockEditarComp.mockResolvedValue({
             nombre: 'traicionar',
             codigo: "def traicionar():\nprimitivas.patear(primitivas.direccionArcoPropio())"
@@ -67,7 +95,7 @@ describe('EditarComp Logic Container', () => {
 
         render(<MemoryRouter><EditarComp/></MemoryRouter>);
         
-        const botonEditar = screen.getByRole('button', { name: /Editar/i });
+        const botonEditar = await screen.findByRole('button', { name: /Editar/i });
         const inputNombre = screen.getByLabelText(/Nombre del comportamiento/i);
         const inputComp = screen.getByTestId('mock-editor-texto');
 
@@ -89,7 +117,7 @@ describe('EditarComp Logic Container', () => {
 
         render(<MemoryRouter><EditarComp /></MemoryRouter>);
         
-        const botonEditar = screen.getByRole('button', { name: /Editar/i });
+        const botonEditar = await screen.findByRole('button', { name: /Editar/i });
         const inputNombre = screen.getByLabelText(/Nombre del comportamiento/i);
         const inputComp = screen.getByTestId('mock-editor-texto');
 
@@ -103,10 +131,10 @@ describe('EditarComp Logic Container', () => {
         });
     });
 
-    it('navega a /comportamientos al presionar el botón "Cancelar"', () => {
+    it('navega a /comportamientos al presionar el botón "Cancelar"', async () => {
         render(<MemoryRouter><EditarComp /></MemoryRouter>);
         
-        const botonVolver = screen.getByRole('button', { name: /Cancelar/i });
+        const botonVolver = await screen.findByRole('button', { name: /Cancelar/i });
         fireEvent.click(botonVolver);
 
         expect(mockNavigate).toHaveBeenCalledWith('/comportamientos');
