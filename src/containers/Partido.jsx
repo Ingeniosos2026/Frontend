@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { createWSService } from '../services/WSService';
 import CanchaVisual from '../components/PartidoComp.jsx';
 
 const Partido = () => {
     const { partido_id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const rutaDeRegreso = location.state?.returnTo;
+
     const [estadoJuego, setEstadoJuego] = useState(null);
     const [partidoTerminado, setPartidoTerminado] = useState(false);
     const [resultadoFinal, setResultadoFinal] = useState(null);
@@ -17,7 +21,6 @@ const Partido = () => {
 
         const manejarEstadoPartido = (payload) => {
             setEstadoJuego(payload);
-            console.log('Estado del partido recibido:', payload);
         };
 
         const manejarFinPartido = (payload) => {
@@ -36,11 +39,16 @@ const Partido = () => {
         };
     }, [partido_id]);
 
+    const manejarVolver = () => {
+        navigate(rutaDeRegreso);
+    };
+
     return (
         <CanchaVisual
             estadoJuego={estadoJuego}
             partidoTerminado={partidoTerminado}
             resultadoFinal={resultadoFinal}
+            alVolver={manejarVolver}
         />
     );
 };

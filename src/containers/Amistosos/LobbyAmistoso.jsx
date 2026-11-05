@@ -37,7 +37,9 @@ const LobbyAmistoso = () => {
 
         const manejarIniciar = () => {
             console.log("El creador inició el partido. Navegando al juego...");
-            navigate(`/partido/${partido_id}`);
+            navigate(`/partido/${partido_id}`, {
+                state: { returnTo: '/amistosos' }
+            });
         };
 
         wsService.on('usuario_unido', manejarUnirse);

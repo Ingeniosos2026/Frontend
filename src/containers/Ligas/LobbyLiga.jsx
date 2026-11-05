@@ -40,12 +40,9 @@ const LobbyLiga = () => {
             });
         };
 
-        const manejarIniciar = () => {
+        const manejarIniciar = (payload) => {
             console.log("El creador inició la liga. Armando fixture...");
-            navigate(`/partidoLiga`);
-            //Logica para Lobby de Liga iniciado...
-            //
-            //
+            navigate(`/ligas/en_curso/${liga_id}`);
         };
 
         const manejarAbandonar = (payload) => {
@@ -58,12 +55,12 @@ const LobbyLiga = () => {
 
         wsService.on('usuario_unido_liga', manejarUnirse);
         wsService.on('usuario_abandono_liga', manejarAbandonar);
-        wsService.on('iniciar_partido', manejarIniciar);
+        wsService.on('liga_iniciada', manejarIniciar);
 
         return () => {
             wsService.off('usuario_unido_liga', manejarUnirse);
             wsService.off('usuario_abandono_liga', manejarAbandonar);
-            wsService.off('iniciar_partido', manejarIniciar);
+            wsService.off('liga_iniciada', manejarIniciar);
             wsService.disconnect();
         };
     }, [liga_id, navigate]);

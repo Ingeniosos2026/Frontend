@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const CANCHA_ANCHO = 100;
 const CANCHA_ALTO = 60;
 
-const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
+const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal, alVolver }) => {
     const canchaRef = useRef(null);
-    const navigate = useNavigate();
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
     
     const miUsuarioId = String(localStorage.getItem('usuario_id'));
@@ -25,10 +23,6 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
         window.addEventListener('resize', actualizarMedidas);
         return () => window.removeEventListener('resize', actualizarMedidas);
     }, [estadoJuego]);
-
-    const manejarVolver = () => {
-        navigate('/amistosos');
-    };
 
 
     const escalar = (coord_back, tope_back, tope_front) => {
@@ -63,7 +57,7 @@ const CanchaVisual = ({ estadoJuego, partidoTerminado, resultadoFinal }) => {
                 </h1>
                 <p>Tiempo total: {formatearReloj(resultadoFinal?.tiempo)}</p>
                 <button 
-                    onClick={manejarVolver}
+                    onClick={alVolver}
                     style={{ marginTop: '20px', padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
                 >
                     Volver al Menú

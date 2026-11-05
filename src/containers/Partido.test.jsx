@@ -7,7 +7,8 @@ import { createWSService } from '../services/WSService';
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
     useNavigate: () => mockNavigate,
-    useParams: () => ({ partido_id: '99' }) // Simulamos la URL /partido/99
+    useParams: () => ({ partido_id: '99' }), // Simulamos la URL /partido/99
+    useLocation: () => ({ state: { returnTo: '/amistosos' } }) // Simulamos la ubicación con estado
 }));
 
 vi.mock('../services/WSService', () => ({

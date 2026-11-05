@@ -175,7 +175,7 @@ describe('LobbyLiga Logic Container', () => {
         unmount();
 
         expect(mockWsOff).toHaveBeenCalledWith('usuario_unido_liga', expect.any(Function));
-        expect(mockWsOff).toHaveBeenCalledWith('iniciar_partido', expect.any(Function));
+        expect(mockWsOff).toHaveBeenCalledWith('liga_iniciada', expect.any(Function));
         expect(mockWsDisconnect).toHaveBeenCalled();
     });
 

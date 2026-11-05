@@ -30,6 +30,7 @@ import MenuLiga from './containers/Ligas/MenuLiga';
 import UnirLiga from './containers/Ligas/UnirLiga';
 import CrearLiga from './containers/Ligas/CrearLiga';
 import LobbyLiga from './containers/Ligas/LobbyLiga';
+import LigaEnCurso from './containers/Ligas/LigaEnCurso';
 
 //Contenedores Amistoso
 import MenuAmistoso from './containers/Amistosos/MenuAmistoso';
@@ -88,6 +89,7 @@ export default function App() {
         <Route element={<LobbyLayout />}>   
           <Route path="/ligas/lobby/:liga_id" element={<LobbyLiga/>} />
           <Route path="/amistosos/lobby/:partido_id" element={<LobbyAmistoso/>} />
+          <Route path="/ligas/en_curso/:liga_id" element={<LigaEnCurso/>} />
         </Route>
 
         {/*Ruta Partido*/} 
