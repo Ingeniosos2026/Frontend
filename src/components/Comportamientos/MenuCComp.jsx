@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Container, Button, Collapse, Card } from 'react-bootstrap';
 
-const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
+const MenuCComp = ({ comportamientos,crear,editar, volver }) => {
     const [comportamiento, setComportamiento] = useState(null);
     const mostrarOpciones = (comp) => {
-
         if (comportamiento?.id === comp.id) {
             setComportamiento(null);
         } else {
@@ -72,7 +71,7 @@ const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
                                     <Collapse in={isExpanded}>
                                         <div id={`collapse-comp-${comp.id}`} className="mt-2">
                                             <Card className="shadow-sm bg-light" style={{ borderColor: '#6f42c1' }}>
-                                                <Card.Body className="d-flex fw-bold"
+                                                <Card.Body className="d-flex fw-bold justify-content-between w-100"
                                                     style={{
                                                         alignItems:'flex-end',
                                                         fontFamily: 'monospace', 
@@ -95,13 +94,22 @@ const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
                                                                 >
                                                                     {index +1}
                                                                 </span>
-                                                                <span style={{ whiteSpace: 'pre-wrap',color: '#c0c0c0'}}>
+                                                                <span 
+                                                                    style={{ 
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        fontFamily: 'Consolas, "Courier New", monospace',
+                                                                        fontWeight: '400',
+                                                                        fontSize: '14px',
+                                                                        color: '#d4d4d4'
+                                                                    }}
+                                                                >
                                                                     {linea} 
                                                                 </span>
                                                                 
                                                             </div>
                                                         ))}
                                                     </div>
+                                                    {comp.id > 3 ? 
                                                     <Button 
                                                         style={{
                                                             backgroundColor:'#543392',
@@ -112,7 +120,9 @@ const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
                                                         onClick={() => editar(comp.id)}
                                                     >
                                                         Editar
-                                                    </Button>    
+                                                    </Button>   
+                                                    : <div></div>}
+ 
                                                 </Card.Body>
                                             </Card>
                                         </div>
@@ -141,4 +151,4 @@ const MisComportamientos = ({ comportamientos,crear,editar, volver }) => {
     );
 };
 
-export default MisComportamientos;
+export default MenuCComp;

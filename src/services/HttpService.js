@@ -194,6 +194,13 @@ const createHttpService = () => {
         body: JSON.stringify(equipoData)
     });
   }
+  // --- EQUIPO ---
+  const realizarCambio = async (partidoId, usuarioId, cambioData) => {
+    return request(`/partido/${partidoId}/${usuarioId}/cambio`, {
+        method: 'PUT',
+        body: JSON.stringify(cambioData)
+    });
+  };
 
   return {
     crearUsuario,
@@ -221,6 +228,7 @@ const createHttpService = () => {
     iniciarAmistoso,
     obtenerEquipoLiga,
     actualizarEquipoLiga
+    realizarCambio
   };
 };
 

@@ -1,12 +1,13 @@
 import { useForm, Controller } from "react-hook-form";
 import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import EditorTexto from '../../containers/Comportamientos/EditorTexto';
+import ApiModal from './ApiModal';
 
 const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
     const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
             nombre: "",
-            codigo: ""
+            codigo:"# Escribe tu comportamiento en código Python aquí\n"
         }
     });
 
@@ -25,7 +26,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                 className="p-4 p-md-5 bg-white rounded shadow-lg" 
                 style={{ maxWidth: '600px', opacity: '0.95' }}
             >
-                <div className="text-center mb-5">
+                <div className="text-center mb-5" style={{ marginBottom: '0px' }}>
                     <h2 className="fw-bold mb-3" style={{ color: '#8b59e7' }}>Crear Comportamiento</h2>
                 </div>
 
@@ -44,7 +45,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                         <Form.Control 
                             type="text" 
                             placeholder="Defender"
-                            className="form-control-lg shadow-sm border-success"
+                            className="form-control-lg shadow-sm "
                             isInvalid={!!errors.nombre}
                             {...register('nombre', {
                                 required: "Ingrese un nombre"
@@ -58,16 +59,17 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                     <Form.Group className="mb-5" controlId="codigo">
                         <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
                             Código del comportamiento
-                        </Form.Label> 
-                        
+                        </Form.Label>
+
+                        <ApiModal/>
+
                         <Controller
                             name="codigo"
                             control={control}
                             rules={{ required: "Ingrese un codigo de comportamiento" }}
                             render={({ field }) => (
                                 <div className={errors.codigo ? "border border-danger rounded" : ""}>
-                                    <EditorTexto 
-                                        {...field}
+                                    <EditorTexto {...field}
                                     />
                                 </div>
                             )}
