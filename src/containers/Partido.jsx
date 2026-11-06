@@ -54,7 +54,21 @@ const Partido = () => {
 
         const manejarCambioJugador = (payload) => {
             setDatosCambio(payload);
-        }
+            setJugadoresEnCancha(prevJugadores => {
+                const jugadoresActualizados = prevJugadores.map(jugador => {
+                    if (jugador.id_jugador === payload.jugador_sale_id) {
+                        return { ...jugador, id_jugador: payload.jugador_entra_id };
+                    }
+                    return jugador;
+                });
+                return jugadoresActualizados;
+            });
+            setJugadoresSuplentes(prevSuplentes => {
+                const jugadoresActualizados = prevSuplentes.filter(jugador => jugador.id_jugador !== payload.jugador_entra_id);
+                return jugadoresActualizados;
+            });
+                
+        };
 
         wsService.on('estado_partido', manejarEstadoPartido);
         wsService.on('partido_terminado', manejarFinPartido);
