@@ -8,10 +8,16 @@ const Partido = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const rutaDeRegreso = location.state?.returnTo;
+    const idUsuario = Number(localStorage.getItem('usuario_id'));
 
     const [estadoJuego, setEstadoJuego] = useState(null);
     const [partidoTerminado, setPartidoTerminado] = useState(false);
     const [resultadoFinal, setResultadoFinal] = useState(null);
+    const [misJugadoresSuplentes, setJugadoresSuplentes] = useState([]);
+    const [misJugadoresEnCancha, setJugadoresEnCancha] = useState([]);
+    const [canchaDim, setCanchaDim] = useState(null);
+    const [datosPausa, setDatosPausa] = useState(null);
+    const [datosCambio, setDatosCambio] = useState(null);
 
     useEffect(() => {
         const wsEndpoint = `/partido/${partido_id}/ws`;
@@ -26,15 +32,44 @@ const Partido = () => {
         const manejarFinPartido = (payload) => {
             setPartidoTerminado(true);
             setResultadoFinal(payload);
-            wsService.disconnect();
         };
+
+        const manejarReconexionPartido = (payload) => {
+            setEstadoJuego(payload);
+            setCanchaDim(payload.cancha);
+            setJugadoresEnCancha(payload.jugadores.filter(jugador => jugador.id_usuario === idUsuario));   
+        }
+
+        const manejarPartidoPausado = (payload) => {
+            setEstadoJuego(prevEstado => ({ ...prevEstado, tiempo: payload.tiempo }));
+            setDatosPausa({
+                numero_pausa: payload.numero_pausa,
+                duracion_pausa: payload.duracion_pausa,
+            });
+        }
+
+        const manejarPartidoReanudado = (payload) => {
+            setEstadoJuego(prevEstado => ({ ...prevEstado, tiempo: payload.tiempo }));
+        }
+
+        const manejarCambioJugador = (payload) => {
+            setDatosCambio(payload);
+        }
 
         wsService.on('estado_partido', manejarEstadoPartido);
         wsService.on('partido_terminado', manejarFinPartido);
+        wsService.on('reconexion_partido', manejarReconexionPartido);
+        wsService.on('partido_pausado', manejarPartidoPausado);
+        wsService.on('partido_reanudado', manejarPartidoReanudado);
+        wsService.on('cambio_jugador_realizado', manejarCambioJugador);
 
         return () => {
             wsService.off('estado_partido', manejarEstadoPartido);
             wsService.off('partido_terminado', manejarFinPartido);
+            wsService.off('reconexion_partido', manejarReconexionPartido);
+            wsService.off('partido_pausado', manejarPartidoPausado);
+            wsService.off('partido_reanudado', manejarPartidoReanudado);
+            wsService.off('cambio_jugador_realizado', manejarCambioJugador);
             wsService.disconnect();
         };
     }, [partido_id]);
@@ -49,6 +84,11 @@ const Partido = () => {
             partidoTerminado={partidoTerminado}
             resultadoFinal={resultadoFinal}
             alVolver={manejarVolver}
+            jugadoresEnCancha={misJugadoresEnCancha}
+            jugadoresSuplentes={misJugadoresSuplentes}
+            idPartido={partido_id}
+            idUsuario={idUsuario}
+            canchaDim={canchaDim}
         />
     );
 };
