@@ -25,7 +25,7 @@ const UnirLiga = () => {
 
             const respuesta = await unirseLiga(liga_id, usuarioId, unirBody);
 
-            localStorage.setItem(`equipo_id_${liga_id}`, respuesta.id_equipo);
+            localStorage.setItem(`equipo_id`, respuesta.id_equipo);
             
             navigate(`/ligas/lobby/${liga_id}`,{ state: { esCreador: false, minimo : minimo } });
 

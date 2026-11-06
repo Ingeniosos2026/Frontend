@@ -185,7 +185,7 @@ const createHttpService = () => {
   };
 
   const obtenerEquipoLiga = async (ligaId, equipoId) => {
-    return request(`/liga/${liga_id}/equipo/${equipo_id}`);
+    return request(`/liga/${ligaId}/equipo/${equipoId}`);
   }
 
   const actualizarEquipoLiga = async (ligaId, equipoId, equipoData) => {

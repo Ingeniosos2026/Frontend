@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { createWSService } from '../../services/WSService';
 import { createHttpService } from '../../services/HttpService';
 import LigaEnCursoComp from '../../components/Ligas/LigaEnCursoComp';
