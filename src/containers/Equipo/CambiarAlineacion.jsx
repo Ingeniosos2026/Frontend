@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import { createHttpService } from '../../services/HttpService';
+import { useNavigate, useParams } from 'react-router-dom';
 import CambiarAlineacionComp from '../../components/Equipo/CambiarAlineacionComp';
 
-const CambiarAlineacion = ({usuario_id, liga_id, onConfirmar}) => {
+const CambiarAlineacion = () => {
     const [cargando, setCargando] = useState(true);
     const [mensajeError, setMensajeError] = useState('');
+    const { liga_id } = useParams();
+    const usuarioId = localStorage.getItem('usuario_id');
+    const equipoId = localStorage.getItem(`equipo_id`);
 
     const [titulares, setTitulares] = useState([]);
     const [suplentes, setSuplentes] = useState([]);
     const [formacion, setFormacion] = useState('');
     const [comportamientos, setComportamientos] = useState([]);
-    const obtenerEquipoLiga = createHttpService();
+    const {obtenerEquipoLiga, obtenerComportamientos, actualizarEquipoLiga} = createHttpService();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const cargarEquipo = async () => {
@@ -18,12 +23,14 @@ const CambiarAlineacion = ({usuario_id, liga_id, onConfirmar}) => {
                 setCargando(true);
                 setMensajeError('');
 
-                const datosEquipo = await obtenerEquipoLiga(liga_id, usuario_id);
-                setEquipo(datosEquipo);
-                setTitulares(datosEquipo.titulares);
-                setSuplentes(datosEquipo.suplentes);
+                const [datosEquipo, datosComp] = await Promise.all([
+                    obtenerEquipoLiga(liga_id, equipoId),
+                    obtenerComportamientos(usuarioId)
+                ]);
+                setTitulares(datosEquipo.jugadores.filter(jugador => jugador.estado === 'titular'));
+                setSuplentes(datosEquipo.jugadores.filter(jugador => jugador.estado === 'suplente'));
                 setFormacion(datosEquipo.formacion);
-                setComportamientos(datosEquipo.comportamientos);
+                setComportamientos(datosComp);
             } catch (error) {
                 setMensajeError(error.message);
             } finally {
@@ -31,15 +38,38 @@ const CambiarAlineacion = ({usuario_id, liga_id, onConfirmar}) => {
             }
         };
         cargarEquipo();
-    }, [usuario_id, liga_id]);
+    }, [usuarioId, equipoId, liga_id]);
 
-    const confirmar = () => {
-        onConfirmar({
-            titulares,
-            suplentes,
-            formacion,
-            comportamientos
-        });
+    const confirmar = async () => {
+        try {
+            setCargando(true);
+            setMensajeError('');
+
+            const jugadoresActualizados = [
+                ...titulares.map(jugador => ({
+                    id: jugador.id,
+                    estado: 'titular',
+                    comportamiento_id: jugador.comportamiento.id
+                })),
+                    ...suplentes.map(jugador => ({
+                    id: jugador.id,
+                    estado: 'suplente',
+                    comportamiento_id: jugador.comportamiento.id
+                }))
+            ];
+
+            await actualizarEquipoLiga(liga_id, equipoId, {
+                jugadores: jugadoresActualizados,
+                formacion: formacion
+            });
+
+            navigate(`/ligas/en_curso/${liga_id}`);
+
+        } catch (error) {
+            setMensajeError(error.message);
+        } finally {
+            setCargando(false);
+        }
     };
 
     if(cargando) {
@@ -51,7 +81,44 @@ const CambiarAlineacion = ({usuario_id, liga_id, onConfirmar}) => {
     }
 
     const volver = () => {
-        navigate(`/ligas/lobby/${liga_id}`);
+        navigate(`/ligas/en_curso/${liga_id}`);
+    };
+
+    const cambiarTitular = (titularIndex, suplenteId) => {
+        const suplenteSelec = suplentes.find(
+            jugador => jugador.id === Number(suplenteId)
+        );
+
+        if (suplenteSelec) {
+            const titularReemplazado = titulares[titularIndex];
+            const nuevosTitulares = [...titulares];
+            const nuevosSuplentes = [...suplentes];
+
+            nuevosTitulares[titularIndex] = suplenteSelec;
+
+            const indiceSuplente = nuevosSuplentes.findIndex(
+            jugador => jugador.id === suplenteSelec.id
+            );
+
+            nuevosSuplentes[indiceSuplente] = titularReemplazado;
+
+            setTitulares(nuevosTitulares);
+            setSuplentes(nuevosSuplentes);
+        }
+    };
+
+    const cambiarComportamiento = (jugadorId, comportamientoId) => {
+        const comportamientoSeleccionado = comportamientos.find(
+            comp => comp.id === Number(comportamientoId)
+        );
+
+        if (!comportamientoSeleccionado) return;
+
+        setTitulares(prev =>
+            prev.map(jugador =>
+                jugador.id === jugadorId ? { ...jugador, comportamiento: comportamientoSeleccionado } : jugador
+            )
+        );
     };
 
     return (
@@ -60,12 +127,10 @@ const CambiarAlineacion = ({usuario_id, liga_id, onConfirmar}) => {
             suplentes={suplentes}
             formacion={formacion}
             comportamientos={comportamientos}
-            onCambiarTitular={(nuevosTitulares, nuevosSuplentes) => { 
-                setTitulares(nuevosTitulares);
-                setSuplentes(nuevosSuplentes);
-            }}
+            error={mensajeError}
+            onCambiarTitular={cambiarTitular}
             onCambiarFormacion={setFormacion}
-            onCambiarComportamiento={setComportamientos}
+            onCambiarComportamiento={cambiarComportamiento}
             onGuardar={confirmar}
             volver={volver}
         />

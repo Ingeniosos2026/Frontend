@@ -14,7 +14,7 @@ const ordenarTabla = (tabla) => {
     return [...tabla].sort((a, b) => {
         const diferenciaPuntos = b.puntos - a.puntos;
         if (diferenciaPuntos !== 0) return diferenciaPuntos; 
-        
+    
         const difGolesA = a.goles_a_favor - a.goles_en_contra;
         const difGolesB = b.goles_a_favor - b.goles_en_contra;
         return difGolesB - difGolesA;
@@ -203,6 +203,10 @@ const LigaEnCurso = () => {
         );
     }
 
+    const manejarCambioAlineacion = () => {
+        navigate(`/alineacion/${liga_id}`);
+    }
+
     return (
         <LigaEnCursoComp
             cargando={cargando}
@@ -212,6 +216,7 @@ const LigaEnCurso = () => {
             miUsuarioId={usuarioId}
             partidoActualId={idPartidoActual}
             verPartido={manejarVerPartido}
+            cambioAlineacion={manejarCambioAlineacion}
         />  
     );
 };

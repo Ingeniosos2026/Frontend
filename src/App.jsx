@@ -43,6 +43,8 @@ import Partido from './containers/Partido';
 
 //Contenedor Ranking
 import Ranking from './containers/Ranking/VerRanking';
+//Contenedor Alineacion
+import CambiarAlineacion from './containers/Equipo/CambiarAlineacion';
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem('usuario_id');
@@ -65,6 +67,9 @@ export default function App() {
           <Route path="/jugadores" element={<MenuJugador />} />
           <Route path="/comportamientos" element={<MenuComp/>} />
         </Route>
+
+        {/*Rutas Alineacion */}
+        <Route path="/alineacion/:liga_id" element={<CambiarAlineacion />} />
 
         {/*Rutas ranking*/}
         <Route path="/ranking" element={<Ranking />} />

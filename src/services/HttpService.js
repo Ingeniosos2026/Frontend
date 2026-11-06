@@ -184,8 +184,15 @@ const createHttpService = () => {
     });
   };
 
-  const obtenerEquipoLiga = async (liga_id, equipo_id) => {
+  const obtenerEquipoLiga = async (ligaId, equipoId) => {
     return request(`/liga/${liga_id}/equipo/${equipo_id}`);
+  }
+
+  const actualizarEquipoLiga = async (ligaId, equipoId, equipoData) => {
+    return request(`/liga/${ligaId}/equipo/${equipoId}`, {
+        method: "PUT",
+        body: JSON.stringify(equipoData)
+    });
   }
 
   return {
@@ -212,7 +219,8 @@ const createHttpService = () => {
     crearAmistoso,
     unirseAmistoso,
     iniciarAmistoso,
-    obtenerEquipoLiga
+    obtenerEquipoLiga,
+    actualizarEquipoLiga
   };
 };
 
