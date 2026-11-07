@@ -1,7 +1,8 @@
 import { useState} from "react";
 import { Modal, Table, Button } from 'react-bootstrap';
 
-function ApiComp(props) {
+function ApiComp({tipo, ...props}) {
+  const esDT = tipo === "dt";
   return (
 <Modal
       {...props}
@@ -23,6 +24,48 @@ function ApiComp(props) {
             </tr>
           </thead>
           <tbody>
+            {esDT ? (
+                <>
+                  {/* Primitivas del Director Técnico */}
+                  <tr>
+                    <td className="fw-bold">Cambiar Comportamiento</td>
+                      <td><code>cambiar_comportamiento()</code></td>
+                      <td>Ninguno</td>
+                      <td>Selecciona aleatoriamente un jugador propio y le asigna un comportamiento diferente de los disponibles.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Cambiar Jugador</td>
+                    <td><code>cambiar_jugador()</code></td>
+                    <td>Ninguno</td>
+                    <td>Realiza un cambio aleatorio entre un titular y un suplente. Solo puede ejecutarse durante una pausa.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Voy Perdiendo</td>
+                    <td><code>voy_perdiendo()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el equipo propio está perdiendo.</td>
+                 </tr>
+                  <tr>
+                    <td className="fw-bold">Voy Ganando</td>
+                    <td><code>voy_ganando()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el equipo propio está ganando.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Está Empatado</td>
+                    <td><code>esta_empatado()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si ambos equipos tienen la misma cantidad de goles.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Es Pausa</td>
+                    <td><code>es_pausa()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el partido se encuentra en pausa.</td>
+                  </tr>
+                </>
+                ) : (
+                    <>
             <tr>
               <td className="fw-bold">Correr</td>
               <td><code style={{ color: '#6f42c1' }}>correr(destino: coordenadas)</code></td>
@@ -71,6 +114,8 @@ function ApiComp(props) {
               <td style={{ textAlign: 'center',fontWeight: '500', color: '#707072'}}>Ninguno</td>
               <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra el arco del equipo propio.</td>
             </tr>
+            </>
+            )}
           </tbody>
         </Table>
 
@@ -84,7 +129,7 @@ function ApiComp(props) {
   );
 }
 
-function ApiModal() {
+function ApiModal({tipo = "jugador"}) {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -97,6 +142,7 @@ function ApiModal() {
       </Button>
 
       <ApiComp
+        tipo={tipo}
         show={modalShow}
         onHide={() => setModalShow(false)}
       />

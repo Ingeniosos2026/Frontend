@@ -59,9 +59,12 @@ describe("MenuComp Logic Container", () => {
         mockObtenerComportamientos.mockResolvedValue([]);
         render(<MemoryRouter><MenuComp /></MemoryRouter>);
 
-        const btnCrear = await screen.findByRole("button", { name: /\+ Crear Comportamiento/i });
-        fireEvent.click(btnCrear);
+        const botonesCrear = await screen.findAllByRole("button", {
+            name: /\+ Crear Comportamiento/i
+        });
 
+        const btnCrear = botonesCrear[0];
+        fireEvent.click(btnCrear);
         expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/crear");
     });
 
@@ -96,6 +99,16 @@ describe("MenuComp Logic Container", () => {
 
         const btnEditar = screen.queryByRole("button", { name: /Editar/i });
         expect(btnEditar).not.toBeInTheDocument();
+    });
+
+    it("navega a /comportamientos/crearDt al ejecutar la acción Crear Comportamiento DT", async () => {
+        mockObtenerComportamientos.mockResolvedValue([]);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnCrear = await screen.findByRole("button", { name: /\+ Crear Comportamiento DT/i });
+        fireEvent.click(btnCrear);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/crearDt");
     });
 
     it("navega a /main al presionar Volver", async () => {

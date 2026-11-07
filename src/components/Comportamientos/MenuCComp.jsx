@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container, Button, Collapse, Card } from 'react-bootstrap';
 
-const MenuCComp = ({ comportamientos,crear,editar, volver }) => {
+const MenuCComp = ({ comportamientos, crear, crearDt, editar, volver }) => {
     const [comportamiento, setComportamiento] = useState(null);
     const mostrarOpciones = (comp) => {
         if (comportamiento?.id === comp.id) {
@@ -29,6 +29,7 @@ const MenuCComp = ({ comportamientos,crear,editar, volver }) => {
                 <div className="text-center mb-5">
                     <h2 className="fw-bold mb-4" style={{ color: '#6f42c1' }}>Menú de Comportamientos</h2>
                     
+                    <div className="d-flex flex-column align-items-center gap-3">
                     <Button 
                         size="lg" 
                         className="px-5 shadow-sm fw-bold rounded-pill border-0"
@@ -37,6 +38,16 @@ const MenuCComp = ({ comportamientos,crear,editar, volver }) => {
                     >
                         + Crear Comportamiento
                     </Button>
+
+                    <Button 
+                        size="lg" 
+                        className="px-5 shadow-sm fw-bold rounded-pill border-0"
+                        style={{ backgroundColor: '#6f42c1', transition: 'all 0.3s ease' }}
+                        onClick={crearDt}
+                    >
+                        + Crear Comportamiento DT
+                    </Button>
+                    </div>
                 </div>
 
                 <h4 className="mb-4 border-bottom pb-2" style={{ color: '#6f42c1' }}>

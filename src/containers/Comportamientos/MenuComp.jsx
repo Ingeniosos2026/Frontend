@@ -25,6 +25,10 @@ const MenuComp = () => {
         navigate("/comportamientos/crear");
     };
 
+    const crearCompDt = () => {
+        navigate("/comportamientos/crearDt");
+    }
+
     const editarComp = (comp_id) => {
         navigate(`/comportamientos/editar/${comp_id}`);
     };
@@ -37,6 +41,7 @@ const MenuComp = () => {
         <MenuCComp
             comportamientos={comps}
             crear = {crearComp}
+            crearDt={crearCompDt}
             editar = {editarComp}
             volver= {irVolver}
         />
