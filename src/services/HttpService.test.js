@@ -127,4 +127,34 @@ describe('HttpService - Cobertura del Sprint 1', () => {
     });
     expect(result).toEqual(mockResponse);
   });
+
+  it('cambiarComportamiento: debe enviar un PUT a /partido/{partidoId}/cambiar/comportamiento', async () => {
+    const partidoId = 15;
+    const mockData = { usuario_id: 7, jugador_id: 9, comp_id: 3 };
+    const mockResponse = { success: true };
+
+    global.fetch.mockResolvedValue({ ok: true, json: async () => mockResponse });
+
+    const result = await http.cambiarComportamiento(partidoId, mockData);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/partido/${partidoId}/cambiar/comportamiento`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockData),
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('cambiarComportamiento: debe lanzar un error estructurado si la respuesta HTTP falla', async () => {
+    const partidoId = 15;
+    const mockData = { usuario_id: 7, jugador_id: 9, comp_id: 3 };
+
+    global.fetch.mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ mensaje: 'El jugador no pertenece al usuario', error: 'BAD_REQUEST' })
+    });
+
+    await expect(http.cambiarComportamiento(partidoId, mockData)).rejects.toThrow('El jugador no pertenece al usuario');
+  });
 });

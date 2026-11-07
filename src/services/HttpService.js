@@ -105,10 +105,10 @@ const createHttpService = () => {
     });
   };
 
-  const asignarComportamiento = async (usuarioId, compId, jugadorId) => {
-    return request(`/comportamiento/${usuarioId}/${compId}/asignar`, {
+  const cambiarComportamiento = async (partidoId, cambioData) => {
+    return request(`/partido/${partidoId}/cambiar/comportamiento`, {
         method: 'PUT',
-        body: JSON.stringify({ jugador_id: jugadorId }) 
+        body: JSON.stringify(cambioData) 
     });
   };
 
@@ -203,7 +203,7 @@ const createHttpService = () => {
     obtenerComportamientos,
     obtenerInformacionComportamiento,
     editarComportamiento,
-    asignarComportamiento,
+    cambiarComportamiento,
     obtenerLigas,
     obtenerFixtureLiga,
     obtenerTablaLiga,
