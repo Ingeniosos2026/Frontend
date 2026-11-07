@@ -251,4 +251,13 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
 
         expect(mockNavigate).toHaveBeenCalledWith('/ligas');
     });
+
+    it('navega al cambio de alineacion al hacer click en "Cambiar Alineacion" en el lobby de la liga en curso', async () => {
+        render(<LigaEnCurso />);
+
+        const botonAlineacion = await screen.findByRole('button', {name: "Cambiar Alineacion"});
+        fireEvent.click(botonAlineacion);
+
+        expect(mockNavigate).toHaveBeenCalledWith('/alineacion/1')
+    })
 });
