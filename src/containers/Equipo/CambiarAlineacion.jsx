@@ -46,18 +46,16 @@ const CambiarAlineacion = ({volver}) => {
 
             const jugadoresActualizados = [
                 ...titulares.map(jugador => ({
-                    id: jugador.id,
-                    estado: 'titular',
-                    comportamiento_id: jugador.comportamiento.id
+                    id_jugador: jugador.id,
+                    id_comportamiento: jugador.comportamiento.id
                 })),
                     ...suplentes.map(jugador => ({
-                    id: jugador.id,
-                    estado: 'suplente',
-                    comportamiento_id: jugador.comportamiento.id
+                    id_jugador: jugador.id,
+                    id_comportamiento: jugador.comportamiento.id
                 }))
             ];
 
-            await actualizarEquipoLiga(liga_id, equipoId, {
+            await actualizarEquipoLiga(liga_id, usuarioId, {
                 jugadores: jugadoresActualizados,
                 formacion: formacion
             });

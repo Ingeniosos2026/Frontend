@@ -188,10 +188,10 @@ const createHttpService = () => {
     return request(`/liga/${ligaId}/equipo/${equipoId}`);
   }
 
-  const actualizarEquipoLiga = async (ligaId, equipoId, equipoData) => {
-    return request(`/liga/${ligaId}/equipo/${equipoId}`, {
+  const actualizarEquipoLiga = async (ligaId, usuarioId, datos) => {
+    return request(`/liga/${ligaId}/alineacion/${usuarioId}`, {
         method: "PUT",
-        body: JSON.stringify(equipoData)
+        body: JSON.stringify(datos)
     });
   }
   // --- EQUIPO ---
