@@ -227,7 +227,7 @@ const createHttpService = () => {
     unirseAmistoso,
     iniciarAmistoso,
     obtenerEquipoLiga,
-    actualizarEquipoLiga
+    actualizarEquipoLiga,
     realizarCambio
   };
 };

@@ -4,6 +4,7 @@ import { createWSService } from '../../services/WSService';
 import { createHttpService } from '../../services/HttpService';
 import LigaEnCursoComp from '../../components/Ligas/LigaEnCursoComp';
 import LigaFinalizadaComp from '../../components/Ligas/LigaFinalizadaComp';
+import CambiarAlineacion from '../Equipo/CambiarAlineacion';
 
 const estados = { 
     EN_CURSO: 'en_curso',
@@ -44,6 +45,7 @@ const LigaEnCurso = () => {
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
     const [idPartidoActual, setIdPartidoActual] = useState(null);
+    const [interfaz, setInterfaz] = useState('liga');
 
     const fixtureRef = useRef([]);
 
@@ -203,10 +205,24 @@ const LigaEnCurso = () => {
         );
     }
 
+    
     const manejarCambioAlineacion = () => {
-        navigate(`/alineacion/${liga_id}`);
+        setInterfaz('alineacion');
     }
 
+    const manejarVolverAlineacion = () => {
+        setInterfaz('liga');
+    };
+
+    if (interfaz === 'alineacion') {
+        return (
+            <CambiarAlineacion
+                volver={manejarVolverAlineacion}
+            />
+        );
+    }
+
+    
     return (
         <LigaEnCursoComp
             cargando={cargando}

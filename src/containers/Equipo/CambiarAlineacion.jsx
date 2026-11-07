@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { createHttpService } from '../../services/HttpService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CambiarAlineacionComp from '../../components/Equipo/CambiarAlineacionComp';
 
-const CambiarAlineacion = () => {
+const CambiarAlineacion = ({volver}) => {
     const [cargando, setCargando] = useState(true);
     const [mensajeError, setMensajeError] = useState('');
     const { liga_id } = useParams();
@@ -15,7 +15,6 @@ const CambiarAlineacion = () => {
     const [formacion, setFormacion] = useState('');
     const [comportamientos, setComportamientos] = useState([]);
     const {obtenerEquipoLiga, obtenerComportamientos, actualizarEquipoLiga} = createHttpService();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const cargarEquipo = async () => {
@@ -63,7 +62,7 @@ const CambiarAlineacion = () => {
                 formacion: formacion
             });
 
-            navigate(`/ligas/en_curso/${liga_id}`);
+            volver();
 
         } catch (error) {
             setMensajeError(error.message);
@@ -79,10 +78,6 @@ const CambiarAlineacion = () => {
     if (mensajeError) {
         return <p>{mensajeError}</p>;
     }
-
-    const volver = () => {
-        navigate(`/ligas/en_curso/${liga_id}`);
-    };
 
     const cambiarTitular = (titularIndex, suplenteId) => {
         const suplenteSelec = suplentes.find(
