@@ -9,22 +9,11 @@ vi.mock("../../services/HttpService", () => ({
     createHttpService: vi.fn(),
 }));
 
-const { navigateMock } = vi.hoisted(() => ({
-    navigateMock: vi.fn()
-}));
-
-vi.mock("react-router-dom", async () => { 
-    const actual = await vi.importActual("react-router-dom"); 
-    return { 
-        ...actual, 
-        useNavigate: () => navigateMock
-    }; 
-});
-
 describe("CambiarAlineacion Container", () => {
     const mockobtenerEquipoLiga = vi.fn();
     const mockobtenerComportamientos = vi.fn();
     const mockactualizarEquipoLiga = vi.fn();
+    const volverMock = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -76,7 +65,7 @@ describe("CambiarAlineacion Container", () => {
             { id: 2, nombre: 'Defender' }
         ]);
 
-        render(<MemoryRouter><CambiarAlineacion /></MemoryRouter>);
+        render(<CambiarAlineacion volver={volverMock}/>);
 
         expect(await screen.findByText('Messi')).toBeInTheDocument();
         expect(screen.getByText('Di María')).toBeInTheDocument();
@@ -96,7 +85,7 @@ describe("CambiarAlineacion Container", () => {
                 <Routes>
                     <Route
                         path="/alineacion/:liga_id"
-                        element={<CambiarAlineacion />}
+                        element={<CambiarAlineacion volver={volverMock}/>}
                     />
                 </Routes>
             </MemoryRouter>
@@ -112,7 +101,7 @@ describe("CambiarAlineacion Container", () => {
 
         await waitFor(() => {
             expect(mockactualizarEquipoLiga).toHaveBeenCalled();
-            expect(navigateMock).toHaveBeenCalledWith("/ligas/en_curso/7");
+            expect(volverMock).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -147,7 +136,7 @@ describe("CambiarAlineacion Container", () => {
                 <Routes>
                     <Route
                         path="/alineacion/:liga_id"
-                        element={<CambiarAlineacion />}
+                        element={<CambiarAlineacion volver={volverMock}/>}
                     />
                 </Routes>
             </MemoryRouter>
@@ -202,7 +191,7 @@ describe("CambiarAlineacion Container", () => {
                 <Routes>
                     <Route
                         path="/alineacion/:liga_id"
-                        element={<CambiarAlineacion />}
+                        element={<CambiarAlineacion volver={volverMock}/>}
                     />
                 </Routes>
             </MemoryRouter>
@@ -218,6 +207,6 @@ describe("CambiarAlineacion Container", () => {
             await screen.findByText("No se pudo actualizar la alineación")
         ).toBeInTheDocument();
 
-        expect(navigateMock).not.toHaveBeenCalled();
+        expect(volverMock).not.toHaveBeenCalled();
     });
 });
