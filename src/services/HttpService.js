@@ -213,7 +213,7 @@ const createHttpService = () => {
     return request(`/comportamientos_dt/${usuarioId}`);
   };
 
-  const activarDirectorTecnico = async (datos) => {
+  const cambiarEstadoDirectorTecnico = async (datos) => {
     return request('/partido', {
         method: 'POST',
         body: JSON.stringify(datos)
@@ -254,7 +254,7 @@ const createHttpService = () => {
     realizarCambio,
     crearComportamientoDt,
     obtenerComportamientosDt,
-    activarDirectorTecnico,
+    cambiarEstadoDirectorTecnico,
     asignarComportamientoDt,
     obtenerEquipoLiga,
     actualizarEquipoLiga

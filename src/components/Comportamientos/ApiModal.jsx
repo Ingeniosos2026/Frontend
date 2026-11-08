@@ -92,15 +92,15 @@ function ApiComp({tipo, ...props}) {
             </tr>
             <tr>
               <td className="fw-bold">Dirección Compañero</td>
-              <td><code style={{ color: '#6f42c1' }}>direccionCompanero(companero: int)</code></td>
-              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Recibe un id de un compañero de equipo.</td>
-              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve las coordenadas donde se encuentra el compañero de equipo.</td>
+              <td><code style={{ color: '#6f42c1' }}>direccionCompanero()</code></td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Ninguno</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve una lista con las posiciones de cada companero.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Rival</td>
-              <td><code style={{ color: '#6f42c1' }}>direccionRival(rival: int)</code></td>
-              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Recibe un id de un jugador rival.</td>
-              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra ese jugador rival.</td>
+              <td><code style={{ color: '#6f42c1' }}>direccionRival()</code></td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Ninguno.</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve una lista con las posiciones de cada rival.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Arco Rival</td>
@@ -110,8 +110,8 @@ function ApiComp({tipo, ...props}) {
             </tr>
             <tr>
               <td className="fw-bold">Pelota Cerca</td>
-              <td><code style={{ color: '#6f42c1' }}>pelotaCerca(jugador: int)</code></td>
-              <td style={{ textAlign: 'center' ,fontWeight: '500' }}>Recibe un id de un jugador.</td>
+              <td><code style={{ color: '#6f42c1' }}>pelotaCerca()</code></td>
+              <td style={{ textAlign: 'center' ,fontWeight: '500' }}>Ninguno.</td>
               <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Verdadero si la pelota se encuentra dentro de la distancia considerada cercana al jugador, falso en caso contrario.</td>
             </tr>
             <tr>

@@ -12,11 +12,9 @@ const CanchaVisual = ({
     jugadoresSuplentes,
     idPartido,
     idUsuario,
-    canchaDim,
-    directorTecnicoActivo,
-    alternarDirectorTecnico
-
+    canchaDim
 }) => {
+    const [activado, setActivado] = useState(false);
     const canchaRef = useRef(null);
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
     const [suplente, setSuplente] = useState(null);
@@ -142,7 +140,7 @@ const CanchaVisual = ({
                                 <div key={jugador.id_jugador}>
                                     <Button
                                         onClick={() => mostrarOpciones(jugador)}
-                                        disabled={directorTecnicoActivo}
+                                        disabled={activado}
                                     >
                                         {jugador.id_jugador} {isExpanded ? '▲' : '▼'}
                                     </Button>
@@ -299,8 +297,8 @@ const CanchaVisual = ({
                     <ActivarDt
                         usuarioId={idUsuario}
                         partidoId={idPartido}
-                        activado={directorTecnicoActivo}
-                        alternarDirectorTecnico={alternarDirectorTecnico}
+                        activado={activado}
+                        setActivado={setActivado}
                     />
                 </div>
                 

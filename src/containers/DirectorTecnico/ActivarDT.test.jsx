@@ -9,7 +9,7 @@ vi.mock("../../services/HttpService", () => ({
 }));
 
 const mockActivarDirectorTecnico = vi.fn();
-const mockAlternarDirectorTecnico = vi.fn();
+const mockSetActivado = vi.fn();
 
 describe("ActivarDT Container", () => {
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe("ActivarDT Container", () => {
                 usuarioId={1}
                 partidoId={10}
                 activado={false}
-                alternarDirectorTecnico={mockAlternarDirectorTecnico}
+                setActivado={mockSetActivado}
             />
         );
 
@@ -40,7 +40,7 @@ describe("ActivarDT Container", () => {
                 true
             );
 
-            expect(mockAlternarDirectorTecnico).toHaveBeenCalledWith(true);
+            expect(mockSetActivado).toHaveBeenCalledWith(true);
         });
     });
 
@@ -50,7 +50,7 @@ describe("ActivarDT Container", () => {
                 usuarioId={1}
                 partidoId={10}
                 activado={true}
-                alternarDirectorTecnico={mockAlternarDirectorTecnico}
+                setActivado={mockSetActivado}
             />
         );
 
@@ -63,7 +63,7 @@ describe("ActivarDT Container", () => {
                 false
             );
 
-            expect(mockAlternarDirectorTecnico).toHaveBeenCalledWith(false);
+            expect(mockSetActivado).toHaveBeenCalledWith(false);
         });
     });
 })

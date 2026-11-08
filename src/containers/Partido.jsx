@@ -19,12 +19,6 @@ const Partido = () => {
     const [datosPausa, setDatosPausa] = useState(null);
     const [datosCambio, setDatosCambio] = useState(null);
 
-    const [directorTecnicoActivo, setDirectorTecnicoActivo] = useState(false);
-
-    const alternarDirectorTecnico = (nuevoEstado) => {
-        setDirectorTecnicoActivo(nuevoEstado);
-    };
-
     useEffect(() => {
         const wsEndpoint = `/partido/${partido_id}/ws`;
         const wsService = createWSService(wsEndpoint);
@@ -109,8 +103,6 @@ const Partido = () => {
             idPartido={partido_id}
             idUsuario={idUsuario}
             canchaDim={canchaDim}
-            directorTecnicoActivo={directorTecnicoActivo}
-            alternarDirectorTecnico={alternarDirectorTecnico}
         />
     );
 };
