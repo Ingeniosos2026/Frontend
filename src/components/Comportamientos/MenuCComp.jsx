@@ -37,6 +37,9 @@ const MenuCComp = ({ comportamientos, comportamientosDt, crear, crearDt, editar,
                     <h2 className="fw-bold mb-4" style={{ color: '#6f42c1' }}>Menú de Comportamientos</h2>
                     
                     <div className="d-flex flex-column align-items-center gap-3">
+                        <h4 className="mb-3 border-bottom pb-2" style={{ color: '#6f42c1' }}>
+                            Mis Comportamientos Jugador
+                        </h4>
                     <Button 
                         size="lg" 
                         className="px-5 shadow-sm fw-bold rounded-pill border-0"
@@ -45,21 +48,10 @@ const MenuCComp = ({ comportamientos, comportamientosDt, crear, crearDt, editar,
                     >
                         + Crear Comportamiento Jugador
                     </Button>
-
-                    <Button 
-                        size="lg" 
-                        className="px-5 shadow-sm fw-bold rounded-pill border-0"
-                        style={{ backgroundColor: '#6f42c1', transition: 'all 0.3s ease' }}
-                        onClick={crearDt}
-                    >
-                        + Crear Comportamiento DT
-                    </Button>
                     </div>
                 </div>
 
-                <h4 className="mb-4 border-bottom pb-2" style={{ color: '#6f42c1' }}>
-                    Mis Comportamientos Jugador
-                </h4>
+                
                 
                 <div className="d-flex flex-column gap-3 mb-4">
                     {comportamientos && comportamientos.length > 0 ? (
@@ -153,9 +145,21 @@ const MenuCComp = ({ comportamientos, comportamientosDt, crear, crearDt, editar,
                     )}
                 </div>
 
-                <h4 className="mb-4 border-bottom pb-2 mt-5" style={{ color: '#6f42c1' }}>
-                    Mis Comportamientos DT
-                </h4>
+                <div className="text-center mb-5">
+                    <h4 className="mb-4 border-bottom mt-4" style={{ color: '#6f42c1' }}>
+                        Mis Comportamientos DT
+                    </h4>
+                    <Button 
+                        size="lg" 
+                        className="px-5 shadow-sm fw-bold rounded-pill border-0"
+                        style={{ backgroundColor: '#6f42c1', transition: 'all 0.3s ease' }}
+                        onClick={crearDt}
+                    >
+                        + Crear Comportamiento DT
+                    </Button>
+                </div>
+
+                
 
                 <div className="d-flex flex-column gap-3 mb-4">
                     {comportamientosDt && comportamientosDt.length > 0 ? (
