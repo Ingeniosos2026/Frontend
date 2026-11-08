@@ -160,8 +160,8 @@ const createHttpService = () => {
   };
 
   // --- AMISTOSOS ---
-  const obtenerAmistosos = async () => {
-    return request('/partidos');
+  const obtenerAmistosos = async (usuarioId) => {
+    return request(`/partidos/${usuarioId}`)
   };
 
   const crearAmistoso = async (usuarioId, partidoData) => {

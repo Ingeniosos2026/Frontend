@@ -11,13 +11,14 @@ const MenuAmistoso = () => {
     const [httpService] = useState(() => createHttpService());
     // const [wsService] = useState(() => createWSService('/amistosos/ws'));
     const [mensajeError, setError] = useState(null);
+    const usuarioId = localStorage.getItem('usuario_id');
     
     useEffect(() => {
         const init = async () => {
             try {
                 setCargando(true);
 
-                const amistosos = await httpService.obtenerAmistosos();
+                const amistosos = await httpService.obtenerAmistosos(usuarioId);
 
                 setAmistosos(amistosos);
 
