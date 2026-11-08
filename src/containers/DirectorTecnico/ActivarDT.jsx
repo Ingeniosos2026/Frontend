@@ -2,11 +2,11 @@ import { Button } from "react-bootstrap";
 import { createHttpService } from '../../services/HttpService.js';
 
 const ActivarDt = ({ usuarioId, partidoId, activado, setActivado}) => {
-    const { activarDirectorTecnico } = createHttpService();
+    const { cambiarEstadoDirectorTecnico } = createHttpService();
 
     const cambiarEstadoDt = async () => {
         try {
-            await activarDirectorTecnico(usuarioId, partidoId, !activado);
+            await cambiarEstadoDirectorTecnico(usuarioId, partidoId);
 
             setActivado(!activado);
 

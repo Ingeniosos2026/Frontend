@@ -213,19 +213,17 @@ const createHttpService = () => {
     return request(`/comportamientos_dt/${usuarioId}`);
   };
 
-  const cambiarEstadoDirectorTecnico = async (datos) => {
-    return request('/partido', {
-        method: 'POST',
-        body: JSON.stringify(datos)
+  const cambiarEstadoDirectorTecnico = async (usuarioId, partidoId) => {
+    return request(`/partido/${partidoId}/${usuarioId}/dt`, {
+        method: 'POST'
     });
   };
 
   const asignarComportamientoDt = async (usuarioId, compId) => {
     return request(`/comportamiento_dt/${usuarioId}/${compId}/asignar`, {
-        method: 'PUT',
-        body: JSON.stringify({ usuario_id: usuarioId }) 
+        method: 'PUT'
     });
-  }
+  };
 
   return {
     crearUsuario,

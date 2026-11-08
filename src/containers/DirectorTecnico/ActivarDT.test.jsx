@@ -8,17 +8,17 @@ vi.mock("../../services/HttpService", () => ({
     createHttpService: vi.fn(),
 }));
 
-const mockActivarDirectorTecnico = vi.fn();
+const mockcambiarEstadoDirectorTecnico = vi.fn();
 const mockSetActivado = vi.fn();
 
 describe("ActivarDT Container", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         createHttpService.mockReturnValue({
-            activarDirectorTecnico: mockActivarDirectorTecnico
+            cambiarEstadoDirectorTecnico: mockcambiarEstadoDirectorTecnico
         });
 
-        mockActivarDirectorTecnico.mockResolvedValue({});
+        mockcambiarEstadoDirectorTecnico.mockResolvedValue({});
     });
 
     it("invoca correctamente al endpoint y activa el DT", async () => {
@@ -34,10 +34,9 @@ describe("ActivarDT Container", () => {
         fireEvent.click(screen.getByRole("button", { name: "Activar" }));
 
         await waitFor(() => {
-            expect(mockActivarDirectorTecnico).toHaveBeenCalledWith(
+            expect(mockcambiarEstadoDirectorTecnico).toHaveBeenCalledWith(
                 1,
-                10,
-                true
+                10
             );
 
             expect(mockSetActivado).toHaveBeenCalledWith(true);
@@ -57,10 +56,9 @@ describe("ActivarDT Container", () => {
         fireEvent.click(screen.getByRole("button", { name: "Desactivar" }));
 
         await waitFor(() => {
-            expect(mockActivarDirectorTecnico).toHaveBeenCalledWith(
+            expect(mockcambiarEstadoDirectorTecnico).toHaveBeenCalledWith(
                 1,
-                10,
-                false
+                10
             );
 
             expect(mockSetActivado).toHaveBeenCalledWith(false);
