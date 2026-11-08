@@ -11,6 +11,51 @@ const CrearCCompDt = ({ mensajeError, alConfirmar, alVolver }) => {
         }
     });
 
+    const sugerenciasDt = [
+                    {
+                        label: "cambiar_comportamiento_ataque",
+                        insertText: "cambiar_comportamiento_ataque()",
+                        detail: "cambiar_comportamiento_ataque()",
+                        documentation: "Selecciona a todos los jugadores propios y les asigna el comportamiento 'Atacar'."
+                    },
+                    {
+                        label: "cambiar_comportamiento_defensa",
+                        insertText: "cambiar_comportamiento_defensa()",
+                        detail: "cambiar_comportamiento_defensa()",
+                        documentation: "Selecciona a todos los jugadores propios y les asigna el comportamiento 'Defender'."
+                    },
+                    {
+                        label: "cambiar_jugador",
+                        insertText: "cambiar_jugador()",
+                        detail: "cambiar_jugador()",
+                        documentation: "Realiza un cambio aleatorio entre un titular y un suplente. Solo puede ejecutarse durante una pausa."
+                    },
+                    {
+                        label: "voy_perdiendo",
+                        insertText: "voy_perdiendo()",
+                        detail: "voy_perdiendo() -> bool",
+                        documentation: "Devuelve verdadero si el equipo propio está perdiendo."
+                    },
+                    {
+                        label: "voy_ganando",
+                        insertText: "voy_ganando()",
+                        detail: "voy_ganando() -> bool",
+                        documentation: "Devuelve verdadero si el equipo propio está ganando."
+                    },
+                    {
+                        label: "esta_empatado",
+                        insertText: "esta_empatado()",
+                        detail: "esta_empatado() -> bool",
+                        documentation: "Devuelve verdadero si ambos equipos tienen la misma cantidad de goles."
+                    },
+                    {
+                        label: "es_pausa",
+                        insertText: "es_pausa()",
+                        detail: "es_pausa() -> bool",
+                        documentation: "Devuelve verdadero si el partido se encuentra en pausa."
+                    }
+                ];
+
     return (
         <div 
             className="min-vh-100 d-flex flex-column align-items-center py-5"
@@ -70,6 +115,7 @@ const CrearCCompDt = ({ mensajeError, alConfirmar, alVolver }) => {
                             render={({ field }) => (
                                 <div className={errors.codigo ? "border border-danger rounded" : ""}>
                                     <EditorTexto {...field}
+                                        sugerencias={sugerenciasDt}
                                     />
                                 </div>
                             )}

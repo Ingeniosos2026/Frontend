@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import CambiarJugador from '../containers/Equipo/CambiarJugador';
 import { Button, Collapse } from 'react-bootstrap'; 
-import ActivarDt from '../containers/Director Tecnico/ActivarDT';
+import ActivarDt from '../containers/DirectorTecnico/ActivarDT';
 
 const CanchaVisual = ({
     estadoJuego,

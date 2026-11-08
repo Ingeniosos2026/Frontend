@@ -7,7 +7,8 @@ const LigaEnCursoComp = ({
     mensajeError, 
     miUsuarioId,
     partidoActualId,
-    verPartido
+    verPartido,
+    cambioAlineacion
 }) => {
     
     if (cargando) {
@@ -156,6 +157,15 @@ const LigaEnCursoComp = ({
                         </Card>
                     </Col>
                 </Row>
+
+                <button
+                    size="lg" 
+                    className="px-5 shadow-sm fw-bold rounded-pill border-0"
+                    style={{ backgroundColor: '#495057', transition: 'all 0.3s ease' }}
+                    onClick={cambioAlineacion}
+                >
+                    Cambiar Alineacion
+                </button>
             </Container>
         </div>
     );

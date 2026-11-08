@@ -184,6 +184,16 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerEquipoLiga = async (ligaId, equipoId) => {
+    return request(`/liga/${ligaId}/equipo/${equipoId}`);
+  }
+
+  const actualizarEquipoLiga = async (ligaId, usuarioId, datos) => {
+    return request(`/liga/${ligaId}/alineacion/${usuarioId}`, {
+        method: "PUT",
+        body: JSON.stringify(datos)
+    });
+  }
   // --- EQUIPO ---
   const realizarCambio = async (partidoId, usuarioId, cambioData) => {
     return request(`/partido/${partidoId}/${usuarioId}/cambio`, {
@@ -245,7 +255,9 @@ const createHttpService = () => {
     crearComportamientoDt,
     obtenerComportamientosDt,
     activarDirectorTecnico,
-    asignarComportamientoDt
+    asignarComportamientoDt,
+    obtenerEquipoLiga,
+    actualizarEquipoLiga
   };
 };
 

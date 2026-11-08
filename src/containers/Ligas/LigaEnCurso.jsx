@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { createWSService } from '../../services/WSService';
 import { createHttpService } from '../../services/HttpService';
 import LigaEnCursoComp from '../../components/Ligas/LigaEnCursoComp';
 import LigaFinalizadaComp from '../../components/Ligas/LigaFinalizadaComp';
+import CambiarAlineacion from '../Equipo/CambiarAlineacion';
 
 const estados = { 
     EN_CURSO: 'en_curso',
@@ -14,7 +15,7 @@ const ordenarTabla = (tabla) => {
     return [...tabla].sort((a, b) => {
         const diferenciaPuntos = b.puntos - a.puntos;
         if (diferenciaPuntos !== 0) return diferenciaPuntos; 
-        
+    
         const difGolesA = a.goles_a_favor - a.goles_en_contra;
         const difGolesB = b.goles_a_favor - b.goles_en_contra;
         return difGolesB - difGolesA;
@@ -44,6 +45,7 @@ const LigaEnCurso = () => {
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
     const [idPartidoActual, setIdPartidoActual] = useState(null);
+    const [interfaz, setInterfaz] = useState('liga');
 
     const fixtureRef = useRef([]);
 
@@ -203,6 +205,24 @@ const LigaEnCurso = () => {
         );
     }
 
+    
+    const manejarCambioAlineacion = () => {
+        setInterfaz('alineacion');
+    }
+
+    const manejarVolverAlineacion = () => {
+        setInterfaz('liga');
+    };
+
+    if (interfaz === 'alineacion') {
+        return (
+            <CambiarAlineacion
+                volver={manejarVolverAlineacion}
+            />
+        );
+    }
+
+    
     return (
         <LigaEnCursoComp
             cargando={cargando}
@@ -212,6 +232,7 @@ const LigaEnCurso = () => {
             miUsuarioId={usuarioId}
             partidoActualId={idPartidoActual}
             verPartido={manejarVerPartido}
+            cambioAlineacion={manejarCambioAlineacion}
         />  
     );
 };
