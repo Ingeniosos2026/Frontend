@@ -1,6 +1,5 @@
-import { Button } from "react-bootstrap";
 import { createHttpService } from '../../services/HttpService.js';
-
+import './ActivarDT.css';  
 const ActivarDt = ({ usuarioId, partidoId, activado, setActivado}) => {
     const { cambiarEstadoDirectorTecnico } = createHttpService();
 
@@ -16,12 +15,14 @@ const ActivarDt = ({ usuarioId, partidoId, activado, setActivado}) => {
     };
 
     return (
-        <div>
-            <p>Director Tecnico</p>
-            <Button onClick={cambiarEstadoDt}>
+    <div className="dt-container">
+        <div className="dt-label-box">
+            <span className="dt-title">DIRECTOR TECNICO</span>
+            <button className="dt-toggle-btn" onClick={cambiarEstadoDt}>
                 {activado ? "Desactivar" : "Activar"}
-            </Button>
+            </button>
         </div>
+    </div>
     );
 };
 
