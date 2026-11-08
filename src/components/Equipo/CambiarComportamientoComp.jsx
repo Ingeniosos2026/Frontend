@@ -6,14 +6,19 @@ const CambiarComportamientoComp = ({
     alConfirmar
 }) => {
   return (
-    <div>
+    <div style={{
+        flexDirection:'column',
+        display:'flex',
+        alignContent:'end'
+    }}>
         <Form.Select
             defaultValue=""
             disabled={cargando}
             onChange={(e) => alConfirmar(e.target.value)}
+            style={{color:'#818181'}}
         >
-            <option value="" disabled>
-                Seleccione un comportamiento
+            <option value="" style={{color:'#a8a8a8', textAlign: 'center'}}>
+                Cambiar comportamiento
             </option>
 
             {comportamientos.map((comp) => (
