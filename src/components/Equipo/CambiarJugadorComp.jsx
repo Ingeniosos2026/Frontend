@@ -2,7 +2,6 @@ import { Form} from 'react-bootstrap';
 
 const CambiarJugadorComp = ({
     jugadoresSuplentes,
-    jugadorSeleccionado,
     cargando,
     confirmarCambio,
 }) => {
@@ -13,13 +12,14 @@ return (
         alignContent:'end'
     }}>
         <Form.Select 
-            value={jugadorSeleccionado}
+            defaultValue=""
             onChange={(e) => confirmarCambio(e.target.value)}
             disabled={cargando}
+            style={{color:'#818181'}}
         >
-            <option value="" style={{color:'#a8a8a8'}}>Seleccionar Jugador....</option>
+            <option value="" style={{color:'#a8a8a8', textAlign: 'center'}}>Cambiar Jugador</option>
             {jugadoresSuplentes.map((jugador) => (
-                <option key={jugador.id_jugador} value={jugador.id_jugador}>
+                <option key={jugador.id_jugador} value={jugador.id_jugador} style={{textAlign: 'center'}}>
                     {jugador.nombre}
                 </option>
             ))}

@@ -27,6 +27,27 @@ body {
     z-index: 999;
 }
 
+
+@keyframes crecerDesdeCentro {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animacion-gol-texto {
+    animation: crecerDesdeCentro 0.6s ease-out forwards;
+}
+
+
 .overlay-pausa {
     background-color: rgba(0,0,0,0.85);
 }

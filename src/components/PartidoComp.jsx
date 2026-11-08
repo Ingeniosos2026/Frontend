@@ -2,6 +2,8 @@ import fondoGlobal from '../assets/kempes.jpeg';
 import JugadoresTabla from './JugadoresTabla';
 import Marcador from '../components/Marcador';
 import './PartidoComp.css';
+import TableroCambios from './TableroCambios';
+import Confetti from 'react-confetti';
 
 const formatearReloj = (segs) => {
     if (!segs) return "00:00";
@@ -12,12 +14,11 @@ const THEME = {
     colors: { pitchGreen: '#4a9029' }
 };
 
-const PartidoUI = ({
-    canchaRef, estadoJuego, EnPausa, datosPausa, datosCambio,
-    partidoTerminado, resultadoFinal, alVolver, jugadoresSuplentes,
+const PartidoComp = ({
+    hayGol,suplentes,equipo,canchaRef, estadoJuego, datosPausa, datosCambio,
+    partidoTerminado, resultadoFinal, alVolver,
     idPartido, idUsuario, misJugadores, rivales, jugadoresRender, pelotaRender
 }) => {
-    
     // PANTALLA DE CARGA
     if (!estadoJuego && !partidoTerminado) {
         return (
@@ -42,7 +43,7 @@ const PartidoUI = ({
     }
 
     const { tiempo, goles } = estadoJuego;
-
+    const nombreMio = equipo.club;
     // CAMPO DE JUEGO
     return (
         <div 
@@ -55,50 +56,60 @@ const PartidoUI = ({
         >
             {/* MARCADOR */}
             <Marcador 
-                tiempo={tiempo} goles={goles} alVolver={alVolver} local={"usuario 1"} visitante={"usuario 2"}
+                tiempo={tiempo} goles={goles} alVolver={alVolver} local={nombreMio} visitante={"usuario 2"}
             />
-
+            {hayGol &&
+                <div style={{
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '100%', 
+                    zIndex: 9999,
+                    pointerEvents: 'none',
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center'
+                }}>
+                <Confetti 
+                    width={window.innerWidth} 
+                    height={window.innerHeight} 
+                    recycle={false}
+                    numberOfPieces={500}
+                />
+                <h1 className="animacion-gol-texto" style={{ fontSize: '100px', color: 'gold', fontWeight: 'bold' }}>¡GOL!</h1>
+                </div>
+            }
             <div className="main-grid">
 
                 {/* TABLA JUGADORES PROPIA */}
                 <div className="panel-left">
-                    <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={jugadoresSuplentes} idPartido={idPartido} idUsuario={idUsuario} />
+                    <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} />
                 </div>
             
                 <div className="pitch-container" ref={canchaRef}>
 
                     {/* PAUSAS */}
-                    {EnPausa && (
+                    {datosPausa && (
                         <div style={{
                             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                            backgroundColor: '#216e35', zIndex: 100, display: 'flex', flexDirection: 'column', 
+                            backgroundColor: '#337e47', zIndex: 100, display: 'flex', flexDirection: 'column', 
                             justifyContent: 'center', alignItems: 'center', borderRadius: 'inherit'
                         }}>
-                            <h2 style={{ fontSize: '40px', color: '#cfd1cf', fontWeight: 'bold', margin: 0 }}>
+                            <h2 style={{ fontFamily:'Arial',fontSize: '60px', color: '#f0f0f0', fontWeight: 'bold', margin: 0 }}>
                                 {datosPausa?.numero_pausa === 2 ? "MEDIO-TIEMPO" : "COOLING BREAK"}
                             </h2>
 
                             {datosPausa && !datosCambio && (
                                 <div style={{ fontSize: '20px', marginTop: '20px', color: '#555', textAlign: 'center' }}>
-                                    <p style={{ margin: '5px 0', color: '#cfd1cf', fontWeight: 'bold' }}>Vuelves en {datosPausa.duracion_pausa} segundos...</p>
+                                    <p style={{ margin: '5px 0', color: '#dfdfdf', fontWeight: 'bold' }}>Vuelves en {datosPausa.duracion_pausa} segundos...</p>
                                 </div>
                             )}
 
-                            {datosCambio && (
-                                <div style={{ backgroundColor: '#1a1a1a', padding: '15px 30px', borderRadius: '8px', border: '4px solid #030303', marginTop: '20px', textAlign: 'center' }}>
-                                    <div style={{ display: 'flex', flexDirection:'row-reverse', justifyContent: 'center', gap: '20px', fontSize: '20px', fontWeight: 'bold' }}>
-                                        <div style={{ display: 'flex', flexDirection:'column-reverse', backgroundColor: '#353434', borderRadius: '8px'}}>
-                                            <div style={{ color: '#e53935', padding:'8px' }}>▼ SALE</div> <div style={{ color: '#e53935' }}>{datosCambio.jugador_sale_id}</div>
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection:'column-reverse', backgroundColor: '#353434', borderRadius: '8px'}}>
-                                            <div style={{ color: '#43a047', padding:'8px' }}>▲ ENTRA</div> <div style={{ color: '#43a047' }}>{datosCambio.jugador_entra_id}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            {/* TABLERO CAMBIOS */}
+                            <TableroCambios datosCambio={datosCambio} />
                         </div>
                     )}
-
                     {/* CANCHA */}
                     <div className="arco arco-izquierdo"></div>
                     <div className="arco arco-derecho"></div>
@@ -161,4 +172,4 @@ const PartidoUI = ({
     );
 };
 
-export default PartidoUI;
+export default PartidoComp;
