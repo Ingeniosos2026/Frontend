@@ -28,10 +28,16 @@ function ApiComp({tipo, ...props}) {
                 <>
                   {/* Primitivas del Director Técnico */}
                   <tr>
-                    <td className="fw-bold">Cambiar Comportamiento</td>
-                      <td><code>cambiar_comportamiento()</code></td>
+                    <td className="fw-bold">Cambiar Comportamiento Ataque</td>
+                      <td><code>cambiar_comportamiento_ataque()</code></td>
                       <td>Ninguno</td>
-                      <td>Selecciona aleatoriamente un jugador propio y le asigna un comportamiento diferente de los disponibles.</td>
+                      <td>Selecciona a todos los jugadores propios y les asigna el comportamiento "Atacar".</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Cambiar Comportamiento Defensa</td>
+                      <td><code>cambiar_comportamiento_defensa()</code></td>
+                      <td>Ninguno</td>
+                      <td>Selecciona a todos los jugadores propios y les asigna el comportamiento "Defender".</td>
                   </tr>
                   <tr>
                     <td className="fw-bold">Cambiar Jugador</td>

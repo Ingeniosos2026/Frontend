@@ -192,6 +192,31 @@ const createHttpService = () => {
     });
   };
 
+  const crearComportamientoDt = async (usuarioId, comportamientoData) => {
+    return request(`/comportamiento_dt/${usuarioId}`, {
+        method: 'POST',
+        body: JSON.stringify(comportamientoData)
+    });
+  };
+
+  const obtenerComportamientosDt = async (usuarioId) => {
+    return request(`/comportamientos_dt/${usuarioId}`);
+  };
+
+  const activarDirectorTecnico = async (datos) => {
+    return request('/partido', {
+        method: 'POST',
+        body: JSON.stringify(datos)
+    });
+  };
+
+  const asignarComportamientoDt = async (usuarioId, compId) => {
+    return request(`/comportamiento_dt/${usuarioId}/${compId}/asignar`, {
+        method: 'PUT',
+        body: JSON.stringify({ usuario_id: usuarioId }) 
+    });
+  }
+
   return {
     crearUsuario,
     iniciarSesion,
@@ -216,7 +241,11 @@ const createHttpService = () => {
     crearAmistoso,
     unirseAmistoso,
     iniciarAmistoso,
-    realizarCambio
+    realizarCambio,
+    crearComportamientoDt,
+    obtenerComportamientosDt,
+    activarDirectorTecnico,
+    asignarComportamientoDt
   };
 };
 

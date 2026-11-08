@@ -5,9 +5,11 @@ import MenuCComp from "../../components/Comportamientos/MenuCComp";
 
 const MenuComp = () => {
     const [comps, setComps] = useState([]);
-    const { obtenerComportamientos } = createHttpService();
+    const [compsDt, setCompsDt] = useState([]);
+    const { obtenerComportamientos, obtenerComportamientosDt, asignarComportamientoDt } = createHttpService();
     const usuarioId = localStorage.getItem("usuario_id");
     const navigate = useNavigate();
+    const [comportamientoDtAsignado, setComportamientoDtAsignado] = useState(null);
 
     useEffect(() => {
         const cargarComportamientos = async () => {
@@ -20,6 +22,29 @@ const MenuComp = () => {
         };
         cargarComportamientos();
     }, [usuarioId]);
+
+    useEffect(() => {
+        const cargarComportamientosDt = async () => {
+            try {
+                const data = await obtenerComportamientosDt(usuarioId);
+                setCompsDt(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        cargarComportamientosDt();
+    }, [usuarioId]);
+
+    const cargarComportamientoDt = async (compId) => {
+        try {
+            await asignarComportamientoDt(usuarioId, compId);
+
+            setComportamientoDtAsignado(compId);
+
+        } catch (error) {
+            console.error("Error al asignar comportamiento DT:", error);
+        }
+    };
 
     const crearComp = () => {
         navigate("/comportamientos/crear");
@@ -40,10 +65,13 @@ const MenuComp = () => {
     return (
         <MenuCComp
             comportamientos={comps}
+            comportamientosDt={compsDt}
             crear = {crearComp}
             crearDt={crearCompDt}
             editar = {editarComp}
             volver= {irVolver}
+            asignarComportamientoDt={cargarComportamientoDt}
+            comportamientoDtAsignado={comportamientoDtAsignado}
         />
     );
 };
