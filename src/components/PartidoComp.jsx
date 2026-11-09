@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import CambiarJugador from '../containers/Equipo/CambiarJugador';
 import { Button, Collapse } from 'react-bootstrap'; 
+import ActivarDt from '../containers/DirectorTecnico/ActivarDT';
 
 const CanchaVisual = ({
     estadoJuego,
@@ -12,8 +13,8 @@ const CanchaVisual = ({
     idPartido,
     idUsuario,
     canchaDim
-
 }) => {
+    const [activado, setActivado] = useState(false);
     const canchaRef = useRef(null);
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
     const [suplente, setSuplente] = useState(null);
@@ -139,6 +140,7 @@ const CanchaVisual = ({
                                 <div key={jugador.id_jugador}>
                                     <Button
                                         onClick={() => mostrarOpciones(jugador)}
+                                        disabled={activado}
                                     >
                                         {jugador.id_jugador} {isExpanded ? '▲' : '▼'}
                                     </Button>
@@ -285,6 +287,19 @@ const CanchaVisual = ({
                             </div>
                         );
                     })}
+                </div>
+
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '15px'
+                }}>
+                    <ActivarDt
+                        usuarioId={idUsuario}
+                        partidoId={idPartido}
+                        activado={activado}
+                        setActivado={setActivado}
+                    />
                 </div>
                 
             </div>

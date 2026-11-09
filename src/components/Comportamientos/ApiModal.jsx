@@ -1,7 +1,8 @@
 import { useState} from "react";
 import { Modal, Table, Button } from 'react-bootstrap';
 
-function ApiComp(props) {
+function ApiComp({tipo, ...props}) {
+  const esDT = tipo === "dt";
   return (
 <Modal
       {...props}
@@ -23,6 +24,54 @@ function ApiComp(props) {
             </tr>
           </thead>
           <tbody>
+            {esDT ? (
+                <>
+                  {/* Primitivas del Director Técnico */}
+                  <tr>
+                    <td className="fw-bold">Cambiar Comportamiento Ataque</td>
+                      <td><code>cambiar_comportamiento_ataque()</code></td>
+                      <td>Ninguno</td>
+                      <td>Selecciona a todos los jugadores propios y les asigna el comportamiento "Atacar".</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Cambiar Comportamiento Defensa</td>
+                      <td><code>cambiar_comportamiento_defensa()</code></td>
+                      <td>Ninguno</td>
+                      <td>Selecciona a todos los jugadores propios y les asigna el comportamiento "Defender".</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Cambiar Jugador</td>
+                    <td><code>cambiar_jugador()</code></td>
+                    <td>Ninguno</td>
+                    <td>Realiza un cambio aleatorio entre un titular y un suplente. Solo puede ejecutarse durante una pausa.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Voy Perdiendo</td>
+                    <td><code>voy_perdiendo()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el equipo propio está perdiendo.</td>
+                 </tr>
+                  <tr>
+                    <td className="fw-bold">Voy Ganando</td>
+                    <td><code>voy_ganando()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el equipo propio está ganando.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Está Empatado</td>
+                    <td><code>esta_empatado()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si ambos equipos tienen la misma cantidad de goles.</td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold">Es Pausa</td>
+                    <td><code>es_pausa()</code></td>
+                    <td>Ninguno</td>
+                    <td>Devuelve verdadero si el partido se encuentra en pausa.</td>
+                  </tr>
+                </>
+                ) : (
+                    <>
             <tr>
               <td className="fw-bold">Correr</td>
               <td><code style={{ color: '#6f42c1' }}>correr(destino: coordenadas)</code></td>
@@ -43,15 +92,15 @@ function ApiComp(props) {
             </tr>
             <tr>
               <td className="fw-bold">Dirección Compañero</td>
-              <td><code style={{ color: '#6f42c1' }}>direccionCompanero(companero: int)</code></td>
-              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Recibe un id de un compañero de equipo.</td>
-              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve las coordenadas donde se encuentra el compañero de equipo.</td>
+              <td><code style={{ color: '#6f42c1' }}>direccionCompanero()</code></td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Ninguno</td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Devuelve una lista con las posiciones de cada companero.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Rival</td>
-              <td><code style={{ color: '#6f42c1' }}>direccionRival(rival: int)</code></td>
-              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Recibe un id de un jugador rival.</td>
-              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra ese jugador rival.</td>
+              <td><code style={{ color: '#6f42c1' }}>direccionRival()</code></td>
+              <td style={{ textAlign: 'start',fontWeight: '500'  }}>Ninguno.</td>
+              <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve una lista con las posiciones de cada rival.</td>
             </tr>
             <tr>
               <td className="fw-bold">Dirección Arco Rival</td>
@@ -61,8 +110,8 @@ function ApiComp(props) {
             </tr>
             <tr>
               <td className="fw-bold">Pelota Cerca</td>
-              <td><code style={{ color: '#6f42c1' }}>pelotaCerca(jugador: int)</code></td>
-              <td style={{ textAlign: 'center' ,fontWeight: '500' }}>Recibe un id de un jugador.</td>
+              <td><code style={{ color: '#6f42c1' }}>pelotaCerca()</code></td>
+              <td style={{ textAlign: 'center' ,fontWeight: '500' }}>Ninguno.</td>
               <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Verdadero si la pelota se encuentra dentro de la distancia considerada cercana al jugador, falso en caso contrario.</td>
             </tr>
             <tr>
@@ -71,6 +120,8 @@ function ApiComp(props) {
               <td style={{ textAlign: 'center',fontWeight: '500', color: '#707072'}}>Ninguno</td>
               <td style={{ textAlign: 'start' ,fontWeight: '500' }}>Devuelve las coordenadas donde se encuentra el arco del equipo propio.</td>
             </tr>
+            </>
+            )}
           </tbody>
         </Table>
 
@@ -84,7 +135,7 @@ function ApiComp(props) {
   );
 }
 
-function ApiModal() {
+function ApiModal({tipo = "jugador"}) {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -97,6 +148,7 @@ function ApiModal() {
       </Button>
 
       <ApiComp
+        tipo={tipo}
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
