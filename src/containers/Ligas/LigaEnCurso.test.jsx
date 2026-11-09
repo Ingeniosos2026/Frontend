@@ -16,7 +16,10 @@ vi.mock('react-router-dom', async () => {
 
 const mockHttpService = {
     obtenerTablaLiga: vi.fn(),
-    obtenerFixtureLiga: vi.fn()
+    obtenerFixtureLiga: vi.fn(),
+    obtenerEquipoLiga: vi.fn(),
+    obtenerComportamientos: vi.fn(),
+    actualizarEquipoLiga: vi.fn()
 };
 vi.mock('../../services/HttpService', () => ({
     createHttpService: () => mockHttpService
@@ -126,18 +129,6 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
         });
     });
 
-    it('renderiza pantalla de Finalizada al recibir error LIGA_NO_DISPONIBLE', async () => {
-        mockHttpService.obtenerTablaLiga.mockRejectedValueOnce({ 
-            tipo: "LIGA_NO_DISPONIBLE", 
-            message: "La liga terminó" 
-        });
-
-        render(<LigaEnCurso />);
-
-        const tituloFinalizada = await screen.findByText('Resultados Finales');
-        expect(tituloFinalizada).toBeInTheDocument();
-        expect(screen.getByText('LIGA FINALIZADA')).toBeInTheDocument();
-    });
 
     it('navega automáticamente al recibir "proximo_partido" y es nuestro turno', async () => {
         mockHttpService.obtenerTablaLiga.mockResolvedValue(mockTablaInicial);
@@ -237,12 +228,12 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
     });
 
     it('navega al listado de ligas al hacer clic en "Ver Ligas Disponibles" en pantalla finalizada', async () => {
-        mockHttpService.obtenerTablaLiga.mockRejectedValueOnce({ 
-            tipo: "LIGA_NO_DISPONIBLE", 
-            message: "La liga terminó" 
-        });
 
         render(<LigaEnCurso />);
+
+        act(() => {
+            wsCallbacks['liga_terminada']({ id_liga: 1 });
+        });
 
         const botonVolver = await screen.findByRole('button', { name: /ver ligas disponibles/i });
         expect(botonVolver).toBeInTheDocument();
@@ -250,5 +241,37 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
         fireEvent.click(botonVolver);
 
         expect(mockNavigate).toHaveBeenCalledWith('/ligas');
+    });
+
+    it('navega al cambio de alineacion al hacer click en "Cambiar Alineacion" en el lobby de la liga en curso', async () => {
+        render(<LigaEnCurso />);
+
+        mockHttpService.obtenerEquipoLiga.mockResolvedValue({
+            jugadores: [
+                {
+                    id: 1,
+                    nombre: 'Jugador 1',
+                    estado: 'titular',
+                    comportamiento: { id: 1 }
+                },
+                {
+                    id: 2,
+                    nombre: 'Jugador 2',
+                    estado: 'suplente',
+                    comportamiento: { id: 1 }
+                }
+            ],
+            formacion: 'ofensiva'
+        });
+
+        mockHttpService.obtenerComportamientos.mockResolvedValue([]);
+
+        const botonAlineacion = await screen.findByRole('button', {
+            name: 'Cambiar Alineacion'
+        });
+
+        fireEvent.click(botonAlineacion);
+
+        expect(await screen.findByText(/Cambio de Alineacion/i)).toBeInTheDocument();
     });
 });

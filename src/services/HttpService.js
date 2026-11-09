@@ -105,10 +105,10 @@ const createHttpService = () => {
     });
   };
 
-  const asignarComportamiento = async (usuarioId, compId, jugadorId) => {
-    return request(`/comportamiento/${usuarioId}/${compId}/asignar`, {
+  const cambiarComportamiento = async (partidoId, cambioData) => {
+    return request(`/partido/${partidoId}/cambiar/comportamiento`, {
         method: 'PUT',
-        body: JSON.stringify({ jugador_id: jugadorId }) 
+        body: JSON.stringify(cambioData) 
     });
   };
 
@@ -184,6 +184,16 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerEquipoLiga = async (ligaId, equipoId) => {
+    return request(`/liga/${ligaId}/equipo/${equipoId}`);
+  }
+
+  const actualizarEquipoLiga = async (ligaId, usuarioId, datos) => {
+    return request(`/liga/${ligaId}/alineacion/${usuarioId}`, {
+        method: "PUT",
+        body: JSON.stringify(datos)
+    });
+  }
   // --- EQUIPO ---
   const realizarCambio = async (partidoId, usuarioId, cambioData) => {
     return request(`/partido/${partidoId}/${usuarioId}/cambio`, {
@@ -228,7 +238,7 @@ const createHttpService = () => {
     obtenerComportamientos,
     obtenerInformacionComportamiento,
     editarComportamiento,
-    asignarComportamiento,
+    cambiarComportamiento,
     obtenerLigas,
     obtenerFixtureLiga,
     obtenerTablaLiga,
@@ -243,9 +253,10 @@ const createHttpService = () => {
     iniciarAmistoso,
     realizarCambio,
     obtenerEquipo,
-    cambiarComportamiento,
     obtenervisualPartido,
     cambiarEstadoDirectorTecnico
+    obtenerEquipoLiga,
+    actualizarEquipoLiga,
   };
 };
 

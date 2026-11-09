@@ -8,7 +8,8 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
             min_jugadores: 3,
             max_jugadores: 6,
             duracion_partido: 5,
-            contraseña: ""
+            contraseña: "",
+            empate: true
         }
     });
 
@@ -137,6 +138,22 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                             className="form-control-lg shadow-sm border-success"
                             {...register('contraseña')} 
                         />
+                    </Form.Group>
+
+                    <Form.Group className="mb-5" controlId="empate">
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
+                            Permitir Empates
+                        </Form.Label>
+                        <Form.Select 
+                            size="lg"
+                            className="shadow-sm border-success"
+                            {...register('empate', {
+                                setValueAs: (value) => value === 'true'
+                            })}
+                        >
+                            <option value="true">Activado (Se permiten empates)</option>
+                            <option value="false">Desactivado (Debe haber un ganador)</option>
+                        </Form.Select>
                     </Form.Group>
 
                     <div className="d-flex justify-content-between border-top pt-4 mt-2">
