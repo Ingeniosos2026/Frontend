@@ -1,0 +1,35 @@
+.dt-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 2;
+}
+
+.dt-label-box {
+    background-color: #d18e2a;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 25px 4px 25px;
+    clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%);
+    width: 80%;
+    max-width: 250px;
+}
+
+.dt-title {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.dt-toggle-btn {
+    background-color: #bea200;
+    color: #fdfdfd;
+    border-color: #bea200;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+}

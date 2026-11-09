@@ -202,6 +202,18 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerEquipo = async (partidoId, usuarioId) => {
+      return request(`/partido/${partidoId}/${usuarioId}`, {
+          method: 'GET',
+      });
+  };
+
+  const obtenervisualPartido = async (partidoId) => {
+    return request(`/partido/${partidoId}/info`, {
+        method: 'GET'
+    });
+  };
+  
   const crearComportamientoDt = async (usuarioId, comportamientoData) => {
     return request(`/comportamiento_dt/${usuarioId}`, {
         method: 'POST',
@@ -250,9 +262,11 @@ const createHttpService = () => {
     unirseAmistoso,
     iniciarAmistoso,
     realizarCambio,
+    obtenerEquipo,
+    obtenervisualPartido,
+    cambiarEstadoDirectorTecnico,
     crearComportamientoDt,
     obtenerComportamientosDt,
-    cambiarEstadoDirectorTecnico,
     asignarComportamientoDt,
     obtenerEquipoLiga,
     actualizarEquipoLiga

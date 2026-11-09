@@ -14,13 +14,12 @@ vi.mock('../../components/Equipo/CambiarJugadorComp', () => ({
     default: (props) => (
         <div data-testid="mock-visual">
             <div data-testid="estado-mostrar">{props.mostrarOpciones.toString()}</div>
-            <div data-testid="estado-seleccionado">{props.jugadorSeleccionado}</div>
             <div data-testid="estado-cargando">{props.cargando.toString()}</div>
             <div data-testid="estado-mensaje">{props.mensaje ? JSON.stringify(props.mensaje) : 'null'}</div>
             
             <button data-testid="btn-abrir" onClick={() => props.setMostrarOpciones(true)}>Abrir</button>
-            <button data-testid="btn-seleccionar" onClick={() => props.setJugadorSeleccionado("99")}>Seleccionar</button>
-            <button data-testid="btn-confirmar" onClick={props.confirmarCambio}>Confirmar</button>
+            <button data-testid="btn-confirmar-vacio" onClick={() => props.confirmarCambio(null)}>Confirmar Sin Jugador</button>
+            <button data-testid="btn-confirmar" onClick={() => props.confirmarCambio("99")}>Confirmar Con Jugador</button>
             <button data-testid="btn-cancelar" onClick={props.cancelarCambio}>Cancelar</button>
         </div>
     )
@@ -42,41 +41,31 @@ describe('Contenedor CambiarJugador', () => {
         render(<CambiarJugador {...propsBase} />);
 
         expect(screen.getByTestId('estado-mostrar')).toHaveTextContent('false');
-        expect(screen.getByTestId('estado-seleccionado')).toHaveTextContent('');
         expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false');
         expect(screen.getByTestId('estado-mensaje')).toHaveTextContent('null');
     });
 
-    it('actualiza los estados al abrir el menú y seleccionar un jugador', () => {
+    it('actualiza los estados al abrir el menú', () => {
         render(<CambiarJugador {...propsBase} />);
 
         fireEvent.click(screen.getByTestId('btn-abrir'));
         expect(screen.getByTestId('estado-mostrar')).toHaveTextContent('true');
-
-        fireEvent.click(screen.getByTestId('btn-seleccionar'));
-        expect(screen.getByTestId('estado-seleccionado')).toHaveTextContent('99');
     });
 
     it('limpia los estados correctamente al cancelar el cambio', () => {
         render(<CambiarJugador {...propsBase} />);
 
-        // Forzamos estados sucios
         fireEvent.click(screen.getByTestId('btn-abrir'));
-        fireEvent.click(screen.getByTestId('btn-seleccionar'));
-
-        // Cancelamos
         fireEvent.click(screen.getByTestId('btn-cancelar'));
 
         expect(screen.getByTestId('estado-mostrar')).toHaveTextContent('false');
-        expect(screen.getByTestId('estado-seleccionado')).toHaveTextContent('');
         expect(screen.getByTestId('estado-mensaje')).toHaveTextContent('null');
     });
 
     it('no hace la petición HTTP si se intenta confirmar sin jugador seleccionado', async () => {
         render(<CambiarJugador {...propsBase} />);
         
-        // Confirmamos directamente (jugadorSeleccionado está vacío por defecto)
-        fireEvent.click(screen.getByTestId('btn-confirmar'));
+        fireEvent.click(screen.getByTestId('btn-confirmar-vacio'));
 
         expect(mockRealizarCambio).not.toHaveBeenCalled();
     });
@@ -85,12 +74,8 @@ describe('Contenedor CambiarJugador', () => {
         mockRealizarCambio.mockResolvedValueOnce({ status: 'ok' });
         
         render(<CambiarJugador {...propsBase} />);
-
-        // Seleccionamos jugador y confirmamos
-        fireEvent.click(screen.getByTestId('btn-seleccionar'));
         fireEvent.click(screen.getByTestId('btn-confirmar'));
 
-        // Mientras carga...
         expect(screen.getByTestId('estado-cargando')).toHaveTextContent('true');
 
         await waitFor(() => {
@@ -103,7 +88,6 @@ describe('Contenedor CambiarJugador', () => {
 
         expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false');
         expect(screen.getByTestId('estado-mostrar')).toHaveTextContent('false');
-        expect(screen.getByTestId('estado-seleccionado')).toHaveTextContent('');
         expect(screen.getByTestId('estado-mensaje')).toHaveTextContent(
             JSON.stringify({ tipo: 'success', mensaje: "Cambio realizado con éxito" })
         );
@@ -114,7 +98,6 @@ describe('Contenedor CambiarJugador', () => {
         
         render(<CambiarJugador {...propsBase} />);
 
-        fireEvent.click(screen.getByTestId('btn-seleccionar'));
         fireEvent.click(screen.getByTestId('btn-confirmar'));
 
         await waitFor(() => {

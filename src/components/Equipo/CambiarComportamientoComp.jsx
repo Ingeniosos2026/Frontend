@@ -2,7 +2,6 @@ import { Form } from 'react-bootstrap';
 
 const CambiarComportamientoComp = ({
     comportamientos,
-    cargando,
     alConfirmar
 }) => {
   return (
@@ -13,7 +12,6 @@ const CambiarComportamientoComp = ({
     }}>
         <Form.Select
             defaultValue=""
-            disabled={cargando}
             onChange={(e) => alConfirmar(e.target.value)}
             style={{color:'#818181'}}
         >
