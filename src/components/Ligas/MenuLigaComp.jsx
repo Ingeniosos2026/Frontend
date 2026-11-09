@@ -6,8 +6,8 @@ const MenuLigaComp = ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }
 
     const [ligaDesplegadaDisp, setLigaDesplegadaDisp] = useState(null);
 
-    const toggleDispLigas = (nombreLiga) => {
-        setLigaDesplegadaDisp(ligaDesplegadaDisp === nombreLiga ? null : nombreLiga);
+    const toggleDispLigas = (idLiga) => {
+        setLigaDesplegadaDisp(ligaDesplegadaDisp === idLiga ? null : idLiga);
     };
 
     return (
@@ -43,23 +43,20 @@ const MenuLigaComp = ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }
                         ligasDisponibles.map((liga, index) => (
                             <div key={`disp-${index}`}>
                                 <Button 
-                                    variant={ligaDesplegadaDisp === liga.nombre ? "primary" : "outline-primary"}
+                                    variant={ligaDesplegadaDisp === liga.id_liga ? "primary" : "outline-primary"}
                                     className="w-100 text-start shadow-sm d-flex justify-content-between align-items-center"
-                                    onClick={() => toggleDispLigas(liga.nombre)}
+                                    onClick={() => toggleDispLigas(liga.id_liga)}
                                     aria-controls={`collapse-liga-${index}`}
-                                    aria-expanded={ligaDesplegadaDisp === liga.nombre}
+                                    aria-expanded={ligaDesplegadaDisp === liga.id_liga}
                                 >
                                     <span className="fw-bold">{liga.nombre}</span>
-                                    <span>{ligaDesplegadaDisp === liga.nombre ? '▲' : '▼'}</span>
+                                    <span>{ligaDesplegadaDisp === liga.id_liga ? '▲' : '▼'}</span>
                                 </Button>
                                 
-                                <Collapse in={ligaDesplegadaDisp === liga.nombre}>
+                                <Collapse in={ligaDesplegadaDisp === liga.id_liga}>
                                     <div id={`collapse-liga-${index}`} className="mt-2">
                                         <Card className="border-primary shadow-sm bg-light">
                                             <Card.Body className="d-flex justify-content-between align-items-center">
-                                                <div className="text-muted fw-bold">
-                                                    Participantes: {liga.participantes}/{liga.max_jugadores}
-                                                </div>
                                                 <Button 
                                                     variant="primary" 
                                                     className="px-4 fw-bold shadow-sm"

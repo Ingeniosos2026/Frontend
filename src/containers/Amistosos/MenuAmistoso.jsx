@@ -10,7 +10,7 @@ const MenuAmistoso = () => {
     const navigate = useNavigate();
     const [httpService] = useState(() => createHttpService());
     const [mensajeError, setError] = useState(null);
-    const usuario_id = localStorage.getItem('usuario_id');
+    const usuario_id = Number(localStorage.getItem('usuario_id'));
     
     useEffect(() => {
         const wsService = createWSService(`/ws/notificaciones/${usuario_id}`);
@@ -43,6 +43,7 @@ const MenuAmistoso = () => {
         wsService.on('amistoso_creado', introducirAmistoso);
 
         return () => {
+            wsService.off('amistoso_creado', introducirAmistoso);
             wsService.disconnect();
         };
 
