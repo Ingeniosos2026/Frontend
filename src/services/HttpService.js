@@ -205,6 +205,18 @@ const createHttpService = () => {
     });
   };
 
+  const obtenervisualPartido = async (partidoId) => {
+    return request(`/partido/${partidoId}/info`, {
+        method: 'GET'
+    });
+  };
+
+  const cambiarEstadoDirectorTecnico = async (usuarioId, partidoId) => {
+    return request(`/partido/${partidoId}/${usuarioId}/dt`, {
+        method: 'POST'
+    });
+  };
+
   return {
     crearUsuario,
     iniciarSesion,
@@ -231,7 +243,9 @@ const createHttpService = () => {
     iniciarAmistoso,
     realizarCambio,
     obtenerEquipo,
-    cambiarComportamiento
+    cambiarComportamiento,
+    obtenervisualPartido,
+    cambiarEstadoDirectorTecnico
   };
 };
 

@@ -2,7 +2,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import Partido from './Partido'; 
-import { createWSService } from '../services/WSService';
+import { createWSService } from '../../services/WSService';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {

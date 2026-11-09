@@ -21,7 +21,14 @@ const TableroCambios = ({ datosCambio }) => {
     if (!datosCambio) return null;
 
     const JugadorColumna = ({ accion, id, color }) => (
-        <div style={{ display: 'flex', flexDirection: 'column-reverse', backgroundColor: '#353434', borderRadius: '8px',fontFamily:'Arial',fontSize:'26px' }}>
+        <div style={{ 
+            display: 'flex',
+            flexDirection: 'column-reverse',
+            backgroundColor: '#353434',
+            borderRadius: '8px',
+            fontFamily:'Arial',
+            fontSize:'26px' 
+        }}>
             <div style={{ color, padding: '8px' }}>{accion}</div> 
             <div style={{ color }}>{id}</div>
         </div>

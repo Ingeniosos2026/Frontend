@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { createWSService } from '../services/WSService';
-import { createHttpService } from '../services/HttpService.js';
-import PartidoComp from '../components/PartidoComp';
+import { createWSService } from '../../services/WSService.js';
+import { createHttpService } from '../../services/HttpService.js';
+import PartidoComp from '../../components/Partido/PartidoComp.jsx';
 
 const CANCHA_ANCHO = 100;
 const CANCHA_ALTO = 60;
@@ -16,8 +16,10 @@ const Partido = () => {
     const idUsuario = Number(localStorage.getItem('usuario_id'));
     const [httpService] = useState(() => createHttpService());
 
+    const [activado,setActivado] = useState(false);
+    const [partidoIniciado, setPartidoIniciado] = useState(false);
     const [datosSuplente, setDatosSuplente] = useState([]);
-    const [equipo, setEquipo] = useState({});
+    const [visual, setVisual] = useState({});
     const [estadoJuego, setEstadoJuego] = useState(null);
     const [datosPausa, setDatosPausa] = useState(null);
     const [partidoTerminado, setPartidoTerminado] = useState(false);
@@ -39,9 +41,12 @@ const Partido = () => {
 
         const cargarDatosEquipo = async () => {
             try {
-                const respuesta = await httpService.obtenerEquipo(partido_id, idUsuario);
-                setEquipo(respuesta.usuario);
-                console.log(equipo);
+                const [respuesta, respuestaV] = await Promise.all([
+                    httpService.obtenerEquipo(partido_id, idUsuario),
+                    httpService.obtenervisualPartido(partido_id)
+                ]);
+                setActivado(respuesta.usuario.dt);
+                setVisual(respuestaV);
             } catch (error) {
                 console.error("Error al obtener equipo:", error);
             }
@@ -51,28 +56,20 @@ const Partido = () => {
             setEstadoJuego(payload);
 
             if (payload.goles) {
-                // 1. Aseguramos que sean números matemáticos
                 const golesIzq = Number(payload.goles.derecho);
                 const golesDer = Number(payload.goles.izquierdo);
                 const totalGolesActual = golesIzq + golesDer;
                 
-                // 2. Log de diagnóstico: Solo imprime si nota una diferencia con el tick anterior
                 if (totalGolesActual !== totalGolesPrevios.current && totalGolesPrevios.current !== -1) {
-                    console.log(`[DEBUG] Marcador cambió: antes ${totalGolesPrevios.current}, ahora ${totalGolesActual}`);
                 }
                 
-                // 3. Condición de Gol
                 if (totalGolesActual > totalGolesPrevios.current) {
                     
-                    // Si NO es la primera vez que lee el estado (evita falso gol al reconectar)
                     if (totalGolesPrevios.current !== -1) {
                         setHayGol(true);
-                        console.log("¡GOL ANIMACIÓN ACTIVADA!");
                         setTimeout(() => setHayGol(false), 3500);
                     }
                 }
-
-                // 4. Actualizamos siempre la referencia para el próximo tick
                 totalGolesPrevios.current = totalGolesActual;
             }
 
@@ -91,8 +88,8 @@ const Partido = () => {
         };
 
         const manejarPartidoIniciado = () => {
-            //setar pantalla de inicio..
-            cargarDatosEquipo(); 
+            cargarDatosEquipo();
+            setPartidoIniciado(true);
         };
 
         const manejarFinPartido = (payload) => { 
@@ -103,6 +100,7 @@ const Partido = () => {
         const manejarReconexionPartido = (payload) =>{
             setEstadoJuego(payload);
             cargarDatosEquipo();
+
         } 
         
         const manejarCambioJugador = (payload) => {
@@ -203,16 +201,19 @@ const Partido = () => {
 
     return (
         <PartidoComp
+            visual={visual}
             hayGol={hayGol}
             suplentes={datosSuplente}
-            equipo={equipo}
             canchaRef={canchaRef}
             estadoJuego={estadoJuego}
             datosPausa={datosPausa}
             datosCambio={datosCambio}
+            partidoIniciado={partidoIniciado}
             partidoTerminado={partidoTerminado}
             resultadoFinal={resultadoFinal}
             alVolver={manejarVolver}
+            activado={activado} 
+            setActivado={setActivado}
             idPartido={partido_id}
             idUsuario={idUsuario}
             misJugadores={misJugadores}

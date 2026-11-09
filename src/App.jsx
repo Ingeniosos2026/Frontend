@@ -39,7 +39,7 @@ import CrearAmistoso from './containers/Amistosos/CrearAmistoso';
 import LobbyAmistoso from './containers/Amistosos/LobbyAmistoso';
 
 //Contenedor Partido
-import Partido from './containers/Partido';
+import Partido from './containers/Partido/Partido';
 
 //Contenedor Ranking
 import Ranking from './containers/Ranking/VerRanking';
