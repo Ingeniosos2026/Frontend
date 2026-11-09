@@ -36,7 +36,7 @@ const MenuAmistoso = () => {
         const introducirAmistoso = (payload) => {
             setAmistosos((prevAmistosos) => [...prevAmistosos, {
                 id: payload.id_partido,
-                nombre: payload.nombre,
+                nombre: payload.nombre || "Amistoso recien creado",
             }]);
         };
 

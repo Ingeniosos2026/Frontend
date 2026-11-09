@@ -8,7 +8,8 @@ import CambiarAlineacion from '../Equipo/CambiarAlineacion';
 
 const estados = { 
     EN_CURSO: 'en_curso',
-    FINALIZADA: 'finalizada'
+    FINALIZADA: 'finalizada',
+    CAMBIO_ALINEACION: 'cambio_alineacion'
 };
 
 const ordenarTabla = (tabla) => {
@@ -40,12 +41,11 @@ const LigaEnCurso = () => {
     
     const [mensajeError, setError] = useState(null);
     const [cargando, setCargando] = useState(true);
-    const [estadoLiga, setEstadoLiga] = useState(estados.EN_CURSO);
+    const [interfaz, setInterfaz] = useState(estados.EN_CURSO);
     
     const [tablaLiga, setTablaLiga] = useState([]);
     const [fixtureLiga, setFixtureLiga] = useState([]);
     const [idPartidoActual, setIdPartidoActual] = useState(null);
-    const [interfaz, setInterfaz] = useState('liga');
 
     const fixtureRef = useRef([]);
 
@@ -70,7 +70,12 @@ const LigaEnCurso = () => {
                 setFixtureLiga(fixture_ordenado);
                 setIdPartidoActual(partido_actual_id);
 
-                if (partido_actual_id) {
+                const liga_terminada = fixture_ordenado.every(partido => partido.id_partido !== null && (partido.goles_izq !== null && partido.goles_der !== null));
+                if (liga_terminada) {
+                    setInterfaz(estados.FINALIZADA);
+                }
+
+                if (partido_actual_id && !liga_terminada) {
 
                     const miPartido = fixture_ordenado.find(
                         p => p.id_partido === partido_actual_id && 
@@ -87,9 +92,6 @@ const LigaEnCurso = () => {
             } catch (error) {
                 console.error(error.message);
                 setError(error.message);
-                if (error.tipo === "LIGA_NO_DISPONIBLE") {
-                    setEstadoLiga(estados.FINALIZADA);
-                }
             } finally {
                 setCargando(false);
             }
@@ -167,7 +169,7 @@ const LigaEnCurso = () => {
 
         const manejarLigaTerminada = (payload) => {
             console.log("La liga finalizó. ID:", payload.id_liga);
-            setEstadoLiga(estados.FINALIZADA);
+            setInterfaz(estados.FINALIZADA);
         };
 
         wsService.on('proximo_partido', manejarProximoPartido);
@@ -194,47 +196,50 @@ const LigaEnCurso = () => {
             });
         }
     }
-
-    if (estadoLiga === estados.FINALIZADA) {
-        return (
-            <LigaFinalizadaComp 
-                alVolver={manejarVolver}
-                tablaLiga={tablaLiga}
-                mensajeError={mensajeError}    
-            />
-        );
-    }
-
     
     const manejarCambioAlineacion = () => {
-        setInterfaz('alineacion');
+        setInterfaz(estados.CAMBIO_ALINEACION);
     }
 
     const manejarVolverAlineacion = () => {
-        setInterfaz('liga');
+        setInterfaz(estados.EN_CURSO);
     };
 
-    if (interfaz === 'alineacion') {
-        return (
-            <CambiarAlineacion
-                volver={manejarVolverAlineacion}
-            />
-        );
-    }
+    const renderInterfaz = () => {
+        switch (interfaz) {
+            case estados.EN_CURSO:
+                return (
+                    <LigaEnCursoComp
+                        cargando={cargando}
+                        tablaLiga={tablaLiga}
+                        fixtureLiga={fixtureLiga}
+                        mensajeError={mensajeError}
+                        miUsuarioId={usuarioId}
+                        partidoActualId={idPartidoActual}
+                        verPartido={manejarVerPartido}
+                        cambioAlineacion={manejarCambioAlineacion}
+                    />  
+                );
+            case estados.FINALIZADA:
+                return (
+                    <LigaFinalizadaComp 
+                        alVolver={manejarVolver}
+                        tablaLiga={tablaLiga}
+                        mensajeError={mensajeError}    
+                    />
+                );
+            case estados.CAMBIO_ALINEACION:
+                return (
+                    <CambiarAlineacion
+                        volver={manejarVolverAlineacion}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
 
-    
-    return (
-        <LigaEnCursoComp
-            cargando={cargando}
-            tablaLiga={tablaLiga}
-            fixtureLiga={fixtureLiga}
-            mensajeError={mensajeError}
-            miUsuarioId={usuarioId}
-            partidoActualId={idPartidoActual}
-            verPartido={manejarVerPartido}
-            cambioAlineacion={manejarCambioAlineacion}
-        />  
-    );
+    return renderInterfaz();
 };
 
 export default LigaEnCurso;
