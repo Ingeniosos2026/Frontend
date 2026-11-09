@@ -49,8 +49,8 @@ const TableroCambios = ({ datosCambio }) => {
                 fontWeight: 'bold',
                 textAlign: 'center'
             }}>
-                <JugadorColumna accion="▼ SALE" id={datosCambio.jugador_sale_id} color="#e53935" />
-                <JugadorColumna accion="▲ ENTRA" id={datosCambio.jugador_entra_id} color="#43a047" />
+                <JugadorColumna accion="▼ SALE" id={datosCambio.nombre_jugador_sale} color="#e53935" />
+                <JugadorColumna accion="▲ ENTRA" id={datosCambio.nombre_jugador_entra} color="#43a047" />
             </div>
             <ManoSVG posicion="left" />
             <ManoSVG posicion="right" />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createHttpService } from '../../services/HttpService';
 import CambiarJugadorComp from '../../components/Equipo/CambiarJugadorComp';
 
-const CambiarJugador = ({ jugadorSaliente, jugadoresSuplentes, idPartido, idUsuario }) => {
+const CambiarJugador = ({ jugadorSaliente, jugadoresSuplentes, idPartido, idUsuario, disabled }) => {
     const [mostrarOpciones, setMostrarOpciones] = useState(false);
     const [mensaje, setMensaje] = useState(null); 
     const [cargando, setCargando] = useState(false);
@@ -46,6 +46,7 @@ const CambiarJugador = ({ jugadorSaliente, jugadoresSuplentes, idPartido, idUsua
             setMostrarOpciones={setMostrarOpciones}
             confirmarCambio={confirmarCambio}
             cancelarCambio={cancelarCambio}
+            disabled={disabled}
         />
     );
 };

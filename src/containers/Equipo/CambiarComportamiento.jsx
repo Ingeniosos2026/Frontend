@@ -5,7 +5,8 @@ import CambiarComportamientoComp from '../../components/Equipo/CambiarComportami
 const CambiarComportamiento = ({
     idJugadorSeleccionado,
     idPartido,
-    idUsuario
+    idUsuario,
+    disabled
 }) => {
     
     const httpService = createHttpService();
@@ -50,6 +51,7 @@ const CambiarComportamiento = ({
             comportamientos={comportamientos}
             cargando={cargando}
             alConfirmar={manejarConfirmar}
+            disabled={disabled}
         />
     );
 };

@@ -21,7 +21,7 @@ const MenuLiga = ({ }) => {
             setError(null);
             
             try {
-                const res = await obtenerLigas();
+                const res = await obtenerLigas(usuario_id);
                 setLigasDisponibles(res);
             
             } catch (error) {

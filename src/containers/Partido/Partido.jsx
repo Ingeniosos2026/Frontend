@@ -24,7 +24,8 @@ const Partido = () => {
     const [datosPausa, setDatosPausa] = useState(null);
     const [partidoTerminado, setPartidoTerminado] = useState(false);
     const [resultadoFinal, setResultadoFinal] = useState(null);
-    const [datosCambio, setDatosCambio] = useState(null);
+    const [colaCambios, setColaCambios] = useState([]);
+    const [cambioVisible, setCambioVisible] = useState(null);
 
     const canchaRef = useRef(null);
     const posicionesPrevias = useRef({});
@@ -111,7 +112,7 @@ const Partido = () => {
         } 
         
         const manejarCambioJugador = (payload) => {
-            setDatosCambio(payload);
+            setColaCambios(cola => [...cola, payload]);
             debeActualizarSuplentes.current = true;
         };
         
@@ -122,7 +123,6 @@ const Partido = () => {
 
         const manejarPartidoReanudado = () => {
             setDatosPausa(null);
-            setDatosCambio(null);
         };
         
         wsService.on('partido_iniciado', manejarPartidoIniciado);
@@ -155,6 +155,30 @@ const Partido = () => {
         resizeObserver.observe(canchaRef.current);
         return () => resizeObserver.disconnect();
     }, [estadoJuego]);
+
+    useEffect(() => {
+        if (cambioVisible !== null || colaCambios.length === 0) {
+            return;
+        }
+
+        setCambioVisible(colaCambios[0]);
+
+        setColaCambios(cola => cola.slice(1));
+
+    }, [cambioVisible, colaCambios]);
+
+    useEffect(() => {
+        if (cambioVisible === null) {
+            return;
+        }
+
+        const temporizador = setTimeout(() => {
+            setCambioVisible(null);
+        }, 3000);
+
+        return () => clearTimeout(temporizador);
+
+    }, [cambioVisible]);
 
     const { misJugadores, rivales, jugadoresRender, pelotaRender } = useMemo(() => {
         if (!estadoJuego) return { misJugadores: [], rivales: [], jugadoresRender: [], pelotaRender: null };
@@ -213,7 +237,7 @@ const Partido = () => {
             canchaRef={canchaRef}
             estadoJuego={estadoJuego}
             datosPausa={datosPausa}
-            datosCambio={datosCambio}
+            datosCambio={cambioVisible}
             partidoIniciado={partidoIniciado}
             partidoTerminado={partidoTerminado}
             resultadoFinal={resultadoFinal}

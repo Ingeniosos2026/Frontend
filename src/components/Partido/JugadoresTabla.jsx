@@ -2,7 +2,7 @@ import { Accordion } from 'react-bootstrap';
 import CambiarJugador from '../../containers/Equipo/CambiarJugador';
 import CambiarComportamiento from '../../containers/Equipo/CambiarComportamiento';
 
-const JugadoresTabla= ({ players, esMio, jugadoresSuplentes, idPartido, idUsuario }) => {
+const JugadoresTabla= ({ players, esMio, jugadoresSuplentes, idPartido, idUsuario, activadoDt }) => {
     return (
         <div className="player-list-container" style={{display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
             <div style={{textAlign: 'center', fontWeight: 'bold', marginBottom: '10px', color: '#44443c'}}>
@@ -32,11 +32,13 @@ const JugadoresTabla= ({ players, esMio, jugadoresSuplentes, idPartido, idUsuari
                                     jugadoresSuplentes={jugadoresSuplentes}
                                     idPartido={idPartido}
                                     idUsuario={idUsuario}
+                                    disabled = {activadoDt}
                                 />
                                 <CambiarComportamiento
                                     idJugadorSeleccionado={jugador.id_jugador}
                                     idPartido={idPartido}
                                     idUsuario={idUsuario}
+                                    disabled={activadoDt}
                                 />
                             </Accordion.Body>
                         </Accordion.Item>
