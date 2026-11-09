@@ -72,8 +72,15 @@ describe('LobbyAmistoso Logic Container', () => {
     });
 
     it('renderiza como creador con el botón deshabilitado hasta que haya rival', () => {
-        useLocation.mockReturnValue({ state: { esCreador: true } });
         render(<LobbyAmistoso />);
+
+        act(() => {
+            wsHandlers['estado_inicial_lobby']({
+                competidores: [
+                    { id: 1, nombre: 'Creador', club: 'Club A' }
+                ]
+            });
+        });
         
         expect(screen.getByText(/Eres el creador de la sala/i)).toBeInTheDocument();
         
@@ -84,6 +91,14 @@ describe('LobbyAmistoso Logic Container', () => {
     it('actualiza la UI cuando el WebSocket emite "usuario_unido"', () => {
         useLocation.mockReturnValue({ state: { esCreador: true } });
         render(<LobbyAmistoso />);
+        
+        act(() => {
+            wsHandlers['estado_inicial_lobby']({
+                competidores: [
+                    { id: 1, nombre: 'Creador', club: 'Club A' }
+                ]
+            });
+        });
         
         act(() => {
             wsHandlers['usuario_unido']({
@@ -109,16 +124,18 @@ describe('LobbyAmistoso Logic Container', () => {
         render(<LobbyAmistoso />);
         
         act(() => {
-            wsHandlers['usuario_unido']({
-                owner: { nombre: 'Juan', club: 'A' },
-                usuario_unido: { nombre: 'Pedro', club: 'B' }
+            wsHandlers['estado_inicial_lobby']({
+                competidores: [
+                    { id: 1, nombre: 'Creador', club: 'Club A' },
+                    { id: 2, nombre: 'Rival', club: 'Club B' }
+                ]
             });
         });
 
         const botonIniciar = screen.getByRole('button', { name: /Iniciar Amistoso/i });
         fireEvent.click(botonIniciar);
 
-        expect(mockIniciarAmistoso).toHaveBeenCalledWith('15', '1');
+        expect(mockIniciarAmistoso).toHaveBeenCalledWith('15', 1);
         
         await waitFor(() => {
             expect(screen.getByRole('button', { name: /Iniciando/i })).toBeDisabled();
@@ -132,9 +149,11 @@ describe('LobbyAmistoso Logic Container', () => {
         render(<LobbyAmistoso />);
         
         act(() => {
-            wsHandlers['usuario_unido']({
-                owner: { nombre: 'A', club: 'A' },
-                usuario_unido: { nombre: 'B', club: 'B' }
+            wsHandlers['estado_inicial_lobby']({
+                competidores: [
+                    { id: 1, nombre: 'Creador', club: 'Club A' },
+                    { id: 2, nombre: 'Rival', club: 'Club B' }
+                ]
             });
         });
 

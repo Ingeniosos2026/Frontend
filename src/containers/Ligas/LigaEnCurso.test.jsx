@@ -129,18 +129,6 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
         });
     });
 
-    it('renderiza pantalla de Finalizada al recibir error LIGA_NO_DISPONIBLE', async () => {
-        mockHttpService.obtenerTablaLiga.mockRejectedValueOnce({ 
-            tipo: "LIGA_NO_DISPONIBLE", 
-            message: "La liga terminó" 
-        });
-
-        render(<LigaEnCurso />);
-
-        const tituloFinalizada = await screen.findByText('Resultados Finales');
-        expect(tituloFinalizada).toBeInTheDocument();
-        expect(screen.getByText('LIGA FINALIZADA')).toBeInTheDocument();
-    });
 
     it('navega automáticamente al recibir "proximo_partido" y es nuestro turno', async () => {
         mockHttpService.obtenerTablaLiga.mockResolvedValue(mockTablaInicial);
@@ -240,12 +228,12 @@ describe('contenedor LigaEnCurso con render de LigaEnCursoComp', () => {
     });
 
     it('navega al listado de ligas al hacer clic en "Ver Ligas Disponibles" en pantalla finalizada', async () => {
-        mockHttpService.obtenerTablaLiga.mockRejectedValueOnce({ 
-            tipo: "LIGA_NO_DISPONIBLE", 
-            message: "La liga terminó" 
-        });
 
         render(<LigaEnCurso />);
+
+        act(() => {
+            wsCallbacks['liga_terminada']({ id_liga: 1 });
+        });
 
         const botonVolver = await screen.findByRole('button', { name: /ver ligas disponibles/i });
         expect(botonVolver).toBeInTheDocument();
