@@ -9,7 +9,7 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
             max_jugadores: 6,
             duracion_partido: 5,
             contraseña: "",
-            empate: false
+            empate: true
         }
     });
 
