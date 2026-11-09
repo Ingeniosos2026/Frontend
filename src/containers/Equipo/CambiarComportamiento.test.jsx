@@ -4,8 +4,32 @@ import '@testing-library/jest-dom';
 import CambiarComportamiento from './CambiarComportamiento';
 import { createHttpService } from '../../services/HttpService';
 
+// Mock del servicio HTTP
 vi.mock('../../services/HttpService', () => ({
     createHttpService: vi.fn()
+}));
+
+// Mock del componente visual (CambiarComportamientoComp)
+vi.mock('../../components/Equipo/CambiarComportamientoComp.jsx', () => ({
+    default: (props) => (
+        <div data-testid="mock-visual">
+            <div data-testid="estado-cargando">{props.cargando.toString()}</div>
+            <div data-testid="estado-comportamientos">{props.comportamientos?.length || 0}</div>
+            
+            <button 
+                data-testid="btn-confirmar" 
+                onClick={() => props.alConfirmar("1")}
+            >
+                Confirmar
+            </button>
+            <button 
+                data-testid="btn-confirmar-vacio" 
+                onClick={() => props.alConfirmar(null)}
+            >
+                Confirmar Vacío
+            </button>
+        </div>
+    )
 }));
 
 describe('Contenedor CambiarComportamiento', () => {
@@ -26,7 +50,7 @@ describe('Contenedor CambiarComportamiento', () => {
         });
     });
 
-    it('renderiza el estado de carga y luego muestra los comportamientos obtenidos', async () => {
+    it('renderiza el estado de carga y luego pasa los comportamientos obtenidos al presentador', async () => {
         mockObtenerComportamientos.mockResolvedValueOnce([
             { id: 1, nombre: 'Ofensivo' },
             { id: 2, nombre: 'Defensivo' }
@@ -34,21 +58,17 @@ describe('Contenedor CambiarComportamiento', () => {
 
         render(<CambiarComportamiento {...propsBase} />);
 
-        const select = screen.getByRole('combobox');
-        
-        expect(select).toBeDisabled();
+        expect(screen.getByTestId('estado-cargando')).toHaveTextContent('true');
 
         await waitFor(() => {
-            expect(screen.getByText('Ofensivo')).toBeInTheDocument();
-            expect(screen.getByText('Defensivo')).toBeInTheDocument();
+            expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false');
         });
 
-        expect(select).not.toBeDisabled();
-        
+        expect(screen.getByTestId('estado-comportamientos')).toHaveTextContent('2');
         expect(mockObtenerComportamientos).toHaveBeenCalledWith(propsBase.idUsuario);
     });
 
-    it('llama a cambiarComportamiento con los datos formateados al seleccionar una opción', async () => {
+    it('llama a cambiarComportamiento con los datos formateados al confirmar', async () => {
         mockObtenerComportamientos.mockResolvedValueOnce([
             { id: 1, nombre: 'Ofensivo' }
         ]);
@@ -56,13 +76,11 @@ describe('Contenedor CambiarComportamiento', () => {
 
         render(<CambiarComportamiento {...propsBase} />);
 
-        const select = screen.getByRole('combobox');
-        
-        await waitFor(() => expect(select).not.toBeDisabled());
+        await waitFor(() => expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false'));
 
-        fireEvent.change(select, { target: { value: '1' } });
+        fireEvent.click(screen.getByTestId('btn-confirmar'));
 
-        expect(select).toBeDisabled();
+        expect(screen.getByTestId('estado-cargando')).toHaveTextContent('true');
 
         await waitFor(() => {
             expect(mockCambiarComportamiento).toHaveBeenCalledWith(propsBase.idPartido, {
@@ -71,17 +89,17 @@ describe('Contenedor CambiarComportamiento', () => {
                 comp_id: 1
             });
         });
+        expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false');
     });
 
-    it('no dispara la petición si se fuerza la selección de la opción vacía', async () => {
+    it('no dispara la petición si se fuerza la confirmación vacía o sin ID', async () => {
         mockObtenerComportamientos.mockResolvedValueOnce([]);
 
         render(<CambiarComportamiento {...propsBase} />);
 
-        const select = screen.getByRole('combobox');
-        await waitFor(() => expect(select).not.toBeDisabled());
+        await waitFor(() => expect(screen.getByTestId('estado-cargando')).toHaveTextContent('false'));
 
-        fireEvent.change(select, { target: { value: '' } });
+        fireEvent.click(screen.getByTestId('btn-confirmar-vacio'));
 
         expect(mockCambiarComportamiento).not.toHaveBeenCalled();
     });
