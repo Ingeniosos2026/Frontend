@@ -64,7 +64,7 @@ const createHttpService = () => {
   };
 
   const obtenerRanking = async () => {
-    return request('/usuarios/ranking');
+    return request('/ranking');
   };
 
   // --- JUGADORES Y COMPORTAMIENTOS ---
@@ -113,8 +113,8 @@ const createHttpService = () => {
   };
 
   // --- LIGAS ---
-  const obtenerLigas = async () => {
-    return request('/ligas');
+  const obtenerLigas = async (usuarioId) => {
+    return request(`/ligas/${usuarioId}`);
   };
 
   const crearLiga = async (usuarioId, ligaData) => {

@@ -77,7 +77,7 @@ const PartidoComp = ({
                     {soyIzquierda && (
                         <>
                         <ActivarDt usuarioId={idUsuario} partidoId={idPartido} activado={activado} setActivado={setActivado}/>
-                        <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} />
+                        <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} activadoDt={activado}/>
                         
                         </>
                     )}
@@ -128,12 +128,12 @@ const PartidoComp = ({
                     {soyDerecha && (
                         <>
                             <ActivarDt  usuarioId={idUsuario} partidoId={idPartido} activado={activado} setActivado={setActivado}/>
-                            <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} />
+                            <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} activadoDt={activado} />
                             
                         </>
                     )}
                     {soyIzquierda && (
-                        <JugadoresTabla players={rivales} esMio={false} />
+                        <JugadoresTabla players={rivales} esMio={false}/>
                     )}
                 </div>
             </div>

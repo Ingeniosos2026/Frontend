@@ -4,6 +4,7 @@ const CambiarJugadorComp = ({
     jugadoresSuplentes,
     cargando,
     confirmarCambio,
+    disabled
 }) => {
 return (
     <div style={{
@@ -14,7 +15,7 @@ return (
         <Form.Select 
             defaultValue=""
             onChange={(e) => confirmarCambio(e.target.value)}
-            disabled={cargando}
+            disabled={cargando || disabled}
             style={{color:'#818181'}}
         >
             <option value="" style={{color:'#a8a8a8', textAlign: 'center'}}>Cambiar Jugador</option>

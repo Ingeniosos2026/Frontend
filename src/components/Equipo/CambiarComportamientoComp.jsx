@@ -2,7 +2,8 @@ import { Form } from 'react-bootstrap';
 
 const CambiarComportamientoComp = ({
     comportamientos,
-    alConfirmar
+    alConfirmar,
+    disabled
 }) => {
   return (
     <div style={{
@@ -14,6 +15,7 @@ const CambiarComportamientoComp = ({
             defaultValue=""
             onChange={(e) => alConfirmar(e.target.value)}
             style={{color:'#818181'}}
+            disabled={disabled}
         >
             <option value="" style={{color:'#a8a8a8', textAlign: 'center'}}>
                 Cambiar comportamiento
