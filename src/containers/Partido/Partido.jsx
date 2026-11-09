@@ -31,7 +31,9 @@ const Partido = () => {
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
     const debeActualizarSuplentes = useRef(true);
     const [hayGol,setHayGol] = useState(false);
-    const totalGolesPrevios = useRef(0);
+    const totalGolesPrevios = useRef(-1);
+    const delayInicio = import.meta.env.MODE === 'test' ? 0 : 4000;
+    const delayReconexion = import.meta.env.MODE === 'test' ? 0 : 1500;
 
     useEffect(() => {
         const wsEndpoint = `/partido/${partido_id}/ws`;
@@ -48,7 +50,7 @@ const Partido = () => {
                 setActivado(respuesta.usuario.dt);
                 setVisual(respuestaV);
             } catch (error) {
-                console.error("Error al obtener equipo:", error);
+                console.error("Error al obtener datos del partido:", error);
             }
         };
 
@@ -89,7 +91,9 @@ const Partido = () => {
 
         const manejarPartidoIniciado = () => {
             cargarDatosEquipo();
-            setPartidoIniciado(true);
+            setTimeout(() => {
+                setPartidoIniciado(true);
+            }, delayInicio);
         };
 
         const manejarFinPartido = (payload) => { 
@@ -100,6 +104,9 @@ const Partido = () => {
         const manejarReconexionPartido = (payload) =>{
             setEstadoJuego(payload);
             cargarDatosEquipo();
+            setTimeout(() => {
+                setPartidoIniciado(true);
+            }, delayReconexion);
 
         } 
         
@@ -198,7 +205,6 @@ const Partido = () => {
     const manejarVolver = () => {
         navigate(rutaDeRegreso);
     };
-
     return (
         <PartidoComp
             visual={visual}

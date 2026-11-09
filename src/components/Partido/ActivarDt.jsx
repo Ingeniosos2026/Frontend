@@ -1,4 +1,3 @@
-
 import { createHttpService } from '../../services/HttpService.js';
 import './ActivarDt.css';  
 const ActivarDt = ({ usuarioId, partidoId, activado, setActivado}) => {

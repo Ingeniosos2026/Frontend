@@ -1,7 +1,7 @@
+import './PartidoComp.css';
 import fondoGlobal from '../../assets/kempes.jpeg';
 import JugadoresTabla from './JugadoresTabla';
 import Marcador from './Marcador';
-import './PartidoComp.css';
 import TableroCambios from './TableroCambios';
 import Confetti from 'react-confetti';
 import FondoCancha from './FondoCancha';
@@ -10,16 +10,15 @@ import ActivarDt from './ActivarDt';
 import PantallaInicial from './PantallaInicial';
 import PantallaFinal from './PantallaFinal';
 
-const formatearReloj = (segs) => {
-    if (!segs) return "00:00";
-    return `${Math.floor(segs / 60).toString().padStart(2, '0')}:${Math.floor(segs % 60).toString().padStart(2, '0')}`;
-};
-
 const PartidoComp = ({
-    visual, hayGol, suplentes, equipo, canchaRef, estadoJuego, datosPausa, datosCambio,
-    partidoIniciado,partidoTerminado, resultadoFinal, alVolver,activado, setActivado,
+    visual, hayGol, suplentes, canchaRef, estadoJuego, datosPausa, datosCambio,
+    partidoIniciado,partidoTerminado, resultadoFinal,alVolver,activado, setActivado,
     idPartido, idUsuario, misJugadores, rivales, jugadoresRender, pelotaRender
 }) => {
+    const { tiempo, goles } = estadoJuego || {};
+    const soyIzquierda = String(visual?.id_usuario_izq) === String(idUsuario);
+    const soyDerecha = String(visual?.id_usuario_der) === String(idUsuario);
+    const soyEspectador = !(soyDerecha || soyIzquierda);
 
     // PANTALLA INICIO DE PARTIDO
     if (!partidoIniciado) {
@@ -39,19 +38,12 @@ const PartidoComp = ({
         );
     }
 
-    const { tiempo, goles } = estadoJuego;
-    const soyIzquierda = String(visual?.id_usuario_izq) === String(idUsuario);
-    const soyDerecha = String(visual?.id_usuario_der) === String(idUsuario);
-    const soyEspectador = !(soyDerecha || soyIzquierda);
-
     // CAMPO DE JUEGO
     return (
-        <div 
-            className="layout-wrapper" 
-            style={{ 
-                backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1), rgba(252, 252, 252, 0.1)), url(${fondoGlobal})`
-            }}
-        >
+        <div className="layout-wrapper" style=
+        {{ 
+            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1), rgba(252, 252, 252, 0.1)), url(${fondoGlobal})`
+        }}>
 
             {/* MARCADOR */}
             <Marcador 
@@ -66,7 +58,7 @@ const PartidoComp = ({
             />
 
             {/* EVENTO GOL */}
-            {hayGol&& !!datosPausa &&
+            {hayGol&& !datosPausa &&
                 <div className="overlay-evento-gol">
                     <Confetti 
                         width={window.innerWidth} 
@@ -84,7 +76,7 @@ const PartidoComp = ({
                 <div className="panel-left">
                     {soyIzquierda && (
                         <>
-                        <ActivarDt/>
+                        <ActivarDt usuarioId={idUsuario} partidoId={idPartido} activado={activado} setActivado={setActivado}/>
                         <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} />
                         
                         </>
