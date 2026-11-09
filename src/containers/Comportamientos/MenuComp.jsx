@@ -27,7 +27,8 @@ const MenuComp = () => {
         const cargarComportamientosDt = async () => {
             try {
                 const data = await obtenerComportamientosDt(usuarioId);
-                setCompsDt(data);
+                setCompsDt(data.comportamientos);
+                setComportamientoDtAsignado(data.id_comportamiento_dt_actual)
             } catch (error) {
                 console.error(error);
             }
