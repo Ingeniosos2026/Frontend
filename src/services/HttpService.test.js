@@ -157,4 +157,118 @@ describe('HttpService - Cobertura del Sprint 1', () => {
 
     await expect(http.cambiarComportamiento(partidoId, mockData)).rejects.toThrow('El jugador no pertenece al usuario');
   });
+
+  it('obtenerEquipoLiga: debe enviar un GET a /liga/{ligaId}/equipo/{equipoId}', async () => {
+    const ligaId = 5;
+    const equipoId = 11;
+    const mockResponse = { id_equipo: 11, formacion: 'ofensiva', jugadores: [] };
+
+    global.fetch.mockResolvedValue({ ok: true, json: async () => mockResponse });
+
+    const result = await http.obtenerEquipoLiga(ligaId, equipoId);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/liga/${ligaId}/equipo/${equipoId}`,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('actualizarEquipoLiga: debe enviar un PUT a /liga/{ligaId}/alineacion/{usuarioId}', async () => {
+    const ligaId = 6;
+    const usuarioId = 8;
+    const mockData = {formacion: 'defensiva', jugadores: []}
+    const mockResponse = {succes: true};
+
+    global.fetch.mockResolvedValue({ ok: true, json: async () => mockResponse });
+
+    const result = await http.actualizarEquipoLiga(ligaId, usuarioId, mockData);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/liga/${ligaId}/alineacion/${usuarioId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockData)
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('realizarCambio: debe enviar un PUT a partido/{partidoId}/{usuarioId}/cambio', async () => {
+    const partidoId = 2;
+    const usuarioId= 5;
+    const mockData = {jugador_sale_id: 2, jugador_entra_id: 5};
+    const mockResponse = {succes: true};
+
+    global.fetch.mockResolvedValue({ok: true, json: async () => mockResponse});
+
+    const result = await http.realizarCambio(partidoId, usuarioId, mockData);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/partido/${partidoId}/${usuarioId}/cambio`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockData)
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('crearComportamientoDt: debe enviar un POST a /comportamiento_dt/{usuarioId}', async () => {
+    const usuarioId = 9;
+    const mockData = {id: 2, id_usuario: 9, nombre: 'todos atacar' , codigo: 'cambiar_comportamiento_ataque()'};
+    const mockResponse = {...mockData}
+
+    global.fetch.mockResolvedValue({ok: true, json: async () => mockResponse});
+
+    const result = await http.crearComportamientoDt(usuarioId, mockData);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/comportamiento_dt/${usuarioId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mockData)
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('obtenerComportamientosDt: debe enviar un GET a /comportamientos_dt/{usuarioId}', async () => {
+    const usuarioId = 5;
+    const mockResponse = {id: 1, nombre: 'todos defender ', codigo: 'cambiar_comportamiento_defensa()'};
+
+    global.fetch.mockResolvedValue({ ok: true, json: async () => mockResponse });
+
+    const result = await http.obtenerComportamientosDt(usuarioId);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/comportamientos_dt/${usuarioId}`,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('cambiarEstadoDirectorTecnico: debe enviar un PUT a /partido/{partidoId}/{usuarioId}/dt', async () => {
+    const partidoId = 12;
+    const usuarioId = 11;
+    const mockResponse = {succes: true};
+
+    global.fetch.mockResolvedValue({ok: true, json: async () => mockResponse});
+
+    const result = await http.cambiarEstadoDirectorTecnico(usuarioId, partidoId);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/partido/${partidoId}/${usuarioId}/dt`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('asignarComportamientoDt: debe enviar un PUT a /comportamiento_dt/{usuarioId}/{compId}/asignar', async () => {
+    const compId = 12;
+    const usuarioId = 11;
+    const mockResponse = {succes: true};
+
+    global.fetch.mockResolvedValue({ok: true, json: async () => mockResponse});
+
+    const result = await http.asignarComportamientoDt(usuarioId, compId);
+
+    expect(global.fetch).toHaveBeenCalledWith(`${mockBaseUrl}/comportamiento_dt/${usuarioId}/${compId}/asignar`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(result).toEqual(mockResponse);
+  });
 });
