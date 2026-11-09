@@ -1,6 +1,8 @@
 import EditorTextoComp from '../../components/Comportamientos/EditorTextoComp';
+import { useEffect, useRef } from 'react';
 
-const EditorTexto = ({ value, onChange, onValidationChange }) => {
+const EditorTexto = ({ value, onChange, onValidationChange, sugerencias }) => {
+    const proveedorRef = useRef(null);
 
     const handleChange = (newValue) => {
         if (onChange) {
@@ -17,7 +19,8 @@ const EditorTexto = ({ value, onChange, onValidationChange }) => {
     };
 
     const handleEditorWillMount = (monaco) => {
-        monaco.languages.registerCompletionItemProvider("python", {
+        proveedorRef.current?.dispose();
+        proveedorRef.current = monaco.languages.registerCompletionItemProvider("python", {
             triggerCharacters: ["."],
             provideCompletionItems: (model, position) => {
                 const word = model.getWordUntilPosition(position);
@@ -39,79 +42,23 @@ const EditorTexto = ({ value, onChange, onValidationChange }) => {
                     return { suggestions: [] };
                 }
 
-                const sugerencias = [
-                    {
-                        label: "correr",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "correr(${1:destino})",
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        detail: "correr(destino: Coordenada)",
-                        documentation: "Mueve el jugador al destino indicado.",
-                        range: range,
-                    },
-                    {
-                        label: "patear",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "patear(${1:direccion})",
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        detail: "patear(direccion: Coordenada) -> bool",
-                        documentation: "Patea la pelota hacia la dirección indicada.",
-                        range: range,
-                    },
-                    {
-                        label: "direccionPelota",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "direccionPelota()",
-                        detail: "direccionPelota() -> Coordenada",
-                        documentation: "Devuelve la posición actual de la pelota.",
-                        range: range,
-                    },
-                    {
-                        label: "direccionCompañeros",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "direccionCompañeros()",
-                        detail: "direccionCompañeros() -> list[Coordenada]",
-                        documentation: "Devuelve las posiciones de los compañeros.",
-                        range: range,
-                    },
-                    {
-                        label: "direccionRivales",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "direccionRivales()",
-                        detail: "direccionRivales() -> list[Coordenada]",
-                        documentation: "Devuelve las posiciones de los rivales.",
-                        range: range,
-                    },
-                    {
-                        label: "pelotaCerca",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "pelotaCerca()",
-                        detail: "pelotaCerca() -> bool",
-                        documentation: "True si la pelota está al alcance.",
-                        range: range,
-                    },
-                    {
-                        label: "direccionArcoRival",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "direccionArcoRival()",
-                        detail: "direccionArcoRival() -> Coordenada",
-                        documentation: "Devuelve la posición del arco rival.",
-                        range: range,
-                    },
-                    {
-                        label: "direccionArcoPropio",
-                        kind: monaco.languages.CompletionItemKind.Method,
-                        insertText: "direccionArcoPropio()",
-                        detail: "direccionArcoPropio() -> Coordenada",
-                        documentation: "Devuelve la posición de tu arco.",
-                        range: range,
-                    }
-                ];
+                const sugerenciasMonaco = sugerencias.map(sugerencia => ({
+                    ...sugerencia,
+                    kind: monaco.languages.CompletionItemKind.Method,
+                    range: range
+                }));
 
-                return { suggestions: sugerencias };
+                return { suggestions: sugerenciasMonaco };
             },
         });
     };
+
+    useEffect(() => {
+        return () => {
+            proveedorRef.current?.dispose();
+            proveedorRef.current = null;
+        };
+    }, []);
     
     return (
         <EditorTextoComp

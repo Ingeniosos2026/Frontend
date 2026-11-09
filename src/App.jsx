@@ -24,6 +24,7 @@ import CrearJugador from './containers/Jugadores/CrearJugador';
 import MenuComp from './containers/Comportamientos/MenuComp';
 import CrearComp from './containers/Comportamientos/CrearComp';
 import EditarComp from './containers/Comportamientos/EditarComp';
+import CrearCompDt from './containers/Comportamientos/CrearCompDT';
 
 //Contenedores Liga
 import MenuLiga from './containers/Ligas/MenuLiga';
@@ -83,6 +84,7 @@ export default function App() {
 
         {/*Rutas Comportamiento*/}          
         <Route path="/comportamientos/crear" element={<CrearComp/>} />
+        <Route path="/comportamientos/crearDt" element={<CrearCompDt/>} /> 
         <Route path="/comportamientos/editar/:comp_id" element={<EditarComp/>} />
 
         {/*Rutas Lobby*/} 
