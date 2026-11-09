@@ -57,7 +57,7 @@ describe("MenuComp Logic Container", () => {
         const mensajes = await screen.findAllByText(/No tienes comportamientos creados en este momento./i);
 
         expect(mensajes).toHaveLength(2);
-        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledTimes(2);
 
         consoleError.mockRestore();
     });
@@ -119,13 +119,17 @@ describe("MenuComp Logic Container", () => {
     });
 
     it('asigna el comportamiento al director tecnico al seleccionar la opcion "Asignar al DT"', async () => {
-        const comportamientos = [
-            {
-                id: 8,
-                nombre: "Cambiar jugador",
-                codigo: "def cambiar_jugador():"
-            }
-        ];
+        const comportamientos = {
+            comportamientos: [
+                {
+                    id: 2,
+                    nombre: "atacar",
+                    codigo: "cambiar_comportamiento_defensa()"
+                }
+            ],
+            id_comportamiento_dt_actual: 1
+        };
+
         
         mockObtenerComportamientos.mockResolvedValue([]);
         mockObtenerComportamientosDt.mockResolvedValue(comportamientos);
@@ -139,10 +143,7 @@ describe("MenuComp Logic Container", () => {
 
         fireEvent.click(botonAsignar);
 
-        expect(mockAsignarComportamientoDt).toHaveBeenCalledWith("123", 8);
-
-
-
+        expect(mockAsignarComportamientoDt).toHaveBeenCalledWith("123", 2);
     });
 
     it("navega a /main al presionar Volver", async () => {
