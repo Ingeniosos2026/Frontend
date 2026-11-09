@@ -215,7 +215,7 @@ const createHttpService = () => {
 
   const cambiarEstadoDirectorTecnico = async (usuarioId, partidoId) => {
     return request(`/partido/${partidoId}/${usuarioId}/dt`, {
-        method: 'POST'
+        method: 'PUT'
     });
   };
 
