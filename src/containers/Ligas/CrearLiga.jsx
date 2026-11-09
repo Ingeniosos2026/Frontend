@@ -23,7 +23,8 @@ const CrearLiga = () => {
         contraseña: '',   
         duracion_partido: 0,
         jugadores: [],
-        formacion: ''
+        formacion: '',
+        empate: true
     });
 
     const handleEquipo = async (equipoData) => {
@@ -47,7 +48,8 @@ const CrearLiga = () => {
                 contraseña:ligaData.contraseña,
                 duracion_partido: ligaData.duracion_partido,
                 jugadores: ligaBody.jugadores,
-                formacion: ligaBody.formacion
+                formacion: ligaBody.formacion,
+                empate: ligaData.empate
             };
             
             setligaBody(body);

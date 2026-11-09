@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Card, Button, Spinner, Alert, Row, Col } from 'react-bootstrap';
 
-const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alIniciar }) => {
+const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, sePuedeIniciar, iniciando, alIniciar }) => {
     return (
 
         <div 
@@ -85,7 +85,7 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                                 size="lg" 
                                 className="px-5 shadow-sm fw-bold rounded-pill d-flex align-items-center"
                                 onClick={alIniciar}
-                                disabled={!versus || iniciando}
+                                disabled={!versus || iniciando || !sePuedeIniciar}
                                 style={{ transition: 'all 0.3s ease' }}
                             >
                                 {iniciando ? (
