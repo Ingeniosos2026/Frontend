@@ -137,6 +137,8 @@ describe('CrearLiga Logic Container', () => {
         const inputMaximo = await screen.findByLabelText(/Maxima cantidad de clubs/i);
         const inputDuracion = await screen.findByLabelText(/Duración de cada partido \(minutos\)/i);
         const inputContraseña = await screen.findByLabelText(/Contraseña para la Liga \(Opcional\)/i);      
+        const inputEmpate = await screen.findByLabelText(/Permitir empates/i);      
+
         const botonCrear = screen.getByRole('button', { name: /Crear Liga/i });
 
         fireEvent.change(inputName, { target: { value: 'Premier' } });
@@ -144,6 +146,7 @@ describe('CrearLiga Logic Container', () => {
         fireEvent.change(inputMaximo, { target: { value: '5' } });
         fireEvent.change(inputDuracion, { target: { value: '5' } });
         fireEvent.change(inputContraseña, { target: { value: 'fairplay' } });
+        fireEvent.change(inputEmpate, { target: { value: true } });
         fireEvent.click(botonCrear);
 
         await waitFor(() => {
@@ -161,7 +164,8 @@ describe('CrearLiga Logic Container', () => {
                     { id_jugador: 5, id_comportamiento: 105 },
                     { id_jugador: 6, id_comportamiento: 106 }
                 ],
-                formacion: "c"
+                formacion: "c",
+                empate: true
             });
             expect(mockNavigate).toHaveBeenCalledWith(
                 '/ligas/lobby/99',

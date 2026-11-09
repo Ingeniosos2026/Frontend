@@ -23,7 +23,8 @@ const CrearLiga = () => {
         contraseña: '',   
         duracion_partido: 0,
         jugadores: [],
-        formacion: ''
+        formacion: '',
+        empate: true
     });
 
     const handleEquipo = async (equipoData) => {
@@ -47,11 +48,13 @@ const CrearLiga = () => {
                 contraseña:ligaData.contraseña,
                 duracion_partido: ligaData.duracion_partido,
                 jugadores: ligaBody.jugadores,
-                formacion: ligaBody.formacion
+                formacion: ligaBody.formacion,
+                empate: ligaData.empate
             };
             
             setligaBody(body);
             const respuesta = await httpService.crearLiga(usuarioId, body);
+            localStorage.setItem(`equipo_id`, respuesta.id_equipo);
             console.log("Liga creada", respuesta);
             navigate(`/ligas/lobby/${respuesta.id}`, { state: { esCreador: true,  minimo : respuesta.min_jugadores } });
         } catch (error) {

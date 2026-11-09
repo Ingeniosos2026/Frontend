@@ -30,5 +30,4 @@ const CambiarComportamientoComp = ({
   );
 };
 
-
 export default CambiarComportamientoComp;

@@ -11,6 +11,59 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
         }
     });
 
+    const sugerencias = [
+                    {
+        label: "correr",
+        insertText: "correr(${1:destino})",
+        insertTextRules: 4,
+        detail: "correr(destino: Coordenada)",
+        documentation: "Mueve el jugador al destino indicado."
+    },
+    {
+        label: "patear",
+        insertText: "patear(${1:direccion})",
+        insertTextRules: 4,
+        detail: "patear(direccion: Coordenada) -> bool",
+        documentation: "Patea la pelota hacia la dirección indicada."
+    },
+    {
+        label: "direccionPelota",
+        insertText: "direccionPelota()",
+        detail: "direccionPelota() -> Coordenada",
+        documentation: "Devuelve la posición actual de la pelota."
+    },
+    {
+        label: "direccionCompañeros",
+        insertText: "direccionCompañeros()",
+        detail: "direccionCompañeros() -> list[Coordenada]",
+        documentation: "Devuelve las posiciones de los compañeros."
+    },
+    {
+        label: "direccionRivales",
+        insertText: "direccionRivales()",
+        detail: "direccionRivales() -> list[Coordenada]",
+        documentation: "Devuelve las posiciones de los rivales."
+    },
+    {
+        label: "pelotaCerca",
+        insertText: "pelotaCerca()",
+        detail: "pelotaCerca() -> bool",
+        documentation: "True si la pelota está al alcance."
+    },
+    {
+        label: "direccionArcoRival",
+        insertText: "direccionArcoRival()",
+        detail: "direccionArcoRival() -> Coordenada",
+        documentation: "Devuelve la posición del arco rival."
+    },
+    {
+        label: "direccionArcoPropio",
+        insertText: "direccionArcoPropio()",
+        detail: "direccionArcoPropio() -> Coordenada",
+        documentation: "Devuelve la posición de tu arco."
+    }
+                ];
+
     return (
         <div 
             className="min-vh-100 d-flex flex-column align-items-center py-5"
@@ -70,6 +123,7 @@ const CrearCComp = ({ mensajeError, alConfirmar, alVolver }) => {
                             render={({ field }) => (
                                 <div className={errors.codigo ? "border border-danger rounded" : ""}>
                                     <EditorTexto {...field}
+                                        sugerencias={sugerencias}
                                     />
                                 </div>
                             )}
