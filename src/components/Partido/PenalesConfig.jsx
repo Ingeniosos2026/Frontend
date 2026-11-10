@@ -42,7 +42,7 @@ const PenalesConfig = ({
             }
         }
         init();
-    }, [idUsuario, titulares]);
+    }, []);
 
     const manejarCambioPateador = (index, campo, valor) => {
         const nuevosPateadores = [...pateadores];
