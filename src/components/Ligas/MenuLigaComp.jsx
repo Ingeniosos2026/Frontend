@@ -56,7 +56,7 @@ const MenuLigaComp = ({ ligasDisponibles, error, CrearLiga, UnirseLiga, Volver }
                                 <Collapse in={ligaDesplegadaDisp === liga.id_liga}>
                                     <div id={`collapse-liga-${index}`} className="mt-2">
                                         <Card className="border-primary shadow-sm bg-light">
-                                            <Card.Body className="d-flex justify-content-between align-items-center">
+                                            <Card.Body className="d-flex justify-content-end">
                                                 <Button 
                                                     variant="primary" 
                                                     className="px-4 fw-bold shadow-sm"

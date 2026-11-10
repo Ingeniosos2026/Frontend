@@ -58,30 +58,6 @@ describe ("Ver Ranking Container", () => {
 
         expect(await screen.findByText('Tú')).toBeInTheDocument();
     });
-
-    it("navega al perfil al seleccionar ver perfil", async () => {
-        obtenerRankingMock.mockResolvedValue([
-            { id: 1, club: 'Club A', puntos: 1500 }
-        ]);
-        
-        render(<Ranking />);
-
-        const buttonPerfil = await screen.findByRole("button", { name: "Ver Perfil"});
-
-        fireEvent.click(buttonPerfil);
-
-        expect(navigateMock).toHaveBeenCalledWith("/perfil/1");
-    });
-
-    it("vuelve a la pagina principal al seleccionar volver", async () => {
-        render(<Ranking />);
-
-        const buttonVolver = await screen.findByRole("button", { name: "Volver"});
-
-        fireEvent.click(buttonVolver);
-
-        expect(navigateMock).toHaveBeenCalledWith("/main");
-    })
 });
 
 

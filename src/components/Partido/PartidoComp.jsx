@@ -25,7 +25,7 @@ const PartidoComp = ({
     // PANTALLA INICIO DE PARTIDO
     if (!partidoIniciado) {
         return (
-            <PantallaInicial visual={visual} />
+            <PantallaInicial visual={visual} idIzq={visual.id_usuario_izq} idDer={visual.id_usuario_izq}/>
         );
     }
 

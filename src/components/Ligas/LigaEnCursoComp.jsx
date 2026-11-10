@@ -49,7 +49,7 @@ const LigaEnCursoComp = ({
                     {/* COLUMNA IZQUIERDA: TABLA DE POSICIONES */}
                     <Col lg={7}>
                         <Card className="shadow-lg border-0 h-100 bg-white" style={{ opacity: '0.98' }}>
-                            <Card.Header className="bg-primary text-white fw-bold py-3">
+                            <Card.Header className=" text-white fw-bold py-3" style={{ backgroundColor: '#585858'}}>
                                 🏆 Tabla de Posiciones
                             </Card.Header>
                             <Card.Body className="p-0">
@@ -94,7 +94,15 @@ const LigaEnCursoComp = ({
                     </Col>
 
                     {/* COLUMNA DERECHA: FIXTURE */}
-                    <Col lg={5}>
+                    <Col lg={5} style={{display:'flex',flexDirection:'column', alignContent:'end'}}>
+                        <button
+                        size="lg" 
+                        className="px-5 shadow-sm fw-bold rounded-pill border-0"
+                        style={{ backgroundColor: '#ffffff', transition: 'all 0.3s ease', fontSize: '18px', textAlign: 'center',fontWeight: '500',padding:'8px', marginBottom:'5px' }}
+                        onClick={cambioAlineacion}
+                        >
+                            Cambiar Alineacion
+                        </button>
                         <Card className="shadow-lg border-0 h-100 bg-white" style={{ opacity: '0.98' }}>
                             <Card.Header className="bg-dark text-white fw-bold py-3">
                                 📅 Fixture Oficial
@@ -156,16 +164,9 @@ const LigaEnCursoComp = ({
                             </Card.Body>
                         </Card>
                     </Col>
+                    
                 </Row>
 
-                <button
-                    size="lg" 
-                    className="px-5 shadow-sm fw-bold rounded-pill border-0"
-                    style={{ backgroundColor: '#495057', transition: 'all 0.3s ease' }}
-                    onClick={cambioAlineacion}
-                >
-                    Cambiar Alineacion
-                </button>
             </Container>
         </div>
     );

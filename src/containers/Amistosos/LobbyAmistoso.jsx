@@ -17,6 +17,20 @@ const LobbyAmistoso = () => {
     const [iniciando, setIniciando] = useState(false);
     const [esCreador, setEsCreador] = useState(false);
     const [sePuedeIniciar, setSePuedeIniciar] = useState(false);
+    const [visual, setVisual] = useState(null);
+
+    useEffect(() => {
+        const cargarVisual = async () => {
+            try {
+                const datosVisuales = await httpService.obtenervisualPartido(partido_id);
+                setVisual(datosVisuales);
+            } catch (error) {
+                console.error("Error al obtener la visual del partido:", error);
+            }
+        };
+        
+        cargarVisual();
+    }, [partido_id, httpService]);
 
     useEffect(() => {
         const wsEndpoint = `/ws/amistoso/${partido_id}`;
@@ -65,7 +79,7 @@ const LobbyAmistoso = () => {
             wsService.off('iniciar_partido', manejarIniciar);
             wsService.disconnect();
         };
-    }, [partido_id, navigate]);
+    }, [partido_id, navigate, usuarioId]);
 
     const manejarIniciarPartido = async () => {
         try {
@@ -86,6 +100,7 @@ const LobbyAmistoso = () => {
             sePuedeIniciar={sePuedeIniciar}
             iniciando={iniciando}
             alIniciar={manejarIniciarPartido}
+            visual={visual}
         />
     );
 };

@@ -18,7 +18,9 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.89.0",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^2.0.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.2",

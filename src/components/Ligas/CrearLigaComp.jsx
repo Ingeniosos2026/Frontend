@@ -141,18 +141,18 @@ const CrearLigaComp = ({ mensajeError, alConfirmar, alVolver }) => {
                     </Form.Group>
 
                     <Form.Group className="mb-5" controlId="empate">
-                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem' }}>
+                        <Form.Label className="fw-bold text-secondary" style={{ marginTop: '.3rem', marginBottom: '.2rem'}}>
                             Permitir Empates
                         </Form.Label>
-                        <Form.Select 
+                        <Form.Select style={{color:'#5c5c5c'}}
                             size="lg"
                             className="shadow-sm border-success"
                             {...register('empate', {
                                 setValueAs: (value) => value === 'true'
                             })}
                         >
-                            <option value="true">Activado (Se permiten empates)</option>
-                            <option value="false">Desactivado (Debe haber un ganador)</option>
+                            <option style={{color:'#6e6e6e'}} value="true">Activado (Se permiten empates)</option>
+                            <option style={{color:'#6e6e6e'}} value="false">Desactivado (Debe haber un ganador)</option>
                         </Form.Select>
                     </Form.Group>
 
