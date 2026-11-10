@@ -81,121 +81,121 @@ const PenalesConfig = ({
         }
     };
 
-    // Pantalla de espera usando un Card de Bootstrap centrado
+    // PANTALLA DE ESPERA (Cargando)
     if (enviado) {
         return (
-            <div className="d-flex justify-content-center align-items-center position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}>
-                <div className="card bg-dark border-warning text-center p-4 shadow-lg">
+            <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}>
+                <div className="card bg-dark border-warning text-center p-5 shadow-lg" style={{ maxWidth: '400px', width: '90%' }}>
                     <div className="card-body">
-                        <div className="spinner-border text-warning mb-3" role="status"></div>
-                        <h4 className="card-title text-warning fw-bold">ESPERANDO PENALES...</h4>
-                        <p className="card-text text-light">Aguardando que el rival configure su equipo o finalice el tiempo.</p>
+                        <div className="spinner-border text-warning mb-4" role="status" style={{ width: '3rem', height: '3rem' }}></div>
+                        <h4 className="card-title text-warning fw-bold mb-3">ESPERANDO PENALES...</h4>
+                        <p className="card-text text-secondary">Aguardando que el rival configure su equipo o finalice el tiempo.</p>
                     </div>
                 </div>
             </div>
         );
     }
 
-    // Modal forzado usando clases de Bootstrap (sin necesidad de JS de Bootstrap)
+    // FORMULARIO PRINCIPAL DE CONFIGURACIÓN
     return (
         <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}>
-            <div className="modal-dialog modal-dialog-centered modal-lg w-100 shadow-lg">
-                <div className="modal-content bg-dark text-light border-secondary">
-                    
-                    <div className="modal-header border-secondary">
-                        <h4 className="modal-title text-warning fw-bold">Preparación de Penales</h4>
-                    </div>
-                    
-                    <div className="modal-body">
-                        {errorMensaje && (
-                            <div className="alert alert-danger py-2" role="alert">
-                                {errorMensaje}
-                            </div>
-                        )}
+            
+            {/* Contenedor central simulando un Modal. Se le da un maxWidth de 650px para que no ocupe toda la pantalla */}
+            <div className="card bg-dark text-light border-secondary shadow-lg" style={{ maxWidth: '650px', width: '95%' }}>
+                
+                <div className="card-header border-secondary text-center pt-3 pb-2">
+                    <h4 className="text-warning fw-bold text-uppercase m-0">Preparación de Penales</h4>
+                </div>
+                
+                <div className="card-body p-4">
+                    {errorMensaje && (
+                        <div className="alert alert-danger py-2 text-center" role="alert">
+                            {errorMensaje}
+                        </div>
+                    )}
 
-                        <form onSubmit={manejarEnvioPenales}>
-                            
-                            {/* SECCIÓN ARQUERO */}
-                            <div className="mb-4">
-                                <h5 className="text-success border-bottom border-secondary pb-2">Arquero</h5>
-                                <div className="row g-3">
-                                    <div className="col-md-6">
-                                        <label className="form-label text-secondary small mb-1">Elegí Arquero</label>
+                    <form onSubmit={manejarEnvioPenales}>
+                        
+                        {/* SECCIÓN ARQUERO */}
+                        <div className="mb-4">
+                            <h5 className="text-success fw-bold border-bottom border-secondary pb-2 mb-3">Arquero</h5>
+                            <div className="row g-3">
+                                <div className="col-md-6">
+                                    <label className="form-label text-secondary small text-uppercase fw-bold mb-1">Elegí Arquero</label>
+                                    <select 
+                                        className="form-select bg-dark text-light border-secondary shadow-none" 
+                                        value={idArquero} 
+                                        onChange={(e) => setIdArquero(e.target.value)}
+                                        required
+                                    >
+                                        <option value="" disabled>Seleccionar...</option>
+                                        {titulares.map(j => (
+                                            <option key={j.id_jugador} value={j.id_jugador}>{j.nombre}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label text-secondary small text-uppercase fw-bold mb-1">Comportamiento</label>
+                                    <select 
+                                        className="form-select bg-dark text-light border-secondary shadow-none" 
+                                        value={idComportamientoArquero} 
+                                        onChange={(e) => setIdComportamientoArquero(e.target.value)}
+                                        required
+                                    >
+                                        <option value="" disabled>Seleccionar...</option>
+                                        {comportamientos.map(c => (
+                                            <option key={c.id} value={c.id}>{c.nombre}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SECCIÓN PATEADORES */}
+                        <div className="mb-4">
+                            <h5 className="text-success fw-bold border-bottom border-secondary pb-2 mb-3">Pateadores</h5>
+                            {pateadores.map((pateador, index) => (
+                                <div key={`pateador-${index}`} className="row g-2 align-items-center mb-3">
+                                    
+                                    <div className="col-12 col-md-2 text-start text-md-end">
+                                        <span className="badge bg-success p-2 w-100" style={{ fontSize: '13px' }}>Pateador {index + 1}</span>
+                                    </div>
+                                    
+                                    <div className="col-12 col-md-5">
                                         <select 
-                                            className="form-select bg-secondary text-light border-0" 
-                                            value={idArquero} 
-                                            onChange={(e) => setIdArquero(e.target.value)}
+                                            className="form-select bg-dark text-light border-secondary shadow-none" 
+                                            value={pateador.id_jugador} 
+                                            onChange={(e) => manejarCambioPateador(index, 'id_jugador', e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled>Seleccionar...</option>
+                                            <option value="" disabled>Elegí Pateador...</option>
                                             {titulares.map(j => (
                                                 <option key={j.id_jugador} value={j.id_jugador}>{j.nombre}</option>
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="form-label text-secondary small mb-1">Comportamiento</label>
+                                    
+                                    <div className="col-12 col-md-5">
                                         <select 
-                                            className="form-select bg-secondary text-light border-0" 
-                                            value={idComportamientoArquero} 
-                                            onChange={(e) => setIdComportamientoArquero(e.target.value)}
+                                            className="form-select bg-dark text-light border-secondary shadow-none" 
+                                            value={pateador.id_comportamiento} 
+                                            onChange={(e) => manejarCambioPateador(index, 'id_comportamiento', e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled>Seleccionar...</option>
+                                            <option value="" disabled>Comportamiento...</option>
                                             {comportamientos.map(c => (
                                                 <option key={c.id} value={c.id}>{c.nombre}</option>
                                             ))}
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            ))}
+                        </div>
 
-                            {/* SECCIÓN PATEADORES */}
-                            <div className="mb-4">
-                                <h5 className="text-success border-bottom border-secondary pb-2">Pateadores</h5>
-                                {pateadores.map((pateador, index) => (
-                                    <div key={`pateador-${index}`} className="row g-2 align-items-center mb-3">
-                                        
-                                        <div className="col-12 col-md-2 text-md-end">
-                                            <span className="badge bg-success p-2">Pateador {index + 1}</span>
-                                        </div>
-                                        
-                                        <div className="col-12 col-md-5">
-                                            <select 
-                                                className="form-select bg-secondary text-light border-0" 
-                                                value={pateador.id_jugador} 
-                                                onChange={(e) => manejarCambioPateador(index, 'id_jugador', e.target.value)}
-                                                required
-                                            >
-                                                <option value="" disabled>Elegí Pateador...</option>
-                                                {titulares.map(j => (
-                                                    <option key={j.id_jugador} value={j.id_jugador}>{j.nombre}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        
-                                        <div className="col-12 col-md-5">
-                                            <select 
-                                                className="form-select bg-secondary text-light border-0" 
-                                                value={pateador.id_comportamiento} 
-                                                onChange={(e) => manejarCambioPateador(index, 'id_comportamiento', e.target.value)}
-                                                required
-                                            >
-                                                <option value="" disabled>Comportamiento...</option>
-                                                {comportamientos.map(c => (
-                                                    <option key={c.id} value={c.id}>{c.nombre}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button type="submit" className="btn btn-warning w-100 fw-bold py-2 mt-2">
-                                CONFIRMAR SELECCIÓN
-                            </button>
-                        </form>
-                    </div>
+                        <button type="submit" className="btn btn-warning w-100 fw-bold py-3 mt-2 text-dark">
+                            CONFIRMAR SELECCIÓN
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
