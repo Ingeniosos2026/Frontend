@@ -27,6 +27,9 @@ const Partido = () => {
     const [colaCambios, setColaCambios] = useState([]);
     const [cambioVisible, setCambioVisible] = useState(null);
 
+    const [configuracionPenales, setConfiguracionPenales] = useState(false);
+    const [hayPenales, setHayPenales] = useState(false);
+
     const canchaRef = useRef(null);
     const posicionesPrevias = useRef({});
     const [medidasFront, setMedidasFront] = useState({ ancho: 800, alto: 480 });
@@ -57,6 +60,11 @@ const Partido = () => {
 
         const manejarEstadoPartido = (payload) => {
             setEstadoJuego(payload);
+
+            if (payload.penales) {
+                setConfiguracionPenales(false);
+                setHayPenales(true);
+            }
 
             if (payload.goles) {
                 const golesIzq = Number(payload.goles.derecho);
@@ -124,6 +132,20 @@ const Partido = () => {
         const manejarPartidoReanudado = () => {
             setDatosPausa(null);
         };
+
+        const manejarInicioPenales = async (payload) => {
+            setPartidoTerminado(false);
+            setConfiguracionPenales(true);
+            setHayPenales(true);
+        };
+
+        const manejarFinPartidoPenales = (payload) => {
+            setPartidoTerminado(true);
+            setResultadoFinal({
+                ...payload,
+                esPenales: true
+            });
+        };
         
         wsService.on('partido_iniciado', manejarPartidoIniciado);
         wsService.on('estado_partido', manejarEstadoPartido);
@@ -132,6 +154,9 @@ const Partido = () => {
         wsService.on('partido_pausado', manejarPartidoPausado);
         wsService.on('partido_reanudado', manejarPartidoReanudado);
         wsService.on('cambio_jugador_realizado', manejarCambioJugador);
+        
+        wsService.on('inicio_definicion_penales', manejarInicioPenales);
+        wsService.on('partido_terminado_penales', manejarFinPartidoPenales);
 
         return () => {
             wsService.off('partido_iniciado', manejarPartidoIniciado);
@@ -141,6 +166,9 @@ const Partido = () => {
             wsService.off('partido_reanudado', manejarPartidoReanudado);
             wsService.off('cambio_jugador_realizado', manejarCambioJugador);
             wsService.off('partido_terminado', manejarFinPartido);
+            
+            wsService.off('inicio_definicion_penales', manejarInicioPenales);
+            wsService.off('partido_terminado_penales', manejarFinPartidoPenales);
             wsService.disconnect();
         };
     }, [partido_id, idUsuario]);
@@ -250,6 +278,8 @@ const Partido = () => {
             rivales={rivales}
             jugadoresRender={jugadoresRender}
             pelotaRender={pelotaRender}
+            configuracionPenales={configuracionPenales}
+            penales={hayPenales}
         />
     );
 };

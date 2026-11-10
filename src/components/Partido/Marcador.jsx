@@ -50,7 +50,7 @@ const Marcador = ({ tiempo, goles, alVolver, izquierda, derecha, espectador, ava
                     <div className="time-box">
                         {formatearReloj(tiempo)}
                         <div className="goles-text">
-                            {goles?.izquierdo ?? 0} - {goles?.derecho ?? 0}
+                            {goles.izquierdo} - {goles.derecho}
                         </div>
                     </div>
                 </div>

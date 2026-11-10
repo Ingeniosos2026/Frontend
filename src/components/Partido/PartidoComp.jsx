@@ -9,11 +9,13 @@ import JugadorRender from './JugadorRender';
 import ActivarDt from './ActivarDt';
 import PantallaInicial from './PantallaInicial';
 import PantallaFinal from './PantallaFinal';
+import PenalesConfig from './PenalesConfig';
 
 const PartidoComp = ({
     visual, hayGol, suplentes, canchaRef, estadoJuego, datosPausa, datosCambio,
     partidoIniciado,partidoTerminado, resultadoFinal,alVolver,activado, setActivado,
-    idPartido, idUsuario, misJugadores, rivales, jugadoresRender, pelotaRender
+    idPartido, idUsuario, misJugadores, rivales, jugadoresRender, pelotaRender,
+    configuracionPenales, penales
 }) => {
     const { tiempo, goles } = estadoJuego || {};
     const soyIzquierda = String(visual?.id_usuario_izq) === String(idUsuario);
@@ -73,6 +75,7 @@ const PartidoComp = ({
             <div className="main-grid">
 
                 {/* PANEL IZQUIERDO */}
+                {!penales&&
                 <div className="panel-left">
                     {soyIzquierda && (
                         <>
@@ -84,13 +87,15 @@ const PartidoComp = ({
                     {soyDerecha && (
                         <JugadoresTabla players={rivales} esMio={false} />
                     )}
-                </div>
+                </div>                
+                }
+
             
                 {/* CAMPO DE JUEGO */}
                 <div className="pitch-container" ref={canchaRef}>
 
                     {/* PAUSAS */}
-                    {datosPausa && (
+                    {datosPausa && !penales && (
                         <div className="overlay-pausas-cancha">
                             <h2 className="pausa-titulo-cancha">
                                 {datosPausa?.numero_pausa === 2 ? "MEDIO-TIEMPO" : "COOLING BREAK"}
@@ -109,6 +114,15 @@ const PartidoComp = ({
                         </div>
                     )}
 
+                    {/* CONFIGURACIÓN DE PENALES */}
+                    {configuracionPenales && (
+                        <PenalesConfig
+                            titulares={misJugadores}
+                            idUsuario={idUsuario}
+                            idPartido={idPartido}
+                        />
+                    )}
+
                     {/* CANCHA */}
                     <FondoCancha/> 
 
@@ -124,18 +138,20 @@ const PartidoComp = ({
                 </div>
                 
                 {/* PANEL DERECHO */}
-                <div className="panel-right">
-                    {soyDerecha && (
-                        <>
-                            <ActivarDt  usuarioId={idUsuario} partidoId={idPartido} activado={activado} setActivado={setActivado}/>
-                            <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} activadoDt={activado} />
-                            
-                        </>
-                    )}
-                    {soyIzquierda && (
-                        <JugadoresTabla players={rivales} esMio={false}/>
-                    )}
-                </div>
+                {!penales&&
+                    <div className="panel-right">
+                        {soyDerecha && (
+                            <>
+                                <ActivarDt  usuarioId={idUsuario} partidoId={idPartido} activado={activado} setActivado={setActivado}/>
+                                <JugadoresTabla players={misJugadores} esMio={true} jugadoresSuplentes={suplentes} idPartido={idPartido} idUsuario={idUsuario} />
+                                
+                            </>
+                        )}
+                        {soyIzquierda && (
+                            <JugadoresTabla players={rivales} esMio={false} />
+                        )}
+                    </div>
+                }
             </div>
         </div>
     );

@@ -24,6 +24,14 @@ const PantallaFinal = ({ visual, resultadoFinal, alVolver }) => {
     const urlAvatarIzq = obtenerUrlAvatar(visual?.avatar_usuario_izq);
     const urlAvatarDer = obtenerUrlAvatar(visual?.avatar_usuario_der);
 
+    const obtenerNombreGanador = () => {
+        if (resultadoFinal?.id_usuario_ganador === visual?.id_usuario_izq) {
+            return visual?.club_usuario_izq;
+        } else if (resultadoFinal?.id_usuario_ganador === visual?.id_usuario_der) {
+            return visual?.club_usuario_der;
+        }
+    };
+
     return (
         <div className="pantalla-dividida-container">
             <div className="pantalla-dividida-content">
@@ -41,8 +49,21 @@ const PantallaFinal = ({ visual, resultadoFinal, alVolver }) => {
                     <div className="etiqueta-finalizado">FINALIZADO</div>
                     
                     <div className="resultado-3d">
-                        {resultadoFinal?.goles?.izquierdo ?? 0} - {resultadoFinal?.goles?.derecho ?? 0}
+                         {resultadoFinal.goles.izquierdo} - {resultadoFinal.goles.derecho}
                     </div>
+
+                    {resultadoFinal?.penales && (
+                        <div className="resultado-penales-bloque">
+                            <div className="resultado-penales">
+                                PENALES: ({resultadoFinal.penales.izquierdo ?? 0} - {resultadoFinal.penales.derecho ?? 0})
+                            </div>
+                            {resultadoFinal.penales.izquierdo === resultadoFinal.penales.derecho && (
+                                <div className="texto-desempate">
+                                    Gana {obtenerNombreGanador()} por {resultadoFinal.motivo_desempate}
+                                </div>
+                            )}
+                        </div>
+                    )}
                     
                     <div className="tiempo-total">
                         TIEMPO: {formatearReloj(resultadoFinal?.tiempo)}

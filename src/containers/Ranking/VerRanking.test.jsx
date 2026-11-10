@@ -37,9 +37,9 @@ describe ("Ver Ranking Container", () => {
 
     it("muestra los clubes en la tabla", async () => {
         obtenerRankingMock.mockResolvedValue([
-            { usuario_id: 1, nombre: 'Club A', puntos_ranking: 1500 },
-            { usuario_id: 2, nombre: 'Club B', puntos_ranking: 1200 },
-            { usuario_id: 3, nombre: 'Club C', puntos_ranking: 900 }
+            { id: 1, club: 'Club A', puntos: 1500 },
+            { id: 2, club: 'Club B', puntos: 1200 },
+            { id: 3, club: 'Club C', puntos: 900 }
         ]);
 
         render(<Ranking />);
@@ -51,7 +51,7 @@ describe ("Ver Ranking Container", () => {
 
     it("se resalta en la tabla el usuario que se encuentra viendo el ranking", async () => {
         obtenerRankingMock.mockResolvedValue([
-            { usuario_id: 123, nombre: 'Club A', puntos_ranking: 1500 }
+            { id: 123, club: 'Club A', puntos: 1500 }
         ]);
 
         render(<Ranking />);
@@ -61,7 +61,7 @@ describe ("Ver Ranking Container", () => {
 
     it("navega al perfil al seleccionar ver perfil", async () => {
         obtenerRankingMock.mockResolvedValue([
-            { usuario_id: 1, nombre: 'Club A', puntos_ranking: 1500 }
+            { id: 1, club: 'Club A', puntos: 1500 }
         ]);
         
         render(<Ranking />);

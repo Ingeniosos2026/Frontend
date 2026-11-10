@@ -237,6 +237,13 @@ const createHttpService = () => {
     });
   };
 
+  const configurarPenales = async (partidoId, payload) => {
+    return request(`/liga/partido/${partidoId}/penales`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+    });
+  };
+
   return {
     crearUsuario,
     iniciarSesion,
@@ -269,7 +276,8 @@ const createHttpService = () => {
     obtenerComportamientosDt,
     asignarComportamientoDt,
     obtenerEquipoLiga,
-    actualizarEquipoLiga
+    actualizarEquipoLiga,
+    configurarPenales
   };
 };
 

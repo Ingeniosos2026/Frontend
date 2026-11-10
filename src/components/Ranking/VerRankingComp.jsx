@@ -22,13 +22,13 @@ const RankingComp = ({ ranking, mensajeError, onVerPerfil, iD, volver }) => {
 
                 <tbody>
                     {ranking.map((club, index) => (
-                        <tr key={club.usuario_id} className={String(club.usuario_id) === String(iD) ? 'table-secondary' : '' }>
+                        <tr key={club.id} className={String(club.id) === String(iD) ? 'table-secondary' : '' }>
                             <td>{index + 1}</td>
-                            <td>{String(club.usuario_id) === String(iD) ? 'Tú' : club.nombre}</td>
-                            <td>{club.puntos_ranking}</td>
+                            <td>{String(club.id) === String(iD) ? 'Tú' : club.club}</td>
+                            <td>{club.puntos}</td>
                             <td>
                                 <Button
-                                    onClick={() => onVerPerfil(club.usuario_id)}
+                                    onClick={() => onVerPerfil(club.id)}
                                 >
                                     Ver Perfil
                                 </Button>
