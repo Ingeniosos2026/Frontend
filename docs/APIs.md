@@ -22,7 +22,6 @@
 | GET | /ligas | Obtener lista de ligas disponibles |
 | GET | /liga/{liga_id}/fixture | Obtener Fixture de la liga |
 | GET | /liga/{liga_id}/tabla | Obtener Tabla de la liga |
-| GET | /liga/{liga_id}/usuarios | Obtener usuarios en la liga |
 | PUT | /liga/{liga_id}/unirse/{usuario_id} | Unirse a una liga |
 | PUT | /liga/{liga_id}/abandonar/{usuario_id} | Abandonar una liga |
 | DELETE | /liga/{liga_id}/{usuario_id} | Cancelar liga |
@@ -33,10 +32,11 @@
 | PUT | /partido/{partido_id}/{usuario_id} | Iniciar partido amistoso |
 | PUT | /partido/{partido_id}/abandonar/{usuario_id} | Abandonar partido amistoso |
 | DELETE | /partido/cancelar/{partido_id}/{usuario_id} | Cancelar partido amistoso |
-| WS | /ws/amistoso/{partido_id} | Eventos del Lobby para amistosos |
-| WS | /ws/partido/{partido_id} | Eventos de Partido en curso |
-| WS | /ws/notificaciones/{usuario_id} | Eventos globales de la App |  
-| WS | /ws/liga/{liga_id} | Eventos del Lobby para ligas |
+| WS | Actualizacion de Entidades | Actualizacion de la nueva posicion (X,Y) de los 6 titulares y la Pelota |
+| WS | Actualizacion de Cronometro | Actualizacion del cronometro del partido |
+| WS | Actualizacion de Marcador | Actualizacion de las anotaciones en el partido |
+| WS | Inicio de Partido | Mensaje de partido inciado |
+| WS | Final del Partido |  Mensaje de partido finalizado |
 | WS | Actualizacion de Ventana | Actualizacion de evento para realizar cambios |
 
 ---
@@ -52,7 +52,7 @@
   {
       "nombre": "string",
       "email": "string",
-      "contraseña": "string",
+      "password": "string",
       "avatar": "int",
       "club": "string"
   }
@@ -63,10 +63,10 @@
   201 Created
   ```json
   {
-      "mensaje": "string"
       "id": "int",
-      "email": "string",
       "nombre": "string",
+      "email": "string",
+      "password": "string",
       "avatar": "int",
       "club": "string"
   }
@@ -90,14 +90,6 @@
   }
   ```
 
-  422 Unprocessable Entity
-  ```json
-  {
-    "error": "ERROR_VALIDACION",
-    "mensaje": "Los datos no cumplen con las reglas de validación"
-  }
-  ```
-
   500 Internal Server Error
   ```json
   {
@@ -113,7 +105,7 @@
   ```json
   {
       "email": "string",
-      "contraseña": "string"
+      "password": "string"
   }
   ```
 
@@ -122,11 +114,10 @@
   200 OK
   ```json
   {
-    "mensaje": "string",
-    "id": "int"
+      "usuario_id": "string"
   }
   ```
-  <!--token de sesion? -->
+  
 
   400 Bad Request
   ```json
@@ -138,8 +129,8 @@
   401 Unauthorized
   ```json
   {
-    "error": "CREDENCIALES_INVALIDAS",
-    "mensaje": "El email o la contasena son incorrectos"
+    "error": "NO_AUTORIZADO",
+    "mensaje": "Correo electrónico y/o contraseña incorrectos"
   }
   ```
   500 Internal Server Error
@@ -261,11 +252,11 @@
   ```json
   {
     "nombre": "string",
-    "power": "int",
-    "agility": "int",
-    "control": "int",
-    "speed": "int",
-    "strength": "int"
+    "power": "int (20-100)",
+    "agility": "int (20-100)",
+    "control": "int (20-100)",
+    "speed": "int (20-100)",
+    "strength": "int (20-100)"
   }
   ```
 
@@ -274,7 +265,7 @@
   ```json
   {
     "id": "int",
-    "nombre": "string",
+    "nombre": "str",
     "power": "int",
     "agility": "int",
     "control": "int",
@@ -287,7 +278,7 @@
   ```json
   {
     "error": "DATOS_INVALIDOS",
-    "mensaje": "Las estadísticas no pueden ser mayores a 100 ni menores a 20 y el total debe ser menor o igual a 300"
+    "mensaje": "Las estadísticas no pueden ser mayores a 100 y el total debe ser menor a 300"
   }
   ```
 
@@ -315,12 +306,7 @@
   [
     {
       "id": "int",
-      "nombre": "string",
-      "power": "int",
-      "agility": "int",
-      "control": "int",
-      "speed": "int",
-      "strength": "int"
+      "nombre": "string"
     }
   ]
   ```
@@ -332,7 +318,6 @@
     "mensaje": "No se pudo obtener la lista de jugadores"
   }
   ```
-
   ---
 
 ### GET /jugador/{usuario_id}/{jugador_id}
@@ -484,14 +469,6 @@
   }
   ```
 
-  422 Unprocessable Entity
-  ```json
-  {
-    "error": "ERROR_VALIDACION",
-    "mensaje": "Los datos ingresados no cumplen con las reglas de validación"
-  }
-  ```
-
   500 Internal Server Error
   ```json
   {
@@ -549,9 +526,8 @@
   200 OK
   ```json
     {
-      "id": "int",
-      "nombre": "string",
-      "codigo": "string"
+      "nombre": "str",
+      "codigo": "str"
     }
   ```
 
@@ -610,12 +586,6 @@
     "mensaje": "Ya existe otro comportamiento con ese nombre"
   }
   ```
-  422 Unprocessable Entity
-  ```json
-  {
-    "error": "ERROR_VALIDACION",
-    "mensaje": "El codigo no cumple con las reglas de validación"
-  }
   ```
   500 Internal Server Error
   ```json
@@ -743,14 +713,6 @@
       "mensaje": "El jugador o el comportamiento no existe"
   }
   ```
-
-  422 Unprocessable Entity
-  ```json
-  {
-    "error": "ERROR_VALIDACION",
-    "mensaje": "El minimo de jugadores debe ser mayor o igual a 3"
-  }
-  ```
   500 Internal Server Error
   ```json
   {
@@ -800,16 +762,7 @@
   200 OK
   ```json
   {
-      "fixture_liga": [
-        {
-          "club_izq": "string",
-          "club_der": "string",
-          "usuario_id_izq": "int",
-          "usuario_id_der": "int",
-          "fecha": "int",
-          "partido_id": "int"
-        }
-      ]
+      "fixture_liga": "[({usuario_id},{usuario_id})]"
   }
   ```
   <!--lista ordenada de tuplas de usuario_id-->
@@ -851,13 +804,10 @@
   ```json
   [
     {
-      "club":"string",
-      "partidos_ganados":"int",
-      "partidos_empatados": "int",
-      "partidos_perdidos": "int",
-      "puntos": "int",
-      "goles_a_favor":"int",
-      "goles_en_contra": "int"
+      "usuario":"string",
+      "partidos_jugados":"int",
+      "puntos":"int",
+      "diferencia_goles":"int",
     }
   ]
   ```
@@ -888,42 +838,6 @@
 
   ---
 
-### GET /liga/{liga_id}/usuarios
-
-  #### Request Body
-  ```json
-  No tiene
-  ```
-  #### Body Response
-  200 OK
-  ```json
-  [
-    {
-      "nombre": "string",
-      "club": "string",
-      "id": "int",
-      "avatar": "int"
-    }
-  ]
-  ```
-  
-  404 Not Found
-  ```json
-
-  {
-      "error": "RECURSO_NO_ENCONTRADO",
-      "mensaje": "La liga no existe"
-  }
-  ```
-  500 Internal Server Error
-  ```json
-  {
-      "error": "ERROR_INTERNO",
-      "mensaje": "No se pudieron obtener los usuarios de la liga"
-  }
-  ```
-
-  ---
 
 ### PUT /liga/{liga_id}/unirse/{usuario_id}
 
@@ -1115,13 +1029,8 @@
   #### Request Body
   ```json
   {
-    "duracion": "int",
-    "jugadores": "[
-      {
-        "id_jugador": "int",
-        "id_comportamiento": "int"
-      }
-    ]",
+    "duracion_partido": "int",
+    "jugadores": "[({jugador_id},{comp_id})]",
     "formacion": "string"
   }
   ```
@@ -1130,16 +1039,10 @@
   201 Created
   ```json
   {
-    "id_partido": "int",
-    "id_usuario_1": "int",
-    "id_usuario_2": "int",
-    "id_equipo_1": "int",
-    "id_equipo_2": "int",
-    "duracion": "int",
-    "formacion_1": "string",
-    "formacion_2": "string",
-    "tipo": "string",
-    "estado": "string"
+    "id": "int",
+    "duracion_partido": "int",
+    "jugadores": "[({jugador_id},{comp_id})]",
+    "formacion": "string"
   }
   ```
 
@@ -1180,8 +1083,7 @@
   ```json
   [
     {
-      "id": "int",
-      "nombre": "string",
+      "id": "int"
     }
   ]
   ```
@@ -1200,12 +1102,7 @@
   #### Request Body
   ```json
   {
-    "jugadores": "[
-      {
-        "id_jugador": "int",
-        "id_comportamiento": "int"
-      }
-    ]",
+    "jugadores": "[({jugador_id},{comp_id})]",
     "formacion": "string"
   }
   ```
@@ -1254,32 +1151,7 @@
   200 OK
   ```json
   {
-    "mensaje": "Partido amistoso iniciado",
-    "id_partido": "int",
-    "cancha": {
-      "ancho": "int",
-      "alto": "int",
-      "arco_izquierdo": {
-        "poste_superior": {
-          "x": "int",
-          "y": "int"
-        },
-        "poste_inferior": {
-          "x": "int",
-          "y": "int
-        }
-      },
-      "arco_derecho": {
-        "poste_superior": {
-          "x": "int",
-          "y": "int"
-        },
-        "poste_inferior": {
-          "x": "int",
-          "y": "int"
-        }
-      }
-    }
+    "mensaje": "Partido amistoso iniciado"
   }
   ```
 
@@ -1404,191 +1276,65 @@
 
 ### DESARROLLO WEBSOCKETS
 ---
-### WS /ws/amistoso/{partido_id}
+### WS Actualizacion de Entidades
 
-#### Body Response
-Se unio un jugador al amistoso
-```json
-{
-  "action": "usuario_unido",
-  "payload": {
-    "owner": {
-      "nombre": "string",
-      "club": "string"
-    },
-    "usuario_unido": {
-      "nombre": "string",
-      "club": "string"
-    }
-  }
-}
-```
-Inicio el partido
-```json
-{
-  "action": "iniciar_partido",
-  "payload": {}
-}
-```
+  #### Body Response
+  ```json
+  {
+    "action": "Position_update",
+    "payload": "(string,int,int)"
 
-### WS /partido/{partido_id}/ws
+  }
+  ```
+  <!-- Entidades: (Jugadores, pelota)-->
+  <!--tupla tipo Coordenadas: (Entidad,coordenada_X,coordenada_Y)-->
+  <!--Ejemplo: (Pelota,5,5)-->
 
-#### Body Response
-Partido iniciado
-```json
-{
-  "action": "partido_iniciado",
-  "payload": {
-    "tiempo": 0
-  }
-}
-```
-Estado partido
-```json
-{
-  "action": "estado_partido",
-  "payload": {
-    "tiempo": "float",
-    "pelota": {
-      "x": "float",
-      "y": "float"
-    },
-    "jugadores": [
-      {
-        "id_jugador": "int",
-        "id_usuario": "int",
-        "id_equipo": "int",
-        "x": "float",
-        "y": "float"
-      }
-    ],
-    "goles": {
-      "izquierdo": "int",
-      "derecho": "int"
-    },
-    "estados_jugadores": [
-      {
-        "id_jugador": "int",
-        "id_usuario": "int",
-        "estado": "string"
-      }
-    ],
-    "acciones": [
-      {
-        "id_jugador": "int",
-        "id_usuario": "int",
-        "accion": "string"
-      }
-    ]
-  }
-}
-```
-Partido terminado
-```json
-{
-  "action": "partido_terminado",
-  "payload": {
-    "tiempo": "float",
-    "goles": {
-      "izquierdo": "int",
-      "derecho": "int"
-    }
-  }
-}
-```
+### WS Actualizacion de Cronometro
 
-### WS /ws/notificaciones/{usuario_id}
+  #### Body Response
+  ```json
+  {
+    "action": "Time_update",
+    "payload": "int"
+  }
+  ```
 
-#### Body Response
-Amistoso creado
-```json
-{
-  "action": "amistoso_creado",
-  "payload": {
-    "id_partido": "int",
-    "duracion": "int",
-    "tipo": "string",
-    "estado": "string"
-  }
-}
-```
+### WS Actualizacion de Marcador
 
-### WS /ws/liga/{liga_id}  
-
-#### Body Response  
-Se unio un club a la liga, se recibe cuando alguien llamó al endpoint unirse a liga
+  #### Body Response
 ```json
 {
-  "action": "club_unido",
-  "payload": {
-    "nombre": "string",
-    "club": "string",
-    "id": "int",
-    "avatar": "int"
-  }
-}
-```
-Un club abandono la liga, se recibe cuando alguien llamó al endpoint abandonar liga
-```json
-{
-  "action": "club_salio",
-  "payload": {
-    "nombre": "string",
-    "club": "string",
-    "id": "int",
-    "avatar": "int"
-  }
-}
-```
-Inicio la liga, se recibe cuando alguien llamó al endpoint Iniciar liga
-```json
-{
-  "action": "liga_iniciada",
-  "payload": {
-    "liga_id": "int"
-  }
+  "action": "Score_update",
+  "payload": "(int,int)"
 
 }
 ```
-Finalizó la liga, se recibe cuando se jugaron todos los partidos de la liga
-```json
-{
-  "action": "liga_finalizada",
-  "payload": {
-    "liga_id": "int"
-  }
+<!--
+  tupla tipo Marcador: (Goles,Goles)
+  Ejemplo: (3,1)
+-->
 
-}
-```
-Inicio un partido, se recibe cuando se comienza a ejecutar un partido de liga
-```json
-{
-  "action": "partido_iniciado",
-  "payload": {
-    "partido_id": "int"
-  }
+### WS Inicio de Partido
 
-}
-```
-Termino un partido, se recibe cuando se termina de ejecutar un partido de liga
-```json
-{
-  "action": "partido_finalizado",
-  "payload": {
-    "partido_id": "int"
+  #### Body Response
+  ```json
+  {
+    "action": "Start_game",
+    "payload": "string"
   }
-}
-```
-Liga cancelada, se recibe cuando el creador de la liga llama al endpoint cancelar liga
-```json
-{
-  "action": "liga_cancelada",
-  "payload": {
-    "liga_id": "int"
-  }
-}
-```
+  ```
 
+### WS Final de Partido
+
+  #### Body Response
+  ```json
+  {
+    "action": "end_game",
+    "payload": "string"
+  }
+  ```
+  <!-- Ventana de partido =(Mediotiempo, Pausa de hidratacion) -->
 
 ### WS Actualizacion de Ventana
 
