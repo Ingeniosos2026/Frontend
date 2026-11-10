@@ -6,18 +6,31 @@ import LobbyAmistosoComp from '../../components/Amistosos/LobbyAmistosoComp';
 
 const LobbyAmistoso = () => {
     const { partido_id } = useParams();
-    const usuarioId = localStorage.getItem('usuario_id');
+    const usuarioId = Number(localStorage.getItem('usuario_id'));
 
     const navigate = useNavigate();
-    const location = useLocation();
-    
-    const esCreador = location.state?.esCreador || false;
 
     const [httpService] = useState(() => createHttpService());
     const [versus, setVersus] = useState(null);
     const [mensajeError, setError] = useState(null);
 
     const [iniciando, setIniciando] = useState(false);
+    const [esCreador, setEsCreador] = useState(false);
+    const [sePuedeIniciar, setSePuedeIniciar] = useState(false);
+    const [visual, setVisual] = useState(null);
+
+    useEffect(() => {
+        const cargarVisual = async () => {
+            try {
+                const datosVisuales = await httpService.obtenervisualPartido(partido_id);
+                setVisual(datosVisuales);
+            } catch (error) {
+                console.error("Error al obtener la visual del partido:", error);
+            }
+        };
+        
+        cargarVisual();
+    }, [partido_id, httpService]);
 
     useEffect(() => {
         const wsEndpoint = `/ws/amistoso/${partido_id}`;
@@ -33,22 +46,40 @@ const LobbyAmistoso = () => {
                 nombre: payload.usuario_unido.nombre,
                 club: payload.usuario_unido.club
             });
+            setSePuedeIniciar(true);
         };
 
         const manejarIniciar = () => {
             console.log("El creador inició el partido. Navegando al juego...");
-            navigate(`/partido/${partido_id}`);
+            navigate(`/partido/${partido_id}`, {
+                state: { returnTo: '/amistosos' }
+            });
         };
 
+        const manejarReconexion = (payload) => {
+            if (payload.competidores.length === 2) {
+                setVersus({
+                    nombre_owner: payload.competidores[0].nombre,
+                    club_owner: payload.competidores[0].club,
+                    nombre: payload.competidores[1].nombre,
+                    club: payload.competidores[1].club
+                });
+                setSePuedeIniciar(true);
+            }
+            setEsCreador(usuarioId === payload.competidores[0].id);
+        };
+
+        wsService.on('estado_inicial_lobby', manejarReconexion);
         wsService.on('usuario_unido', manejarUnirse);
         wsService.on('iniciar_partido', manejarIniciar);
 
         return () => {
+            wsService.off('estado_inicial_lobby', manejarReconexion);
             wsService.off('usuario_unido', manejarUnirse);
             wsService.off('iniciar_partido', manejarIniciar);
             wsService.disconnect();
         };
-    }, [partido_id, navigate]);
+    }, [partido_id, navigate, usuarioId]);
 
     const manejarIniciarPartido = async () => {
         try {
@@ -66,8 +97,10 @@ const LobbyAmistoso = () => {
             mensajeError={mensajeError}
             esCreador={esCreador}
             versus={versus}
+            sePuedeIniciar={sePuedeIniciar}
             iniciando={iniciando}
             alIniciar={manejarIniciarPartido}
+            visual={visual}
         />
     );
 };

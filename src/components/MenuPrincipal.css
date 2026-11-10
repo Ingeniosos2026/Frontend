@@ -1,0 +1,66 @@
+.slick-slider {
+    width: 100%;
+    position: relative;
+}
+
+
+.slick-list {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+}
+
+.slick-slide > div {
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
+    transform: scale(0.6);
+    opacity: 0.70;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.slick-slide.slick-center > div {
+    transform: scale(1.10); 
+    opacity: 1;
+}
+
+.tarjeta-carrusel {
+    border-radius: 40px;
+    transition: border-radius 0.5s ease;
+}
+
+.slick-center .tarjeta-carrusel {
+    border-radius: 20px;
+}
+
+.btn-carrusel {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(211, 211, 211, 0.4);
+    border-radius: 80px;
+    border: none;
+    color: rgba(253, 253, 253, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5)); 
+}
+
+.btn-carrusel:hover {
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.2);
+}
+
+.btn-prev {
+    left: -50px; 
+}
+
+.btn-next {
+    right: -50px; 
+}
+
+.slick-prev:before, .slick-next:before {
+    display: none;
+}

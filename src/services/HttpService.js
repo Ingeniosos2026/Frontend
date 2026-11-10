@@ -16,7 +16,8 @@ const createHttpService = () => {
       
       if (!response.ok) {
 
-        let mensajeBackend = 'Error HTTP: ${response.status}';
+        let mensajeBackend = `Error HTTP: ${response.status}`;
+        let errorTipo = null;
 
         try {
           const errorData = await response.json();
@@ -26,11 +27,18 @@ const createHttpService = () => {
           } else if (errorData.detail) {
             mensajeBackend = JSON.stringify(errorData.detail);
           }
+          if (errorData.error) {
+            errorTipo = errorData.error;
+          }
         } catch (e) {
             console.warn("El servidor no devolvió un JSON de error válido");
         }
 
-        throw new Error(mensajeBackend);
+        const err = new Error(mensajeBackend);
+        if (errorTipo) {
+          err.tipo = errorTipo;
+        }
+        throw err;
       }
       
       return await response.json();
@@ -56,7 +64,7 @@ const createHttpService = () => {
   };
 
   const obtenerRanking = async () => {
-    return request('/usuarios/ranking');
+    return request('/ranking');
   };
 
   // --- JUGADORES Y COMPORTAMIENTOS ---
@@ -90,16 +98,23 @@ const createHttpService = () => {
     return request(`/comportamiento/${usuarioId}/${compId}`);
   };
 
-  const asignarComportamiento = async (usuarioId, compId, jugadorId) => {
-    return request(`/comportamiento/${usuarioId}/${compId}/asignar`, {
+  const editarComportamiento = async (usuarioId,compId, comportamientoData) => {
+    return request(`/comportamiento/${usuarioId}/${compId}`, {
         method: 'PUT',
-        body: JSON.stringify({ jugador_id: jugadorId }) 
+        body: JSON.stringify(comportamientoData)
+    });
+  };
+
+  const cambiarComportamiento = async (partidoId, cambioData) => {
+    return request(`/partido/${partidoId}/cambiar/comportamiento`, {
+        method: 'PUT',
+        body: JSON.stringify(cambioData) 
     });
   };
 
   // --- LIGAS ---
-  const obtenerLigas = async () => {
-    return request('/ligas');
+  const obtenerLigas = async (usuarioId) => {
+    return request(`/ligas/${usuarioId}`);
   };
 
   const crearLiga = async (usuarioId, ligaData) => {
@@ -134,9 +149,19 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerFixtureLiga = async (ligaId) => {
+    const data = await request(`/liga/${ligaId}/fixture`);
+    return data.fixture;
+  };
+
+  const obtenerTablaLiga = async (ligaId) => {
+    const data = await request(`/liga/${ligaId}/tabla`);
+    return data.tabla;
+  };
+
   // --- AMISTOSOS ---
-  const obtenerAmistosos = async () => {
-    return request('/partidos');
+  const obtenerAmistosos = async (usuarioId) => {
+    return request(`/partidos/${usuarioId}`)
   };
 
   const crearAmistoso = async (usuarioId, partidoData) => {
@@ -159,6 +184,66 @@ const createHttpService = () => {
     });
   };
 
+  const obtenerEquipoLiga = async (ligaId, equipoId) => {
+    return request(`/liga/${ligaId}/equipo/${equipoId}`);
+  }
+
+  const actualizarEquipoLiga = async (ligaId, usuarioId, datos) => {
+    return request(`/liga/${ligaId}/alineacion/${usuarioId}`, {
+        method: "PUT",
+        body: JSON.stringify(datos)
+    });
+  }
+  // --- EQUIPO ---
+  const realizarCambio = async (partidoId, usuarioId, cambioData) => {
+    return request(`/partido/${partidoId}/${usuarioId}/cambio`, {
+        method: 'PUT',
+        body: JSON.stringify(cambioData)
+    });
+  };
+
+  const obtenerEquipo = async (partidoId, usuarioId) => {
+      return request(`/partido/${partidoId}/${usuarioId}`, {
+          method: 'GET',
+      });
+  };
+
+  const obtenervisualPartido = async (partidoId) => {
+    return request(`/partido/${partidoId}/info`, {
+        method: 'GET'
+    });
+  };
+  
+  const crearComportamientoDt = async (usuarioId, comportamientoData) => {
+    return request(`/comportamiento_dt/${usuarioId}`, {
+        method: 'POST',
+        body: JSON.stringify(comportamientoData)
+    });
+  };
+
+  const obtenerComportamientosDt = async (usuarioId) => {
+    return request(`/comportamientos_dt/${usuarioId}`);
+  };
+
+  const cambiarEstadoDirectorTecnico = async (usuarioId, partidoId) => {
+    return request(`/partido/${partidoId}/${usuarioId}/dt`, {
+        method: 'PUT'
+    });
+  };
+
+  const asignarComportamientoDt = async (usuarioId, compId) => {
+    return request(`/comportamiento_dt/${usuarioId}/${compId}/asignar`, {
+        method: 'PUT'
+    });
+  };
+
+  const configurarPenales = async (partidoId, payload) => {
+    return request(`/liga/partido/${partidoId}/penales`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+    });
+  };
+
   return {
     crearUsuario,
     iniciarSesion,
@@ -169,8 +254,11 @@ const createHttpService = () => {
     crearComportamiento,
     obtenerComportamientos,
     obtenerInformacionComportamiento,
-    asignarComportamiento,
+    editarComportamiento,
+    cambiarComportamiento,
     obtenerLigas,
+    obtenerFixtureLiga,
+    obtenerTablaLiga,
     crearLiga,
     unirseLiga,
     abandonarLiga,
@@ -179,7 +267,17 @@ const createHttpService = () => {
     obtenerAmistosos,
     crearAmistoso,
     unirseAmistoso,
-    iniciarAmistoso
+    iniciarAmistoso,
+    realizarCambio,
+    obtenerEquipo,
+    obtenervisualPartido,
+    cambiarEstadoDirectorTecnico,
+    crearComportamientoDt,
+    obtenerComportamientosDt,
+    asignarComportamientoDt,
+    obtenerEquipoLiga,
+    actualizarEquipoLiga,
+    configurarPenales
   };
 };
 

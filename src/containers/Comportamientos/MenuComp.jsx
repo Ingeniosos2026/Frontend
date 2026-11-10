@@ -1,77 +1,80 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createHttpService } from "../../services/HttpService";
-import MisComportamientos from "../../components/Comportamientos/MenuComp";
-
+import MenuCComp from "../../components/Comportamientos/MenuCComp";
 
 const MenuComp = () => {
-
     const [comps, setComps] = useState([]);
-
-    const { obtenerComportamientos } = createHttpService();
-
-    const [cargandoComportamientos, setCargando] = useState(true);
-
+    const [compsDt, setCompsDt] = useState([]);
+    const { obtenerComportamientos, obtenerComportamientosDt, asignarComportamientoDt } = createHttpService();
     const usuarioId = localStorage.getItem("usuario_id");
-
     const navigate = useNavigate();
-
-
+    const [comportamientoDtAsignado, setComportamientoDtAsignado] = useState(null);
 
     useEffect(() => {
-
         const cargarComportamientos = async () => {
-
             try {
-
-                setCargando(true);
-
                 const data = await obtenerComportamientos(usuarioId);
-
-                setComps(data || []);
-
+                setComps(data);
             } catch (error) {
-
                 console.error(error);
-
-            } finally {
-
-                setCargando(false);
-
             }
-
         };
-
         cargarComportamientos();
-
     }, [usuarioId]);
 
+    useEffect(() => {
+        const cargarComportamientosDt = async () => {
+            try {
+                const data = await obtenerComportamientosDt(usuarioId);
+                setCompsDt(data.comportamientos);
+                setComportamientoDtAsignado(data.id_comportamiento_dt_actual)
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        cargarComportamientosDt();
+    }, [usuarioId]);
 
+    const cargarComportamientoDt = async (compId) => {
+        try {
+            await asignarComportamientoDt(usuarioId, compId);
 
-    const irVolver = () => {
+            setComportamientoDtAsignado(compId);
 
-        navigate("/main");
-
+        } catch (error) {
+            console.error("Error al asignar comportamiento DT:", error);
+        }
     };
 
+    const crearComp = () => {
+        navigate("/comportamientos/crear");
+    };
 
+    const crearCompDt = () => {
+        navigate("/comportamientos/crearDt");
+    }
+
+    const editarComp = (comp_id) => {
+        navigate(`/comportamientos/editar/${comp_id}`);
+    };
+
+    const irVolver = () => {
+        navigate("/main");
+    };
 
     return (
-
-        <MisComportamientos
-
+        <MenuCComp
             comportamientos={comps}
-
-            cargando={cargandoComportamientos}
-
+            comportamientosDt={compsDt}
+            crear = {crearComp}
+            crearDt={crearCompDt}
+            editar = {editarComp}
             volver= {irVolver}
-
+            asignarComportamientoDt={cargarComportamientoDt}
+            comportamientoDtAsignado={comportamientoDtAsignado}
         />
-
     );
-
 };
-
-
 
 export default MenuComp;

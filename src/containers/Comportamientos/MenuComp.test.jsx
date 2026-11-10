@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import MenuComp from "./MenuComp";
@@ -18,72 +18,140 @@ vi.mock("../../services/HttpService", () => ({
     createHttpService: vi.fn(),
 }));
 
-vi.mock("../../components/Comportamientos/MenuComp", () => ({
-    default: (props) => (
-        <div data-testid="mock-mis-comportamientos">
-            <span data-testid="cargando">{props.cargando.toString()}</span>
-            <span data-testid="comportamientos-count">{props.comportamientos?.length || 0}</span>
-            <button data-testid="btn-volver" onClick={props.volver}>Volver</button>
-        </div>
-    ),
-}));
+const mockObtenerComportamientos = vi.fn();
+const mockObtenerComportamientosDt = vi.fn();
+const mockAsignarComportamientoDt = vi.fn();
 
 describe("MenuComp Logic Container", () => {
-    const mockObtenerComportamientos = vi.fn();
     beforeEach(() => {
         vi.clearAllMocks();
         localStorage.clear();
         localStorage.setItem("usuario_id", "123");
         createHttpService.mockReturnValue({
             obtenerComportamientos: mockObtenerComportamientos,
+            obtenerComportamientosDt: mockObtenerComportamientosDt,
+            asignarComportamientoDt: mockAsignarComportamientoDt
         });
     });
 
-    it("muestra el estado de carga y luego inyecta los comportamientos obtenidos", async () => {
+    it("obtiene y muestra los comportamientos en la lista", async () => {
         const comportamientos = [
-            { id: 1, nombre: "Caminar" },
-            { id: 2, nombre: "Correr" },
+            { id: 4, nombre: "Caminar", codigo: "def caminar():\n primitivas.correr(arco_propio)\n" },
+            { id: 5, nombre: "traicionar", codigo: "def traicionar():\nprimitivas.patear(primitivas.direccionArcoPropio())" },
         ];
         mockObtenerComportamientos.mockResolvedValue(comportamientos);
 
         render(<MemoryRouter><MenuComp /></MemoryRouter>);
-        expect(screen.getByTestId("cargando").textContent).toBe("true");
 
-        await waitFor(() => {
-            expect(screen.getByTestId("cargando").textContent).toBe("false");
-        });
-
-        expect(screen.getByTestId("comportamientos-count").textContent).toBe("2");
+        expect(await screen.findByText("Caminar")).toBeInTheDocument();
+        expect(screen.getByText("traicionar")).toBeInTheDocument();
         expect(mockObtenerComportamientos).toHaveBeenCalledWith("123");
     });
 
-    it("maneja un error al obtener los comportamientos", async () => {
+    it("maneja error al obtener comportamientos y muestra mensaje de lista vacía", async () => {
         const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-        
         mockObtenerComportamientos.mockRejectedValue(new Error("Error al obtener comportamientos"));
 
         render(<MemoryRouter><MenuComp /></MemoryRouter>);
 
-        await waitFor(() => {
-            expect(screen.getByTestId("cargando").textContent).toBe("false");
-        });
+        const mensajes = await screen.findAllByText(/No tienes comportamientos creados en este momento./i);
 
-        expect(consoleError).toHaveBeenCalled();
-        expect(screen.getByTestId("comportamientos-count").textContent).toBe("0");
+        expect(mensajes).toHaveLength(2);
+        expect(consoleError).toHaveBeenCalledTimes(2);
 
         consoleError.mockRestore();
     });
 
-    it("navega a /main al presionar Volver", async () => {
+    it("navega a /comportamientos/crear al ejecutar la acción Crear Comportamiento", async () => {
         mockObtenerComportamientos.mockResolvedValue([]);
-        
         render(<MemoryRouter><MenuComp /></MemoryRouter>);
 
-        await waitFor(() => {
-            expect(screen.getByTestId("cargando").textContent).toBe("false");
+        const botonesCrear = await screen.findAllByRole("button", {
+            name: /\+ Crear Comportamiento/i
         });
 
-        fireEvent.click(screen.getByTestId("btn-volver"));
+        const btnCrear = botonesCrear[0];
+        fireEvent.click(btnCrear);
+        expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/crear");
+    });
+
+    it("despliega detalle y navega a /comportamientos/editar/:id al ejecutar la acción Editar", async () => {
+        const comportamientos = [
+            { id: 67, nombre: "Pasar al Rival", codigo: "def Pasar_Rival():\n  primitivas.patear(direccionRival)\n" },
+        ];
+        mockObtenerComportamientos.mockResolvedValue(comportamientos);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnAcordeon = await screen.findByRole("button", { name: /Pasar al Rival/i });
+        fireEvent.click(btnAcordeon);
+        
+        expect(await screen.findByText(/def Pasar_Rival\(\):/i)).toBeInTheDocument();
+        expect(await screen.findByText(/primitivas\.patear\(direccionRival\)/i)).toBeInTheDocument();
+
+        const btnEditar = await screen.findByRole("button", { name: /Editar/i });
+        fireEvent.click(btnEditar);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/editar/67");
+    });
+
+    it("despliega detalle y no permite editar comportamiento default", async () => {
+        const comportamientos = [
+            { id: 1, nombre: "Defender", codigo:"def comportamiento_defender(primitivas):\n    primitivas.patear(direccionRival)\n" },
+        ];
+        mockObtenerComportamientos.mockResolvedValue(comportamientos);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnAcordeon = await screen.findByRole("button", { name: /Defender/i });
+        fireEvent.click(btnAcordeon);
+
+        const btnEditar = screen.queryByRole("button", { name: /Editar/i });
+        expect(btnEditar).not.toBeInTheDocument();
+    });
+
+    it("navega a /comportamientos/crearDt al ejecutar la acción Crear Comportamiento DT", async () => {
+        mockObtenerComportamientos.mockResolvedValue([]);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnCrear = await screen.findByRole("button", { name: /\+ Crear Comportamiento DT/i });
+        fireEvent.click(btnCrear);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/comportamientos/crearDt");
+    });
+
+    it('asigna el comportamiento al director tecnico al seleccionar la opcion "Asignar al DT"', async () => {
+        const comportamientos = {
+            comportamientos: [
+                {
+                    id: 2,
+                    nombre: "atacar",
+                    codigo: "cambiar_comportamiento_defensa()"
+                }
+            ],
+            id_comportamiento_dt_actual: 1
+        };
+
+        
+        mockObtenerComportamientos.mockResolvedValue([]);
+        mockObtenerComportamientosDt.mockResolvedValue(comportamientos);
+        mockAsignarComportamientoDt.mockResolvedValue({});
+
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const botonAsignar = await screen.findByRole("button", {
+            name: /Asignar al DT/i
+        });
+
+        fireEvent.click(botonAsignar);
+
+        expect(mockAsignarComportamientoDt).toHaveBeenCalledWith("123", 2);
+    });
+
+    it("navega a /main al presionar Volver", async () => {
+        mockObtenerComportamientos.mockResolvedValue([]);
+        render(<MemoryRouter><MenuComp /></MemoryRouter>);
+
+        const btnVolver = await screen.findByRole("button", { name: /Volver/i });
+        fireEvent.click(btnVolver);
         
         expect(mockNavigate).toHaveBeenCalledWith("/main");
     });

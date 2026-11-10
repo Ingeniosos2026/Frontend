@@ -1,7 +1,7 @@
-import React from 'react';
 import { Container, Card, Button, Spinner, Alert, Row, Col } from 'react-bootstrap';
 
-const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alIniciar }) => {
+const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, sePuedeIniciar, iniciando, alIniciar, visual }) => {
+
     return (
 
         <div 
@@ -20,7 +20,6 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
             >
                 <div className="text-center mb-4">
                     <h2 className="fw-bold" style={{ color: '#198754' }}>Lobby del Partido</h2>
-                    <p className="text-muted">Sala de espera previa al encuentro</p>
                 </div>
                 
                 {mensajeError && (
@@ -52,9 +51,17 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                             <Card.Body className="p-4">
                                 <Row className="g-4 text-center align-items-center">
                                     <Col xs={12} md={5}>
-                                        <h5 className="text-muted fw-bold mb-3 border-bottom pb-2">Local (Tú)</h5>
+                                        <div className="d-flex justify-content-center mb-3">
+                                            {visual?.avatar_usuario_izq && (
+                                                <img 
+                                                    src={new URL(`../../assets/avatars/avatar_${visual.avatar_usuario_izq}.png`, import.meta.url).href} 
+                                                    alt="Avatar Izquierda" 
+                                                    style={{width: '150px',height: '150px',objectFit: 'contain'}}
+                                                />
+                                            )}
+                                        </div>
                                         <h3 className="fw-bold text-dark">{versus.nombre_owner}</h3>
-                                        <p className="text-secondary mb-0">🛡️ Club {versus.club_owner}</p>
+                                        <p className="text-secondary mb-0">{versus.club_owner}</p>
                                     </Col>
                                     
                                     <Col xs={12} md={2} className="d-flex justify-content-center my-3 my-md-0">
@@ -63,10 +70,19 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                                         </div>
                                     </Col>
                                     
+                                    {/* EQUIPO DERECHO (RIVAL) */}
                                     <Col xs={12} md={5}>
-                                        <h5 className="text-muted fw-bold mb-3 border-bottom pb-2">Visitante (Rival)</h5>
+                                        <div className="d-flex justify-content-center mb-3">
+                                            {visual?.avatar_usuario_der && (
+                                                <img 
+                                                    src={new URL(`../../assets/avatars/avatar_${visual.avatar_usuario_der}.png`, import.meta.url).href} 
+                                                    alt="Avatar Derecha" 
+                                                    style={{width: '150px',height: '150px',objectFit: 'contain'}}
+                                                />
+                                            )}
+                                        </div>
                                         <h3 className="fw-bold text-dark">{versus.nombre}</h3>
-                                        <p className="text-secondary mb-0">🛡️ Club {versus.club}</p>
+                                        <p className="text-secondary mb-0">{versus.club}</p>
                                     </Col>
                                 </Row>
                             </Card.Body>
@@ -74,7 +90,7 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                     )}
                 </div>
 
-                <div className="d-flex flex-column align-items-center pt-4 border-top">
+                <div className="d-flex flex-column align-items-center ">
                     {esCreador ? (
                         <>
                             <p className="text-muted text-center mb-3">
@@ -85,7 +101,7 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                                 size="lg" 
                                 className="px-5 shadow-sm fw-bold rounded-pill d-flex align-items-center"
                                 onClick={alIniciar}
-                                disabled={!versus || iniciando}
+                                disabled={!versus || iniciando || !sePuedeIniciar}
                                 style={{ transition: 'all 0.3s ease' }}
                             >
                                 {iniciando ? (
@@ -94,7 +110,7 @@ const LobbyAmistosoComp = ({ mensajeError, esCreador, versus, iniciando, alInici
                                         Iniciando...
                                     </>
                                 ) : (
-                                    "▶ Iniciar Amistoso"
+                                    "Iniciar Amistoso"
                                 )}
                             </Button>
                         </>

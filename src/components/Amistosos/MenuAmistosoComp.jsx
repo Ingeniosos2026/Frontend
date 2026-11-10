@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Container, Button, Collapse, Card, Spinner, Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { Container, Button, Collapse, Card, Alert } from 'react-bootstrap';
 
-const MenuAmistosoComp = ({ amistosos, cargando, mensajeError, alCrear, alUnirse, alVolver }) => {
+const MenuAmistosoComp = ({ amistosos, mensajeError, alCrear, alUnirse, alVolver }) => {
     const [amistosoDesplegadaDisp, setAmistosoDesplegadaDisp] = useState(null);
 
-    const toggleDispAmistosos = (nombreAmistoso) => {
-        setAmistosoDesplegadaDisp(amistosoDesplegadaDisp === nombreAmistoso ? null : nombreAmistoso);
+    const toggleDispAmistosos = (idAmistoso) => {
+        setAmistosoDesplegadaDisp(amistosoDesplegadaDisp === idAmistoso ? null : idAmistoso);
     };
 
     return (
@@ -43,21 +43,20 @@ const MenuAmistosoComp = ({ amistosos, cargando, mensajeError, alCrear, alUnirse
                         amistosos.map((amistoso, index) => (
                             <div key={`disp-${index}`}>
                                 <Button 
-                                    variant={amistosoDesplegadaDisp === amistoso.nombre ? "success" : "outline-success"}
+                                    variant={amistosoDesplegadaDisp === amistoso.id ? "success" : "outline-success"}
                                     className="w-100 text-start shadow-sm d-flex justify-content-between align-items-center"
-                                    onClick={() => toggleDispAmistosos(amistoso.nombre)}
+                                    onClick={() => toggleDispAmistosos(amistoso.id)}
                                     aria-controls={`collapse-amistoso-${index}`}
-                                    aria-expanded={amistosoDesplegadaDisp === amistoso.nombre}
+                                    aria-expanded={amistosoDesplegadaDisp === amistoso.id}
                                 >
                                     <span className="fw-bold">{amistoso.nombre}</span>
-                                    <span>{amistosoDesplegadaDisp === amistoso.nombre ? '▲' : '▼'}</span>
+                                    <span>{amistosoDesplegadaDisp === amistoso.id ? '▲' : '▼'}</span>
                                 </Button>
                                 
-                                <Collapse in={amistosoDesplegadaDisp === amistoso.nombre}>
+                                <Collapse in={amistosoDesplegadaDisp === amistoso.id}>
                                     <div id={`collapse-amistoso-${index}`} className="mt-2">
                                         <Card className="border-success shadow-sm bg-light">
                                             <Card.Body className="d-flex justify-content-between align-items-center">
-                                                <span className="text-muted fw-bold">ID: {amistoso.id}</span>
                                                 <Button 
                                                     variant="success" 
                                                     className="px-4 fw-bold shadow-sm"

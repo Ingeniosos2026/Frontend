@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createHttpService } from '../../services/HttpService.js';
-// import { createWSService } from 'src/services/WSService';
+import { createWSService } from '../../services/WSService';
 import MenuAmistosoComp from '../../components/Amistosos/MenuAmistosoComp.jsx';
 
 const MenuAmistoso = () => {
@@ -9,24 +9,19 @@ const MenuAmistoso = () => {
     const [cargandoAmistosos, setCargando] = useState(true);
     const navigate = useNavigate();
     const [httpService] = useState(() => createHttpService());
-    // const [wsService] = useState(() => createWSService('/amistosos/ws'));
     const [mensajeError, setError] = useState(null);
+    const usuario_id = Number(localStorage.getItem('usuario_id'));
     
     useEffect(() => {
+        const wsService = createWSService(`/ws/notificaciones/${usuario_id}`);
+        wsService.connect();
         const init = async () => {
             try {
                 setCargando(true);
 
-                const amistosos = await httpService.obtenerAmistosos();
+                const amistosos = await httpService.obtenerAmistosos(usuario_id);
 
                 setAmistosos(amistosos);
-
-                // if (wsService.isConnected) {
-                //     console.warn('WebSocket ya está conectado. Reutilizando conexion existente.');
-                // } else {
-                //     wsService.connect();
-                //     completar...
-                // }
 
             } catch (error) {
                 console.error(error.message)
@@ -37,6 +32,20 @@ const MenuAmistoso = () => {
         };
 
         init();
+
+        const introducirAmistoso = (payload) => {
+            setAmistosos((prevAmistosos) => [...prevAmistosos, {
+                id: payload.id_partido,
+                nombre: payload.nombre || "Amistoso recien creado",
+            }]);
+        };
+
+        wsService.on('amistoso_creado', introducirAmistoso);
+
+        return () => {
+            wsService.off('amistoso_creado', introducirAmistoso);
+            wsService.disconnect();
+        };
 
     }, []);
     

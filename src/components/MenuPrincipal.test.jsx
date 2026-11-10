@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useNavigate, MemoryRouter } from "react-router-dom";
 import PagPrincipal from "./MenuPrincipal";
 
-// 1. Mock de react-router-dom
 const { navigateMock } = vi.hoisted(() => ({
     navigateMock: vi.fn()
 }));
@@ -14,6 +13,12 @@ vi.mock("react-router-dom", async () => {
         ...actual, 
         useNavigate: () => navigateMock
     }; 
+});
+
+vi.mock("react-slick", () => {
+    return {
+        default: ({ children }) => <div data-testid="mock-slider">{children}</div>
+    };
 });
 
 describe("MenuPrincipal", () => {
@@ -29,8 +34,6 @@ describe("MenuPrincipal", () => {
             </MemoryRouter>
         );
 
-        // Verificamos los títulos principales que se ven dentro de las secciones del carrusel[cite: 12]
-        // Se utiliza getAllByText ya que el texto aparece dos veces en cada Carousel.Item (en h5 y en la etiqueta superior si estuviera visible)
         const titulosLiga = screen.getAllByText("LIGA");
         expect(titulosLiga.length).toBeGreaterThan(0);
 
@@ -42,6 +45,9 @@ describe("MenuPrincipal", () => {
 
         const titulosComportamientos = screen.getAllByText("COMPORTAMIENTOS");
         expect(titulosComportamientos.length).toBeGreaterThan(0);
+
+        const titulosRanking = screen.getAllByText("RANKING GLOBAL");
+        expect(titulosRanking.length).toBeGreaterThan(0);
     });
 
     it("muestra la interfaz de liga al hacer clic", () => {
@@ -51,7 +57,6 @@ describe("MenuPrincipal", () => {
             </MemoryRouter>
         );
 
-        // Como el onClick está en un div que contiene el texto, hacemos clic en el primer elemento de texto encontrado[cite: 12]
         fireEvent.click(screen.getAllByText("LIGA")[0]);
         expect(navigateMock).toHaveBeenCalledWith("/ligas");
     });
@@ -87,5 +92,16 @@ describe("MenuPrincipal", () => {
 
         fireEvent.click(screen.getAllByText("COMPORTAMIENTOS")[0]);
         expect(navigateMock).toHaveBeenCalledWith("/comportamientos");
+    });
+
+    it("muestra el ranking de clubes al hacer clic", () => {
+        render (
+            <MemoryRouter>
+                <PagPrincipal />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getAllByText("RANKING GLOBAL")[0]);
+        expect(navigateMock).toHaveBeenCalledWith("/ranking");
     });
 });
