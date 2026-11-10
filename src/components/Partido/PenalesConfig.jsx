@@ -48,7 +48,7 @@ const PenalesConfig = ({
         const nuevosPateadores = [...pateadores];
         nuevosPateadores[index][campo] = valor;
         setPateadores(nuevosPateadores);
-        setErrorMensaje(''); // Limpiamos errores si el usuario cambia algo
+        setErrorMensaje('');
     };
 
     const manejarEnvioPenales = async (e) => {
@@ -81,7 +81,6 @@ const PenalesConfig = ({
         }
     };
 
-    // PANTALLA DE ESPERA (Cargando)
     if (enviado) {
         return (
             <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}>
@@ -96,7 +95,6 @@ const PenalesConfig = ({
         );
     }
 
-    // FORMULARIO PRINCIPAL DE CONFIGURACIÓN
     return (
         <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 1050 }}>
             
