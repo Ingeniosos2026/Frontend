@@ -38,7 +38,7 @@ const Marcador = ({ tiempo, goles, alVolver, izquierda, derecha, espectador, ava
                             src={obtenerUrlAvatar(avatarIzq)} 
                             alt="Avatar Izq" 
                             className="avatar-img"
-                            onError={(e) => e.target.style.display = 'none'}
+                            onError={(e) => e.target.style.display = 'none'}                    
                         />
                     )}
                 </div>
